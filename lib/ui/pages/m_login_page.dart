@@ -32,12 +32,11 @@ class _LoginPageState extends State<LoginPage> {
 
     _userNumController.addListener(() {
       _email = _userNumController.text;
-      print(" ${_email}    _userNumController     ${_userNumController.text}");
+
     });
     _passwordController.addListener(() {
       _password = _passwordController.text;
-      print(" ${_password}    _userNumController     ${_passwordController
-          .text}");
+
     });
   }
 
@@ -186,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
             mOptions.baseUrl = WanAndroidApi.MESSAGE_U;
             mOptions.method = Method.post;
             new WanRepository().postLoginForm(mDataMap).then((onValue) {
-              print("then     ${onValue}");
+
               Navigator.push(
                   context,new MaterialPageRoute(builder: (context)
               =>
