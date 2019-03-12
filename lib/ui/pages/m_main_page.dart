@@ -32,7 +32,7 @@ class M_MainPage extends StatelessWidget {
         child: new Scaffold(
           appBar: new MyAppBar(
             centerTitle: true,
-            title: new Text('任星报'),
+            title: new Text('任行宝'),
             actions: <Widget>[
               new IconButton(
                   icon: new Icon(Icons.search),
