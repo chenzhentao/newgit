@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _email, _password, _deviceInfo;
+  String _email='1551868680311', _password='123456', _deviceInfo;
 
   bool _isObscure = true;
   Color _eyeColor;
@@ -32,11 +32,9 @@ class _LoginPageState extends State<LoginPage> {
 
     _userNumController.addListener(() {
       _email = _userNumController.text;
-
     });
     _passwordController.addListener(() {
       _password = _passwordController.text;
-
     });
   }
 
@@ -57,8 +55,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  final _passwordController = TextEditingController();
-  final _userNumController = TextEditingController();
+  final _passwordController = TextEditingController(text: '123456');
+  final _userNumController = TextEditingController(text:'1551868680311');
 
   @override
   Widget build(BuildContext context) {
@@ -67,29 +65,31 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Form(
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 22.0),
-            children: <Widget>[
-              SizedBox(
-                height: 200.0,
+        padding: EdgeInsets.symmetric(horizontal: 22.0),
+        children: <Widget>[
+          SizedBox(
+            height: 200.0,
 //            child: new ImageIcon(
 //                AssetImage(Utils.getImgPath('renxingbao_tubiao'))),
-              ),
-              buildPhoneField(),
-              buildPasswordField(context),
-              buildForgetPasswordField(),
-              SizedBox(
-                height: 30.0,
-              ),
-              buildLoginButton(context),
-            ],
-          )),
+          ),
+          buildPhoneField(),
+          buildPasswordField(context),
+          buildForgetPasswordField(),
+          SizedBox(
+            height: 30.0,
+          ),
+          buildLoginButton(context),
+        ],
+      )),
     );
   }
 
   TextFormField buildPhoneField() {
     return TextFormField(
       controller: _userNumController,
+
       decoration: InputDecoration(labelText: '请输入账号'),
+
       validator: (String value) {
         if (value == null || value.length < 6) {
           return '请输入有效的账号';
@@ -121,10 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                   _isObscure = !_isObscure;
                   _eyeColor = _isObscure
                       ? Colors.grey
-                      : Theme
-                      .of(context)
-                      .iconTheme
-                      .color;
+                      : Theme.of(context).iconTheme.color;
                 });
               })),
     );
@@ -185,20 +182,15 @@ class _LoginPageState extends State<LoginPage> {
             mOptions.baseUrl = WanAndroidApi.MESSAGE_U;
             mOptions.method = Method.post;
             new WanRepository().postLoginForm(mDataMap).then((onValue) {
-
               Navigator.push(
-                  context,new MaterialPageRoute(builder: (context)
-              =>
-              new IdentityPage(mData: onValue)
-              )
-
-              );});
-          }   ,       child: Text(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new IdentityPage(mData: onValue)));
+            });
+          },
+          child: Text(
             '登录',
-            style: Theme
-                .of(context)
-                .primaryTextTheme
-                .headline,
+            style: Theme.of(context).primaryTextTheme.headline,
           ),
           color: Colors.red,
         ),

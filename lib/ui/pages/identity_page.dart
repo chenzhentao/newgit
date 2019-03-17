@@ -40,51 +40,78 @@ class _IdentityPage extends State<IdentityPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               ListView.builder(
-                padding: EdgeInsets.all(18.0),
-                itemExtent: 20.0,
-                itemCount: mData.length,
                 shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemBuilder: buildItem,
+
+                itemCount: mData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return new InkWell(
+                    //highlightColor: Colors.red,
+                    splashColor: Colors.blueAccent,
+                    onTap: () {
+                      setState(() {
+                        mData.forEach((element) => element.isSelected = false);
+                        mData[index].isSelected = true;
+                      });
+                    },
+                    child: new RadioItem(mData[index]),
+                  );
+                },
               ),
               RaisedButton(
                 child: Text('确认'),
                 onPressed: () {
                   print('确认了');
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => new M_MainPage()));
                 },
               )
             ],
           ),
         ));
   }
+}
 
-  //ListView的Item
-  Widget buildItem(BuildContext context, int index) {
-    //设置分割线
-    if (index.isOdd) return new Divider();
-    //设置字体样式
-    var backgroudPaint = new Paint();
-    backgroudPaint.color = Colors.amber;
-    TextStyle textStyle = new TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 14.0,
-        background: backgroudPaint);
-    //设置Padding
-    return new GestureDetector(
+class RadioItem extends StatelessWidget {
+  final returnValue _item;
 
-        onTap: () {
-          //处理点击事件
-          Navigator.push(
-              context,new MaterialPageRoute(builder: (context)
-          =>
-          new M_MainPage()
-          )
+  RadioItem(this._item);
 
-          );
-        },
-        child: new Align(
-            widthFactor: 30.0,
-            heightFactor: 18.0,
-            child: new Text('${mData[index].roleName}', style: textStyle)));
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      margin: new EdgeInsets.only(left:20.0,top:5.0,right:20.0,bottom:5.0),
+      child: new Wrap(
+       /* mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment:MainAxisAlignment.spaceAround,*/
+        children: <Widget>[
+          new Container(
+            height: 50.0,
+          /* width: 300,*/
+            child: new Center(
+              child: new Text(_item.roleName,
+
+                  style: new TextStyle(
+
+                      color: _item.isSelected ? Colors.white : Colors.black,
+                      //fontWeight: FontWeight.bold,
+                      fontSize: 18.0)),
+            ),
+            decoration: new BoxDecoration(
+              color: _item.isSelected ? Colors.blueAccent : Colors.transparent,
+
+              border: new Border.all(
+                  width: 1.0,
+
+                  color: _item.isSelected ? Colors.blueAccent : Colors.grey),
+              borderRadius: const BorderRadius.all(const Radius.circular(5.0)),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
+
+
