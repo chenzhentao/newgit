@@ -32,7 +32,7 @@ class WanAndroidApi {
    static const String MESSAGE_a = "http://api.szwyx.com/renxingbao/";
   /*测试*/
    static const String MESSAGE_UR = "http://test.szwyx.com/renxingbao/";
-  static const String MESSAGE_U = MESSAGE_b;
+  static const String MESSAGE_U = MESSAGE_a;
 
   static String getPath({String path: '', int page, String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);

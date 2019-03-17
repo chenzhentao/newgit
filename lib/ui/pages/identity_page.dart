@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
 import 'package:flutter_wanandroid/ui/pages/m_home_page.dart';
 import 'package:flutter_wanandroid/ui/pages/m_main_page.dart';
@@ -21,11 +22,35 @@ class _IdentityPage extends State<IdentityPage> {
   List<returnValue> mData;
 
   _IdentityPage(this.mData) : super();
+  int checkedIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (mData.isEmpty) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text('提示'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("退出"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+                content: Text('错误的用户信息，请与公司联系'));
+          });
+    } else if (mData.length == 1) {
+      SpHelper.putObject<String>('identy_info', mData[checkedIndex].toJson());
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => new M_MainPage()));
+    } else
+      mData[checkedIndex].isSelected = true;
   }
 
   @override
@@ -41,7 +66,6 @@ class _IdentityPage extends State<IdentityPage> {
             children: <Widget>[
               ListView.builder(
                 shrinkWrap: true,
-
                 itemCount: mData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return new InkWell(
@@ -49,8 +73,13 @@ class _IdentityPage extends State<IdentityPage> {
                     splashColor: Colors.blueAccent,
                     onTap: () {
                       setState(() {
-                        mData.forEach((element) => element.isSelected = false);
-                        mData[index].isSelected = true;
+                        if (checkedIndex != index) {
+                          mData[checkedIndex].isSelected = false;
+                          mData[index].isSelected = true;
+                          checkedIndex = index;
+                        }
+                        /*mData.forEach((element) => element.isSelected = false);
+                        mData[index].isSelected = true;*/
                       });
                     },
                     child: new RadioItem(mData[index]),
@@ -60,7 +89,8 @@ class _IdentityPage extends State<IdentityPage> {
               RaisedButton(
                 child: Text('确认'),
                 onPressed: () {
-                  print('确认了');
+                  SpHelper.putObject<String>(
+                      'identy_info', mData[checkedIndex].toJson());
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
@@ -81,29 +111,26 @@ class RadioItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      margin: new EdgeInsets.only(left:20.0,top:5.0,right:20.0,bottom:5.0),
+      margin:
+          new EdgeInsets.only(left: 20.0, top: 5.0, right: 20.0, bottom: 5.0),
       child: new Wrap(
-       /* mainAxisSize: MainAxisSize.max,
+        /* mainAxisSize: MainAxisSize.max,
         mainAxisAlignment:MainAxisAlignment.spaceAround,*/
         children: <Widget>[
           new Container(
             height: 50.0,
-          /* width: 300,*/
+            /* width: 300,*/
             child: new Center(
               child: new Text(_item.roleName,
-
                   style: new TextStyle(
-
                       color: _item.isSelected ? Colors.white : Colors.black,
                       //fontWeight: FontWeight.bold,
                       fontSize: 18.0)),
             ),
             decoration: new BoxDecoration(
               color: _item.isSelected ? Colors.blueAccent : Colors.transparent,
-
               border: new Border.all(
                   width: 1.0,
-
                   color: _item.isSelected ? Colors.blueAccent : Colors.grey),
               borderRadius: const BorderRadius.all(const Radius.circular(5.0)),
             ),
@@ -113,5 +140,3 @@ class RadioItem extends StatelessWidget {
     );
   }
 }
-
-
