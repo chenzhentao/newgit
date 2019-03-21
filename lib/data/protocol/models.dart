@@ -77,6 +77,46 @@ class ReposModel {
   }
 }
 
+
+class BannerModelParent {
+  String msg;
+  int status;
+  String code;
+  List<BannerModel> returnValue;
+//(json['children'] as List)
+//            ?.map((e) => e == null
+//                ? null
+//                : new TreeModel.fromJson(e as Map<String, dynamic>))
+//            ?.toList();
+  BannerModelParent.fromJson(Map<String, dynamic> json)
+      : msg = json['msg'],
+        status = json['status'],
+        code = json['code'],
+        returnValue = (json['imagePath'] as List)
+            ?.map((e) => e == null
+            ? null
+            : new BannerModel.fromJson(e as Map<String, dynamic>))
+            ?.toList();
+
+  Map<String, dynamic> toJson() => {
+    'msg': msg,
+    'status': status,
+    'code': code,
+    'imagePath': returnValue,
+  };
+
+  @override
+  String toString() {
+    StringBuffer sb = new StringBuffer('{');
+    sb.write("\"msg\":\"$msg\"");
+    sb.write(",\"status\":$status");
+    sb.write(",\"code\":\"$code\"");
+    sb.write(",\"returnValue\":\"$returnValue\"");
+    sb.write('}');
+    return sb.toString();
+  }
+}
+
 class BannerModel {
   String title;
   int id;
@@ -84,25 +124,25 @@ class BannerModel {
   String imagePath;
 
   BannerModel.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
+      : title = json['createDate'],
         id = json['id'],
-        url = json['url'],
-        imagePath = json['imagePath'];
+        url = json['schoolLink'],
+        imagePath = json['schoolImageUrl'];
 
   Map<String, dynamic> toJson() => {
-        'title': title,
+        'createDate': title,
         'id': id,
-        'url': url,
-        'imagePath': imagePath,
+        'schoolLink': url,
+        'schoolImageUrl': imagePath,
       };
 
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
-    sb.write("\"title\":\"$title\"");
+    sb.write("\"createDate\":\"$title\"");
     sb.write(",\"id\":$id");
-    sb.write(",\"url\":\"$url\"");
-    sb.write(",\"imagePath\":\"$imagePath\"");
+    sb.write(",\"schoolLink\":\"$url\"");
+    sb.write(",\"schoolImageUrl\":\"$imagePath\"");
     sb.write('}');
     return sb.toString();
   }

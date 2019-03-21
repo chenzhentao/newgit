@@ -7,9 +7,9 @@ bool isHomeInit = true;
 
 class MHomePage extends StatelessWidget {
   final returnValue mData;
-  final String labelId;
 
-  const MHomePage({Key key, this.labelId, this.mData});
+
+  const MHomePage({Key key,  this.mData});
 
   Widget buildBanner(BuildContext context, List<BannerModel> list) {
     if (ObjectUtil.isEmpty(list)) {
@@ -95,6 +95,7 @@ class MHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogUtil.e("HomePage build......");
+    String labelId = mData.roleName;
     RefreshController _controller = new RefreshController();
     final MainBloc bloc = BlocProvider.of<MainBloc>(context);
     bloc.homeEventStream.listen((event) {

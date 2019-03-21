@@ -196,7 +196,10 @@ class MainBloc implements BlocBase {
   }
 
   Future getBanner(String labelId) {
-    return wanRepository.getBanner().then((list) {
+    Map<String, String> mDataMap = {
+      'schoolId': labelId
+    };
+    return wanRepository.getBanner(mDataMap).then((list) {
       _bannerSink.add(UnmodifiableListView<BannerModel>(list));
     });
   }

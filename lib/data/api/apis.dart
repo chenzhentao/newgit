@@ -34,6 +34,11 @@ class WanAndroidApi {
    static const String MESSAGE_UR = "http://test.szwyx.com/renxingbao/";
   static const String MESSAGE_U = MESSAGE_a;
 
+
+  /*首页banner*/
+  static const   String MYSCHOOL = "api/homePage/mySchool";
+  /*首页接口*/
+  static const   String MY_MENU = "api/homePage/myMenu";
   static String getPath({String path: '', int page, String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);
     if (page != null) {

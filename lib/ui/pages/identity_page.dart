@@ -90,7 +90,7 @@ class _IdentityPage extends State<IdentityPage> {
                 child: Text('确认'),
                 onPressed: () {
                   SpHelper.putObject<String>(
-                      'identy_info', mData[checkedIndex].toJson());
+                      'identy_info', mData[checkedIndex].toJson().toString());
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
