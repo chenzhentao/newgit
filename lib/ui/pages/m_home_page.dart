@@ -96,8 +96,7 @@ class MHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogUtil.e("HomePage build......");
-    // SpHelper.putObject<String>(
-    //                        'identy_info',tata .toJson().toString());
+
     mData = SpHelper.getIndentityBean();
     String labelId = mData.roleName;
     RefreshController _controller = new RefreshController();
