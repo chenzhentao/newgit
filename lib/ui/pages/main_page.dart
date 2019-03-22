@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/ui/pages/m_home_page.dart';
 import 'package:flutter_wanandroid/ui/pages/main_left_page.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
 
@@ -75,7 +76,7 @@ class TabBarViewLayout extends StatelessWidget {
     String labelId = page.labelId;
     switch (labelId) {
       case Ids.titleHome:
-        return HomePage(labelId: labelId);
+        return MHomePage();
         break;
       case Ids.titleRepos:
         return ReposPage(labelId: labelId);

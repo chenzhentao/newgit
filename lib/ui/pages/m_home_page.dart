@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
 
 bool isHomeInit = true;
 
 class MHomePage extends StatelessWidget {
-  final returnValue mData;
+   IdentityBean mData;
 
 
-  const MHomePage({Key key,  this.mData});
+   MHomePage();
 
   Widget buildBanner(BuildContext context, List<BannerModel> list) {
     if (ObjectUtil.isEmpty(list)) {
@@ -95,6 +96,9 @@ class MHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LogUtil.e("HomePage build......");
+    // SpHelper.putObject<String>(
+    //                        'identy_info',tata .toJson().toString());
+    mData = SpHelper.getIndentityBean();
     String labelId = mData.roleName;
     RefreshController _controller = new RefreshController();
     final MainBloc bloc = BlocProvider.of<MainBloc>(context);

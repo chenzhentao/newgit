@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
 import 'package:flutter_wanandroid/ui/pages/m_home_page.dart';
 import 'package:flutter_wanandroid/ui/pages/m_main_page.dart';
@@ -89,12 +90,26 @@ class _IdentityPage extends State<IdentityPage> {
               RaisedButton(
                 child: Text('确认'),
                 onPressed: () {
-                  SpHelper.putObject<String>(
-                      'identy_info', mData[checkedIndex].toJson().toString());
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => new M_MainPage()));
+                  var tata = mData[checkedIndex];
+                /*  SpHelper.putObject<String>(
+                      'identy_info',tata .toJson().toString());*/
+
+                  Map<String, String> mDataMap = {
+                    'mobileId': tata.mobileId.toString(),
+                    'baseRoleId': tata.baseRoleId.toString(),
+                    'roleName': tata.roleName,
+                    'roleId': tata.roleId.toString()
+                  };
+                  print(mDataMap.toString());
+
+                  new WanRepository().getIdentityForm(mDataMap).then((onValue) {
+                    SpHelper.putObject<String>(
+                        'identy_info',tata .toJson().toString());
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => new M_MainPage()));
+                  });
                 },
               )
             ],

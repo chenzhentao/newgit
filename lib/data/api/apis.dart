@@ -39,6 +39,11 @@ class WanAndroidApi {
   static const   String MYSCHOOL = "api/homePage/mySchool";
   /*首页接口*/
   static const   String MY_MENU = "api/homePage/myMenu";
+  /*
+         * 确认身份后得到个人信息
+         * */
+  static const   String GET_INFORMATION = "api/login/getMyInformation/";
+
   static String getPath({String path: '', int page, String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);
     if (page != null) {

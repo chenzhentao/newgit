@@ -3,6 +3,7 @@ import 'package:flutter_wanandroid/common/common.dart';
 import 'package:flutter_wanandroid/data/api/apis.dart';
 import 'package:flutter_wanandroid/data/net/dio_util.dart';
 import 'package:flutter_wanandroid/data/protocol/models.dart';
+import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
 //data) async {
 //    var mOptions = new Options();
@@ -140,6 +141,27 @@ class WanRepository {
     return treeList;
   }
 
+  Future<IdentityBean> getIdentityForm(data) async {
+    var mOptions = new Options();
+    mOptions.data = data;
+    mOptions.path = WanAndroidApi.USER_LOGIN;
+    mOptions.baseUrl = WanAndroidApi.MESSAGE_U;
+    mOptions.method = Method.get;
+
+    BaseResp<Map<String, dynamic>> baseResp = await DioUtil().request<Map<String, dynamic>>(Method.get,
+        WanAndroidApi.GET_INFORMATION, data: data, options: mOptions);
+    IdentityBean treeList;
+    print("baseResp     ${baseResp}");
+    if (baseResp.status != Constant.STATUS_SUCCESS1.toString()) {
+      print("baseResp     ${baseResp}");
+      return new Future.error(baseResp.msg);
+    }
+    if (baseResp.data != null) {
+        return IdentityBean.fromJson(baseResp.data);
+    }
+
+    return treeList;
+  }
   Future<List<returnValue>> postLoginForm(data) async {
     var mOptions = new Options();
     mOptions.data = data;
