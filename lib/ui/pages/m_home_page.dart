@@ -7,10 +7,10 @@ import 'package:flutter_wanandroid/ui/pages/page_index.dart';
 bool isHomeInit = true;
 
 class MHomePage extends StatelessWidget {
-   IdentityBean mData;
+  final IdentityBean mData;
+  final String labelId;
 
-
-   MHomePage();
+  const MHomePage({Key key, this.labelId, this.mData}) : super(key: key);
 
   Widget buildBanner(BuildContext context, List<BannerModel> list) {
     if (ObjectUtil.isEmpty(list)) {
@@ -41,6 +41,7 @@ class MHomePage extends StatelessWidget {
       ),
     );
   }
+
   Widget buildRepos(BuildContext context, List<ReposModel> list) {
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
@@ -67,6 +68,7 @@ class MHomePage extends StatelessWidget {
       children: children,
     );
   }
+
   Widget buildWxArticle(BuildContext context, List<ReposModel> list) {
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
@@ -93,12 +95,10 @@ class MHomePage extends StatelessWidget {
       children: children,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     LogUtil.e("HomePage build......");
-
-    mData = SpHelper.getIndentityBean();
-    String labelId = mData.roleName;
     RefreshController _controller = new RefreshController();
     final MainBloc bloc = BlocProvider.of<MainBloc>(context);
     bloc.homeEventStream.listen((event) {
@@ -111,7 +111,7 @@ class MHomePage extends StatelessWidget {
       LogUtil.e("HomePage init......");
       isHomeInit = false;
       Observable.just(1).delay(new Duration(milliseconds: 500)).listen((_) {
-        bloc.onRefresh(labelId: labelId);
+        bloc.onRefresh(labelId: labelId,bean: mData);
         bloc.getHotRecItem();
         bloc.getVersion();
       });
@@ -127,7 +127,7 @@ class MHomePage extends StatelessWidget {
             controller: _controller,
             enablePullUp: false,
             onRefresh: () {
-              return bloc.onRefresh(labelId: labelId);
+              return bloc.onRefresh(labelId: labelId, bean: mData);
             },
             child: new ListView(
               children: <Widget>[
@@ -158,7 +158,7 @@ class MHomePage extends StatelessWidget {
                         },
                       );
                     }),
-                buildBanner(context,snapshot.data),
+                buildBanner(context, snapshot.data),
                 new StreamBuilder(
                     stream: bloc.recReposStream,
                     builder: (BuildContext context,

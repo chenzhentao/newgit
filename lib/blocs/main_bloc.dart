@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
+import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 
 class MainBloc implements BlocBase {
   ///****** ****** ****** Home ****** ****** ****** /
@@ -125,10 +126,10 @@ class MainBloc implements BlocBase {
   }
 
   @override
-  Future getData({String labelId, int page}) {
+  Future getData({String labelId, int page, IdentityBean bean}) {
     switch (labelId) {
       case Ids.titleHome:
-        return getHomeData(labelId);
+        return getHomeData(labelId,bean);
         break;
       case Ids.titleRepos:
         return getArticleListProject(labelId, page);
@@ -169,7 +170,7 @@ class MainBloc implements BlocBase {
   }
 
   @override
-  Future onRefresh({String labelId}) {
+  Future onRefresh({String labelId, IdentityBean bean}) {
     switch (labelId) {
       case Ids.titleHome:
         getHotRecItem();
@@ -186,18 +187,18 @@ class MainBloc implements BlocBase {
         break;
     }
     LogUtil.e("onRefresh labelId: $labelId" + "   _reposPage: $_reposPage");
-    return getData(labelId: labelId, page: 0);
+    return getData(labelId: labelId, page: 0,bean:bean);
   }
 
-  Future getHomeData(String labelId) {
+  Future getHomeData(String labelId, IdentityBean bean) {
     getRecRepos(labelId);
     getRecWxArticle(labelId);
-    return getBanner(labelId);
+    return getBanner(labelId,bean);
   }
 
-  Future getBanner(String labelId) {
+  Future getBanner(String labelId, IdentityBean bean) {
     Map<String, String> mDataMap = {
-      'schoolId': labelId
+      'schoolId': bean.userVo.schoolId.toString()
     };
     return wanRepository.getBanner(mDataMap).then((list) {
       _bannerSink.add(UnmodifiableListView<BannerModel>(list));
