@@ -76,7 +76,7 @@ class TabBarViewLayout extends StatelessWidget {
     String labelId = page.labelId;
     switch (labelId) {
       case Ids.titleHome:
-        return MHomePage();
+        return MHomePage(labelId: labelId,mData: SpHelper.getIndentityBean(),);
         break;
       case Ids.titleRepos:
         return ReposPage(labelId: labelId);
