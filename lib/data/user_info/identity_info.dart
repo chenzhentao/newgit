@@ -52,7 +52,7 @@ class IdentityBean {
         roleName = json['roleName'];
 
   Map<String, dynamic> toJson() => {
-    'userVo': userVo.toJson(),
+    'userVo': userVo,
     'mobileId': mobileId,
     'roleId': roleId,
     'baseRoleId': baseRoleId,
@@ -62,10 +62,10 @@ class IdentityBean {
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
-    sb.write("\"userVo\":\"$userVo\"");
+    sb.write("\"userVo\":$userVo");
     sb.write(",\"mobileId\":$mobileId");
-    sb.write(",\"roleId\":\"$roleId\"");
-    sb.write(",\"baseRoleId\":\"$baseRoleId\"");
+    sb.write(",\"roleId\":$roleId");
+    sb.write(",\"baseRoleId\":$baseRoleId");
     sb.write(",\"roleName\":\"$roleName\"");
     sb.write('}');
     return sb.toString();
@@ -113,23 +113,23 @@ class UserVobean {
     'attendanceType': attendanceType,
     'headTeacherName': headTeacherName,
     'schoolId': schoolId,
-    'sclassVosbean': sclassVosbean.toJson(),
-    'sclassVos': sclassVos,
+//    'sclassVosbean': sclassVosbean.toJson(),
+    'sclassVos': sclassVos.toString(),
     'schoolName': schoolName,
   };
 
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
-    sb.write(",\"id\":$id");
-    sb.write("\"userName\":\"$userName\"");
+    sb.write("\"id\":$id");
+    sb.write(",\"userName\":\"$userName\"");
 
     sb.write(",\"userPhone\":\"$userPhone\"");
-    sb.write(",\"attendanceType\":\"$attendanceType\"");
+    sb.write(",\"attendanceType\":$attendanceType");
     sb.write(",\"headTeacherName\":\"$headTeacherName\"");
-    sb.write(",\"schoolId\":\"$schoolId\"");
+    sb.write(",\"schoolId\":$schoolId");
     sb.write(",\"sclassVosbean\":\"$sclassVosbean\"");
-    sb.write(",\"sclassVos\":\"$sclassVos\"");
+    sb.write(",\"sclassVos\":$sclassVos");
     sb.write(",\"schoolName\":\"$schoolName\"");
     sb.write('}');
     return sb.toString();
@@ -139,31 +139,23 @@ class UserVobean {
 class SclassVosbean {
   @override
   String toString() {
-    return "{" +
-        "\"gradeName\":\"" +
-        gradeName +
-        "\",\"studentName\":\"" +
-        studentName +
-        "\",\"schoolId\":\"" +
-        "$schoolId "+
-        "\",\"studentId\":\"" +
-        "#studentId" +
-        "\",\"headTeacherName\":\"" +
-        headTeacherName +
-        "\",\"schoolName\":\"" +
-        schoolName +
-        "\",\"studentUrl\":\"" +
-        studentUrl +
-        "\",\"schoolUserId\":\"" +
-        "$schoolUserId" +
-        "\",\"classId\":" +
-        "$classId" +
-        ",\"gradeId\":\"" +
-        "$gradeId" +
-        "\",\"className\":\"" +
-        className +
-        "\"" +
-        "}";
+    StringBuffer sb = new StringBuffer('{');
+    sb.write("\"gradeName\":\"$gradeName\"");
+    sb.write(",\"studentName\":\"$studentName\"");
+    sb.write(",\"schoolId\":$schoolId");
+    sb.write(",\"studentId\":$studentId");
+    sb.write(",\"headTeacherName\":\"$headTeacherName\"");
+
+    sb.write(",\"studentUrl\":\"$studentUrl\"");
+    sb.write(",\"schoolName\":\"$schoolName\"");
+    sb.write(",\"schoolUserId\":$schoolUserId");
+
+    sb.write(",\"gradeId\":$gradeId");
+    sb.write(",\"classId\":$classId");
+    sb.write(",\"className\":\"$className\"");
+    sb.write('}');
+    return sb.toString();
+
   }
 
   SclassVosbean(int classId, String className) {
@@ -177,8 +169,10 @@ class SclassVosbean {
       : classId = json['classId'],
         className = json['className'],
         gradeName = json['gradeName'],
+        studentName = json['studentName'],
         schoolId = json['schoolId'],
         studentId = json['studentId'],
+
         headTeacherName = json['headTeacherName'],
         schoolUserId = json['schoolUserId'],
         gradeId = json['gradeId'],
@@ -189,6 +183,7 @@ class SclassVosbean {
     'classId': classId,
     'className': className,
     'gradeName': gradeName,
+    'studentName': studentName,
     'schoolId': schoolId,
     'studentId': studentId,
     'headTeacherName': headTeacherName,

@@ -112,8 +112,8 @@ class MHomePage extends StatelessWidget {
       isHomeInit = false;
       Observable.just(1).delay(new Duration(milliseconds: 500)).listen((_) {
         bloc.onRefresh(labelId: labelId,bean: mData);
-        bloc.getHotRecItem();
-        bloc.getVersion();
+//        bloc.getHotRecItem();
+//        bloc.getVersion();
       });
     }
 

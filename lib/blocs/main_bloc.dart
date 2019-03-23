@@ -191,8 +191,8 @@ class MainBloc implements BlocBase {
   }
 
   Future getHomeData(String labelId, IdentityBean bean) {
-    getRecRepos(labelId);
-    getRecWxArticle(labelId);
+//    getRecRepos(labelId);
+//    getRecWxArticle(labelId);
     return getBanner(labelId,bean);
   }
 

@@ -21,7 +21,7 @@ class WanRepository {
     mOptions.path = WanAndroidApi.MYSCHOOL;
     mOptions.baseUrl = WanAndroidApi.MESSAGE_U;
     mOptions.method = Method.get;
-    BaseResp<Map<String, dynamic>> baseResp = await DioUtil().request<Map<String, dynamic>>(
+    BaseResp<List> baseResp = await DioUtil().request<List>(
         Method.get, WanAndroidApi.MYSCHOOL,data: data,options: mOptions);
     BannerModelParent bannerModelParent;
     List<BannerModel> bannerList;
@@ -29,8 +29,11 @@ class WanRepository {
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {
-      bannerModelParent = BannerModelParent.fromJson(baseResp.data);;
-      bannerList = bannerModelParent.returnValue;
+      bannerList = baseResp.data.map((value) {
+        return BannerModel.fromJson(value);
+      }).toList();
+//      bannerModelParent = BannerModelParent.fromJson(baseResp.data);;
+//      bannerList = bannerModelParent.returnValue;
     }
     return bannerList;
   }
@@ -151,9 +154,9 @@ class WanRepository {
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil().request<Map<String, dynamic>>(Method.get,
         WanAndroidApi.GET_INFORMATION, data: data, options: mOptions);
     IdentityBean treeList;
-    print("baseResp     ${baseResp}");
+    print("baseResp     ${baseResp.data}");
     if (baseResp.status != Constant.STATUS_SUCCESS1.toString()) {
-      print("baseResp     ${baseResp}");
+//      print("baseResp     ${baseResp.data}");
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {

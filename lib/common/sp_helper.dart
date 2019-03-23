@@ -33,6 +33,7 @@ class SpHelper {
 
   static IdentityBean getIndentityBean() {
     String _saveLanguage = SpUtil.getString("identy_info");
+    LogUtil.e(_saveLanguage);
     if (ObjectUtil.isNotEmpty(_saveLanguage)) {
       Map userMap = json.decode(_saveLanguage);
       return IdentityBean.fromJson(userMap);

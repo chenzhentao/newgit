@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
+import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/ui/pages/m_home_page.dart';
 import 'package:flutter_wanandroid/ui/pages/m_main_page.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
@@ -103,8 +104,11 @@ class _IdentityPage extends State<IdentityPage> {
                   print(mDataMap.toString());
 
                   new WanRepository().getIdentityForm(mDataMap).then((onValue) {
+//                    LogUtil.e(onValue .toJson());
+//                    LogUtil.e(onValue.roleName);
+                  var valueJson = onValue .toString();
                     SpHelper.putObject<String>(
-                        'identy_info',tata .toJson().toString());
+                        'identy_info',valueJson);
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
