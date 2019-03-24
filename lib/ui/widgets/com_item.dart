@@ -8,35 +8,30 @@ class ComArrowItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      child: new Material(
-        color: Colors.white,
-        child: new ListTile(
-          onTap: () {
-            if (model.page == null) {
-              NavigatorUtil.pushWeb(context,
-                  title: model.title, url: model.url, isHome: true);
-            } else {
-              NavigatorUtil.pushPage(context, model.page,
-                  pageName: model.title);
-            }
-          },
-          title: new Text(model.title == null ? "" : model.title),
-          trailing: new Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              new Text(
-                model.extra == null ? "" : model.extra,
-                style: TextStyle(color: Colors.grey, fontSize: 14.0),
+      margin:
+          new EdgeInsets.only(left: 20.0, top: 5.0, right: 20.0, bottom: 5.0),
+      child: new Wrap(
+          /* mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment:MainAxisAlignment.spaceAround,*/
+          children: <Widget>[
+            new Container(
+              height: 50.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text(model.roleName,
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 18.0)),
               ),
-              new Icon(
-                Icons.navigate_next,
-                color: Colors.grey,
+              decoration: new BoxDecoration(
+                color: Colors.transparent,
+                border: new Border.all(width: 1.0, color: Colors.grey),
+                borderRadius:
+                    const BorderRadius.all(const Radius.circular(5.0)),
               ),
-            ],
-          ),
-        ),
-      ),
-      decoration: Decorations.bottom,
+            ),
+          ]),
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 
-class ArticleItem extends StatelessWidget {
-  const ArticleItem(this.model, {Key key, this.isHome}) : super(key: key);
+class MessageItem extends StatelessWidget {
+  const MessageItem(this.model, {Key key, this.isHome}) : super(key: key);
 
-  final ReposModel model;
+  final MessageModel model;
   final bool isHome;
 
   @override
@@ -21,37 +21,37 @@ class ArticleItem extends StatelessWidget {
             children: <Widget>[
               new Expanded(
                   child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(
-                    model.studentName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyles.listTitle,
-                  ),
-                  Gaps.vGap10,
-                  new Text(
-                    model.subTypeName,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyles.listContent,
-                  ),
-                  Gaps.vGap5,
-                  new Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       new Text(
-                        model.creator,
-                        style: TextStyles.listExtra,
+                        model.sendName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyles.listTitle,
                       ),
-                      Gaps.hGap10,
+                      Gaps.vGap10,
                       new Text(
-                        model.createDateStr,
-                        style: TextStyles.listExtra,
+                        model.msgReceiveNames,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyles.listContent,
                       ),
+                      Gaps.vGap5,
+                      new Row(
+                        children: <Widget>[
+                          new Text(
+                            model.msgReceiveNames,
+                            style: TextStyles.listExtra,
+                          ),
+                          Gaps.hGap10,
+                          new Text(
+                            model.createDate,
+                            style: TextStyles.listExtra,
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              )),
+                  )),
               new Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(left: 12.0),
@@ -61,7 +61,7 @@ class ArticleItem extends StatelessWidget {
                   child: new Padding(
                     padding: EdgeInsets.all(5.0),
                     child: new Text(
-                      model.studentName,
+                      model.msgReceiveNames,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 11.0),
                     ),

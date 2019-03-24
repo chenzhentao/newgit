@@ -1,4 +1,5 @@
 import 'package:flutter_wanandroid/common/common.dart';
+import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
 import 'package:flutter_wanandroid/models/models.dart';
 
 //模拟网络请求数据
@@ -27,10 +28,8 @@ class HttpUtils {
     });
   }
 
-  Future<ComModel> getRecItem() async {
-    return Future.delayed(new Duration(milliseconds: 300), () {
-      return null;
-    });
+  Future<List<ComModel>> getRecItem(mDataMap) async {
+    return new WanRepository().getMenuItem(mDataMap);
   }
 
   Future<List<ComModel>> getRecList() async {

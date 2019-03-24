@@ -15,8 +15,8 @@ class ReposItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return new InkWell(
       onTap: () {
-        NavigatorUtil.pushWeb(context,
-            title: model.title, url: model.link, isHome: isHome);
+//        NavigatorUtil.pushWeb(context,
+//            title: model.title, url: model.link, isHome: isHome);
       },
       child: new Container(
           height: 160.0,
@@ -28,7 +28,7 @@ class ReposItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   new Text(
-                    model.title,
+                    model.studentName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles.listTitle,
@@ -37,7 +37,7 @@ class ReposItem extends StatelessWidget {
                   new Expanded(
                     flex: 1,
                     child: new Text(
-                      model.desc,
+                      model.typeName,
                       maxLines: 3,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
@@ -48,12 +48,12 @@ class ReposItem extends StatelessWidget {
                   new Row(
                     children: <Widget>[
                       new Text(
-                        model.author,
+                        model.creator,
                         style: TextStyles.listExtra,
                       ),
                       Gaps.hGap10,
                       new Text(
-                        Utils.getTimeLine(context, model.publishTime),
+                        model.createDateStr,
                         style: TextStyles.listExtra,
                       ),
                     ],
@@ -68,7 +68,7 @@ class ReposItem extends StatelessWidget {
                   width: 72,
                   height: 128,
                   fit: BoxFit.fill,
-                  imageUrl: model.envelopePic,
+                  imageUrl: model.typeName,
                   placeholder: new ProgressView(),
                   errorWidget: new Icon(Icons.error),
                 ),

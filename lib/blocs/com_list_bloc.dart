@@ -4,14 +4,14 @@ import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
 
 class ComListBloc implements BlocBase {
-  BehaviorSubject<List<ReposModel>> _comListData =
-      BehaviorSubject<List<ReposModel>>();
+  BehaviorSubject<List<MessageModel>> _comListData =
+      BehaviorSubject<List<MessageModel>>();
 
-  Sink<List<ReposModel>> get _comListSink => _comListData.sink;
+  Sink<List<MessageModel>> get _comListSink => _comListData.sink;
 
-  Stream<List<ReposModel>> get comListStream => _comListData.stream;
+  Stream<List<MessageModel>> get comListStream => _comListData.stream;
 
-  List<ReposModel> comList;
+  List<MessageModel> comList;
   int _comListPage = 0;
 
   BehaviorSubject<StatusEvent> _comListEvent = BehaviorSubject<StatusEvent>();
@@ -76,8 +76,8 @@ class ComListBloc implements BlocBase {
       if (page == 1) {
         comList.clear();
       }
-      comList.addAll(list);
-      _comListSink.add(UnmodifiableListView<ReposModel>(comList));
+//      comList.add(list);
+      _comListSink.add(UnmodifiableListView<MessageModel>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
           ObjectUtil.isEmpty(list) ? RefreshStatus.noMore : RefreshStatus.idle,
           cid: cid));
@@ -94,7 +94,7 @@ class ComListBloc implements BlocBase {
         comList.clear();
       }
       comList.addAll(list);
-      _comListSink.add(UnmodifiableListView<ReposModel>(comList));
+      _comListSink.add(UnmodifiableListView<MessageModel>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
           ObjectUtil.isEmpty(list) ? RefreshStatus.noMore : RefreshStatus.idle,
           cid: cid));
@@ -113,8 +113,8 @@ class ComListBloc implements BlocBase {
       if (page == 0) {
         comList.clear();
       }
-      comList.addAll(list);
-      _comListSink.add(UnmodifiableListView<ReposModel>(comList));
+//      comList.addAll(list);
+      _comListSink.add(UnmodifiableListView<MessageModel>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
           ObjectUtil.isEmpty(list) ? RefreshStatus.noMore : RefreshStatus.idle,
           cid: cid));

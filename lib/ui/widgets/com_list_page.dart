@@ -19,8 +19,8 @@ class ComListPage extends StatelessWidget {
 
     return new StreamBuilder(
         stream: bloc.comListStream,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ReposModel>> snapshot) {
+        builder:null
+           /* (BuildContext context, AsyncSnapshot<List<ReposModel>> snapshot) {
           if (bloc.comList == null) {
             bloc.onRefresh(labelId: labelId, cid: cid);
 //            Observable.just(1)
@@ -48,6 +48,6 @@ class ComListPage extends StatelessWidget {
                   : new ArticleItem(model);
             },
           );
-        });
+        }*/);
   }
 }

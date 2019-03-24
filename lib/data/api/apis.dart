@@ -23,7 +23,7 @@ class WanAndroidApi {
 
   /// 查看某个公众号历史数据 http://wanandroid.com/wxarticle/list/405/1/json
   /// 在某个公众号中搜索历史文章 http://wanandroid.com/wxarticle/list/405/1/json?k=Java
-  static const String WXARTICLE_LIST = "wxarticle/list";
+  static const String WXARTICLE_LIST = "api/schoolFamily/list/";
 
   static const String USER_REGISTER = "user/register"; //注册
   static const String USER_LOGIN = "api/login/login"; //登录
@@ -43,6 +43,7 @@ class WanAndroidApi {
          * 确认身份后得到个人信息
          * */
   static const   String GET_INFORMATION = "api/login/getMyInformation/";
+  static const String HOME_HONOR_LIST = "api/offenseStudentOffense/goodListForPage";
 
   static String getPath({String path: '', int page, String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);

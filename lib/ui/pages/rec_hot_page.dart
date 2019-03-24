@@ -68,7 +68,7 @@ class RecHotPage extends StatelessWidget {
                 return new InkWell(
                   onTap: () {
                     NavigatorUtil.pushWeb(context,
-                        title: model.title, url: model.url, isHome: true);
+                        title: model.roleName, url: model.imgUrl, isHome: true);
                   },
                   child: new Container(
                       alignment: Alignment.topLeft,
@@ -81,14 +81,14 @@ class RecHotPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               new Text(
-                                model.title,
+                                model.roleName,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyles.listTitle,
                               ),
                               Gaps.vGap10,
                               new Text(
-                                model.content == null ? "" : model.content,
+                                model.menuImage == null ? "" : model.menuImage,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyles.listContent,
@@ -97,7 +97,7 @@ class RecHotPage extends StatelessWidget {
                               new Row(
                                 children: <Widget>[
                                   new Text(
-                                    model.author,
+                                    model.menuImage,
                                     style: TextStyles.listExtra,
                                   ),
                                   Gaps.hGap10,
@@ -105,7 +105,7 @@ class RecHotPage extends StatelessWidget {
                                     Utils.getTimeLine(
                                         context,
                                         DateUtil.getDateMsByTimeStr(
-                                            model.updatedAt)),
+                                            "2018-01-01 08:20:05")),
                                     style: TextStyles.listExtra,
                                   ),
                                 ],

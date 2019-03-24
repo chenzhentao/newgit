@@ -8,11 +8,11 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final MainBloc bloc = BlocProvider.of<MainBloc>(context);
     ComModel github = new ComModel(
-        title: 'GitHub',
-        url: 'https://github.com/Sky24n/flutter_wanandroid',
-        extra: 'Go Star');
-    ComModel author = new ComModel(title: '作者', page: AuthorPage());
-    ComModel other = new ComModel(title: '其他', page: OtherPage());
+        menuName: 'GitHub',
+        imgUrl: 'https://github.com/Sky24n/flutter_wanandroid',
+        roleName: 'Go Star');
+    ComModel author = new ComModel(menuName: '作者', /*page: AuthorPage()*/);
+    ComModel other = new ComModel(menuName: '其他',/* page: OtherPage()*/);
 
     return new Scaffold(
       appBar: new AppBar(

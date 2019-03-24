@@ -29,60 +29,216 @@ class ComListResp<T> {
 }
 
 class ReposModel {
-  int id;
-  String title;
-  String desc;
-  String author;
-  String link;
-  String projectLink;
-  String envelopePic;
-  String superChapterName;
-  int publishTime;
-  bool collect;
+  String createDateStr;
+  String updateDateStr;
+  String offenseTimeStr;
+  double avgScore;
+  int studentOffenseId;
+
+  String creator;
+  String createDate;
+  String updator;
+  String updateDate;
+  int studentId;
+
+  String studentName;
+  int offenseId;
+  String score;
+  int bonusOrMalus;
+  String typeName;
+
+  int typeCategory;
+  String subTypeName;
+  int gradeId;
+  String gradeName;
+  String className;
+
+  int schoolId;
+  String schoolName;
+  int timeSetId;
+  String timeSetName;
+  String offenseTime;
+
+  String offenseDescription;
+  String studentPic;
 
   ReposModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        title = json['title'],
-        desc = json['desc'],
-        author = json['author'],
-        link = json['link'],
-        projectLink = json['projectLink'],
-        envelopePic = json['envelopePic'],
-        superChapterName = json['superChapterName'],
-        publishTime = json['publishTime'],
-        collect = json['collect'];
+      : createDateStr = json['createDateStr'],
+        updateDateStr = json['updateDateStr'],
+        offenseTimeStr = json['offenseTimeStr'],
+        avgScore = json['avgScore'],
+        studentOffenseId = json['studentOffenseId'],
+        creator = json['creator'],
+        createDate = json['createDate'],
+        updator = json['updator'],
+        updateDate = json['updateDate'],
+        studentId = json['studentId'],
+        studentName = json['studentName'],
+        offenseId = json['offenseId'],
+        score = json['score'],
+        bonusOrMalus = json['bonusOrMalus'],
+        typeName = json['typeName'],
+        typeCategory = json['typeCategory'],
+        subTypeName = json['subTypeName'],
+        gradeId = json['gradeId'],
+        gradeName = json['gradeName'],
+        className = json['className'],
+        schoolId = json['schoolId'],
+        schoolName = json['schoolName'],
+        timeSetId = json['timeSetId'],
+        timeSetName = json['timeSetName'],
+        offenseTime = json['offenseTime'],
+        offenseDescription = json['offenseDescription'],
+        studentPic = json['studentPic'];
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'desc': desc,
-        'author': author,
-        'link': link,
-        'projectLink': projectLink,
-        'envelopePic': envelopePic,
-        'superChapterName': superChapterName,
-        'publishTime': publishTime,
-        'collect': collect,
+        'createDateStr': createDateStr,
+        'updateDateStr': updateDateStr,
+        'offenseTimeStr': offenseTimeStr,
+        'avgScore': avgScore,
+        'studentOffenseId': studentOffenseId,
+        'creator': creator,
+        'createDate': createDate,
+        'updator': updator,
+        'updateDate': updateDate,
+        'studentId': studentId,
+        'studentName': studentName,
+        'offenseId': offenseId,
+        'score': score,
+        'bonusOrMalus': bonusOrMalus,
+        'typeName': typeName,
+        'typeCategory': typeCategory,
+        'subTypeName': subTypeName,
+        'gradeId': gradeId,
+        'gradeName': gradeName,
+        'className': className,
+        'schoolId': schoolId,
+        'schoolName': schoolName,
+        'timeSetId': timeSetId,
+        'timeSetName': timeSetName,
+        'offenseTime': offenseTime,
+        'offenseDescription': offenseDescription,
+        'studentPic': studentPic,
       };
 
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
-    sb.write("\"title\":\"$title\"");
-    sb.write(",\"id\":$id");
-    sb.write(",\"author\":\"$author\"");
-    sb.write(",\"envelopePic\":\"$envelopePic\"");
+    sb.write("\"createDateStr\":\"$createDateStr\"");
+    sb.write("\"updateDateStr\":\"$updateDateStr\"");
+    sb.write("\"offenseTimeStr\":\"$offenseTimeStr\"");
+    sb.write("\"avgScore\":$avgScore");
+    sb.write("\"studentOffenseId\":$studentOffenseId");
+    sb.write("\"creator\":\"$creator\"");
+    sb.write("\"createDate\":\"$createDate\"");
+    sb.write("\"updator\":\"$updator\"");
+    sb.write("\"updateDate\":\"$updateDate\"");
+    sb.write("\"studentId\":$studentId");
+    sb.write("\"studentName\":\"$studentName\"");
+    sb.write("\"offenseId\":$offenseId");
+    sb.write("\"score\":\"$score\"");
+    sb.write("\"bonusOrMalus\":\"$bonusOrMalus\"");
+    sb.write("\"typeName\":\"$typeName\"");
+    sb.write("\"typeCategory\":\"$typeCategory\"");
+    sb.write("\"subTypeName\":\"$subTypeName\"");
+    sb.write("\"gradeId\":$gradeId");
+    sb.write("\"gradeName\":\"$gradeName\"");
+    sb.write("\"className\":\"$className\"");
+    sb.write("\"schoolId\":$schoolId");
+    sb.write("\"schoolName\":\"$schoolName\"");
+    sb.write("\"timeSetId\":$timeSetId");
+    sb.write("\"timeSetName\":\"$timeSetName\"");
+    sb.write("\"offenseTime\":\"$offenseTime\"");
+    sb.write("\"offenseDescription\":\"$offenseDescription\"");
+    sb.write("\"studentPic\":\"$studentPic\"");
+
     sb.write('}');
     return sb.toString();
   }
 }
 
+class MessageModel {
+
+
+   int messageId;
+   String msgType;
+   String msgTitle;
+   String msgContent;
+   String hasRead;
+
+   String msgScopeType;
+   String ownerMobileUserId;
+
+   String msgReceiveNames;
+   String msgReceiveIds;
+   String delStatus;
+   String sendName;
+   String createDate;
+   int readCount;
+   int commentCount;
+  MessageModel.fromJson(Map<String, dynamic> json)
+      : messageId = json['messageId'],
+        msgType = json['msgType'],
+        msgTitle = json['msgTitle'],
+        msgContent = json['msgContent'],
+        hasRead = json['hasRead'],
+        msgScopeType = json['msgScopeType'],
+        createDate = json['createDate'],
+        ownerMobileUserId = json['ownerMobileUserId'],
+        msgReceiveNames = json['msgReceiveNames'],
+        msgReceiveIds = json['msgReceiveIds'],
+        delStatus = json['delStatus'],
+        sendName = json['sendName'],
+        readCount = json['readCount'],
+        commentCount = json['commentCount']
+;
+
+  Map<String, dynamic> toJson() => {
+        'messageId': messageId,
+        'msgType': msgType,
+        'msgTitle': msgTitle,
+        'msgContent': msgContent,
+        'hasRead': hasRead,
+        'msgScopeType': msgScopeType,
+        'createDate': createDate,
+        'ownerMobileUserId': ownerMobileUserId,
+        'msgReceiveNames': msgReceiveNames,
+        'msgReceiveIds': msgReceiveIds,
+        'delStatus': delStatus,
+        'sendName': sendName,
+        'readCount': readCount,
+        'commentCount': commentCount,
+
+      };
+
+  @override
+  String toString() {
+    StringBuffer sb = new StringBuffer('{');
+    sb.write("\"messageId\":$messageId");
+    sb.write("\"msgType\":\"$msgType\"");
+    sb.write("\"msgTitle\":\"$msgTitle\"");
+    sb.write("\"msgContent\":\"$msgContent\"");
+    sb.write("\"hasRead\":\"$hasRead\"");
+    sb.write("\"msgScopeType\":\"$msgScopeType\"");
+    sb.write("\"createDate\":\"$createDate\"");
+    sb.write("\"ownerMobileUserId\":\"$ownerMobileUserId\"");
+    sb.write("\"msgReceiveNames\":\"$msgReceiveNames\"");
+    sb.write("\"msgReceiveIds\":\"$msgReceiveIds\"");
+    sb.write("\"delStatus\":\"$delStatus\"");
+    sb.write("\"sendName\":\"$sendName\"");
+    sb.write("\"readCount\":\"$readCount\"");
+    sb.write("\"commentCount\":$commentCount");
+    sb.write('}');
+    return sb.toString();
+  }
+}
 
 class BannerModelParent {
   String msg;
   int status;
   String code;
   List<BannerModel> returnValue;
+
 //(json['children'] as List)
 //            ?.map((e) => e == null
 //                ? null
@@ -94,16 +250,16 @@ class BannerModelParent {
         code = json['code'],
         returnValue = (json['imagePath'] as List)
             ?.map((e) => e == null
-            ? null
-            : new BannerModel.fromJson(e as Map<String, dynamic>))
+                ? null
+                : new BannerModel.fromJson(e as Map<String, dynamic>))
             ?.toList();
 
   Map<String, dynamic> toJson() => {
-    'msg': msg,
-    'status': status,
-    'code': code,
-    'imagePath': returnValue,
-  };
+        'msg': msg,
+        'status': status,
+        'code': code,
+        'imagePath': returnValue,
+      };
 
   @override
   String toString() {

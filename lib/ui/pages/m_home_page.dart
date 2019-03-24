@@ -13,6 +13,7 @@ class MHomePage extends StatelessWidget {
   const MHomePage({Key key, this.labelId, this.mData}) : super(key: key);
 
   Widget buildBanner(BuildContext context, List<BannerModel> list) {
+    LogUtil.e(list.toString());
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
     }
@@ -111,9 +112,10 @@ class MHomePage extends StatelessWidget {
       LogUtil.e("HomePage init......");
       isHomeInit = false;
       Observable.just(1).delay(new Duration(milliseconds: 500)).listen((_) {
-        bloc.onRefresh(labelId: labelId,bean: mData);
-//        bloc.getHotRecItem();
-//        bloc.getVersion();
+        bloc.onRefresh(labelId: labelId, bean: mData);
+        bloc.getHotRecItem(
+            mData.roleId.toString(), mData.userVo.schoolId.toString());
+        bloc.getVersion();
       });
     }
 
@@ -121,6 +123,7 @@ class MHomePage extends StatelessWidget {
         stream: bloc.bannerStream,
         builder:
             (BuildContext context, AsyncSnapshot<List<BannerModel>> snapshot) {
+
           return new RefreshScaffold(
             labelId: labelId,
             isLoading: snapshot.data == null,
@@ -131,34 +134,24 @@ class MHomePage extends StatelessWidget {
             },
             child: new ListView(
               children: <Widget>[
-                new StreamBuilder(
-                    stream: bloc.recItemStream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<ComModel> snapshot) {
-                      ComModel model = bloc.hotRecModel;
-                      if (model == null) {
-                        return new Container(
-                          height: 0.0,
-                        );
-                      }
-                      int status = Utils.getUpdateStatus(model.version);
-                      return new HeaderItem(
-                        titleColor: Colors.redAccent,
-                        title: status == 0 ? model.content : model.title,
-                        extra: status == 0 ? 'Go' : "",
-                        onTap: () {
-                          if (status == 0) {
-                            NavigatorUtil.pushPage(
-                                context, RecHotPage(title: model.content),
-                                pageName: model.content);
-                          } else {
-                            NavigatorUtil.launchInBrowser(model.url,
-                                title: model.title);
-                          }
-                        },
-                      );
-                    }),
                 buildBanner(context, snapshot.data),
+                /* ListView.builder(
+                  shrinkWrap: true,
+                  itemCount:
+                      bloc.hotRecModel != null ? bloc.hotRecModel.length : 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new InkWell(
+                      //highlightColor: Colors.red,
+                      splashColor: Colors.blueAccent,
+                      onTap: () {
+                        */ /*mData.forEach((element) => element.isSelected = false);
+                        mData[index].isSelected = true;
+                        });*/ /*
+                      },
+                      child: new MenuItem(bloc.hotRecModel[index]),
+                    );
+                  },
+                ),
                 new StreamBuilder(
                     stream: bloc.recReposStream,
                     builder: (BuildContext context,
@@ -170,10 +163,46 @@ class MHomePage extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<List<ReposModel>> snapshot) {
                       return buildWxArticle(context, snapshot.data);
-                    }),
+                    }),*/
               ],
             ),
-          );
+          );;
         });
+  }
+}
+
+class MenuItem extends StatelessWidget {
+  final ComModel _item;
+
+  MenuItem(this._item);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      margin:
+          new EdgeInsets.only(left: 20.0, top: 5.0, right: 20.0, bottom: 5.0),
+      child: new Wrap(
+        /* mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment:MainAxisAlignment.spaceAround,*/
+        children: <Widget>[
+          new Container(
+            height: 50.0,
+            /* width: 300,*/
+            child: new Center(
+              child: new Text(_item.roleName,
+                  style: new TextStyle(
+                      color: Colors.black,
+                      //fontWeight: FontWeight.bold,
+                      fontSize: 18.0)),
+            ),
+            decoration: new BoxDecoration(
+              color: Colors.transparent,
+              border: new Border.all(width: 1.0, color: Colors.grey),
+              borderRadius: const BorderRadius.all(const Radius.circular(5.0)),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

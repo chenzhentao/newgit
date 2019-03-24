@@ -22,12 +22,12 @@ class MainBloc implements BlocBase {
 
   Stream<List<ReposModel>> get recReposStream => _recRepos.stream;
 
-  BehaviorSubject<List<ReposModel>> _recWxArticle =
-      BehaviorSubject<List<ReposModel>>();
+  BehaviorSubject<List<MessageModel>> _recWxArticle =
+      BehaviorSubject<List<MessageModel>>();
 
-  Sink<List<ReposModel>> get _recWxArticleSink => _recWxArticle.sink;
+  Sink<List<MessageModel>> get _recWxArticleSink => _recWxArticle.sink;
 
-  Stream<List<ReposModel>> get recWxArticleStream => _recWxArticle.stream;
+  Stream<List<MessageModel>> get recWxArticleStream => _recWxArticle.stream;
 
   ///****** ****** ****** Home ****** ****** ****** /
 
@@ -98,13 +98,14 @@ class MainBloc implements BlocBase {
 
   ///****** ****** ****** personal ****** ****** ****** /
 
-  BehaviorSubject<ComModel> _recItem = BehaviorSubject<ComModel>();
+  BehaviorSubject<List<ComModel>> _recItem = BehaviorSubject<List<ComModel>>();
 
-  Sink<ComModel> get _recItemSink => _recItem.sink;
+  Sink<List<ComModel>> get _recItemSink => _recItem.sink;
 
-  Stream<ComModel> get recItemStream => _recItem.stream.asBroadcastStream();
+  Stream<List<ComModel>> get recItemStream =>
+      _recItem.stream.asBroadcastStream();
 
-  ComModel hotRecModel;
+  List<ComModel> hotRecModel;
 
   BehaviorSubject<List<ComModel>> _recList = BehaviorSubject<List<ComModel>>();
 
@@ -129,7 +130,7 @@ class MainBloc implements BlocBase {
   Future getData({String labelId, int page, IdentityBean bean}) {
     switch (labelId) {
       case Ids.titleHome:
-        return getHomeData(labelId,bean);
+        return getHomeData(labelId, bean);
         break;
       case Ids.titleRepos:
         return getArticleListProject(labelId, page);
@@ -173,7 +174,7 @@ class MainBloc implements BlocBase {
   Future onRefresh({String labelId, IdentityBean bean}) {
     switch (labelId) {
       case Ids.titleHome:
-        getHotRecItem();
+        getHotRecItem(bean.roleId.toString(), bean.userVo.schoolId.toString());
         break;
       case Ids.titleRepos:
         _reposPage = 0;
@@ -187,13 +188,13 @@ class MainBloc implements BlocBase {
         break;
     }
     LogUtil.e("onRefresh labelId: $labelId" + "   _reposPage: $_reposPage");
-    return getData(labelId: labelId, page: 0,bean:bean);
+    return getData(labelId: labelId, page: 0, bean: bean);
   }
 
   Future getHomeData(String labelId, IdentityBean bean) {
-//    getRecRepos(labelId);
-//    getRecWxArticle(labelId);
-    return getBanner(labelId,bean);
+    getRecRepos(labelId, bean.userVo.schoolId.toString());
+    getRecWxArticle(labelId, 0,"1",bean.userVo.id.toString(),"0");
+    return getBanner(labelId, bean);
   }
 
   Future getBanner(String labelId, IdentityBean bean) {
@@ -205,9 +206,9 @@ class MainBloc implements BlocBase {
     });
   }
 
-  Future getRecRepos(String labelId) async {
-    ComReq _comReq = new ComReq(402);
-    wanRepository.getProjectList(data: _comReq.toJson()).then((list) {
+  Future getRecRepos(String labelId, String schoolId) async {
+    Map<String, String> mDataMap = {'schoolId': schoolId};
+    wanRepository.getProjectList(data: mDataMap).then((list) {
       if (list.length > 6) {
         list = list.sublist(0, 6);
       }
@@ -215,13 +216,22 @@ class MainBloc implements BlocBase {
     });
   }
 
-  Future getRecWxArticle(String labelId) async {
+  Future getRecWxArticle(String labelId, int page, String type, String userId,
+      String crDate) async {
     int _id = 408;
-    wanRepository.getWxArticleList(id: _id).then((list) {
+    Map<String, String> dataMap = {
+      'page': page.toString(),
+      'type': type,
+      'userId': userId,
+      'idType': "0",
+      'crDate': crDate
+    };
+
+    wanRepository.getWxArticleList(id: _id, data: dataMap).then((list) {
       if (list.length > 6) {
         list = list.sublist(0, 6);
       }
-      _recWxArticleSink.add(UnmodifiableListView<ReposModel>(list));
+      _recWxArticleSink.add(UnmodifiableListView<MessageModel>(list));
     });
   }
 
@@ -303,8 +313,13 @@ class MainBloc implements BlocBase {
     });
   }
 
-  Future getHotRecItem() async {
-    httpUtils.getRecItem().then((model) {
+  Future getHotRecItem(String roleId, String schoolId) async {
+    Map<String, String> dataMap = {
+      'schoolId': schoolId,
+      'roleId': roleId,
+    };
+
+    httpUtils.getRecItem(dataMap).then((model) {
       hotRecModel = model;
       _recItemSink.add(hotRecModel);
     });

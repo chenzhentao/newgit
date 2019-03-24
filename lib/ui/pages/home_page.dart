@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildWxArticle(BuildContext context, List<ReposModel> list) {
+  /*Widget buildWxArticle(BuildContext context, List<MessageModel> list) {
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
     }
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: children,
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class HomePage extends StatelessWidget {
       isHomeInit = false;
       Observable.just(1).delay(new Duration(milliseconds: 500)).listen((_) {
         bloc.onRefresh(labelId: labelId);
-        bloc.getHotRecItem();
+        bloc.getHotRecItem("","");
         bloc.getVersion();
       });
     }
@@ -128,7 +128,7 @@ class HomePage extends StatelessWidget {
             },
             child: new ListView(
               children: <Widget>[
-                new StreamBuilder(
+               /* new StreamBuilder(
                     stream: bloc.recItemStream,
                     builder: (BuildContext context,
                         AsyncSnapshot<ComModel> snapshot) {
@@ -154,7 +154,7 @@ class HomePage extends StatelessWidget {
                           }
                         },
                       );
-                    }),
+                    }),*/
                 buildBanner(context, snapshot.data),
                 new StreamBuilder(
                     stream: bloc.recReposStream,
@@ -162,12 +162,12 @@ class HomePage extends StatelessWidget {
                         AsyncSnapshot<List<ReposModel>> snapshot) {
                       return buildRepos(context, snapshot.data);
                     }),
-                new StreamBuilder(
+               /* new StreamBuilder(
                     stream: bloc.recWxArticleStream,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<ReposModel>> snapshot) {
+                        AsyncSnapshot<List<MessageModel>> snapshot) {
                       return buildWxArticle(context, snapshot.data);
-                    }),
+                    }),*/
               ],
             ),
           );
