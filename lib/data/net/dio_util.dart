@@ -14,7 +14,7 @@ import 'package:dio/dio.dart';
 
 /// <BaseResp<T> 返回 status code msg data.
 class BaseResp<T> {
-  String status;
+  int status;
   int code;
   String msg;
   T data;
@@ -24,7 +24,7 @@ class BaseResp<T> {
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
-    sb.write("\"status\":\"$status\"");
+    sb.write("\"status\":$status");
     sb.write(",\"code\":$code");
     sb.write(",\"msg\":\"$msg\"");
     sb.write(",\"data\":\"$data\"");
@@ -46,7 +46,7 @@ class BaseRespR<T> {
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
-    sb.write("\"status\":\"$status\"");
+    sb.write("\"status\":$status");
     sb.write(",\"code\":$code");
     sb.write(",\"msg\":\"$msg\"");
     sb.write(",\"data\":\"$data\"");
@@ -118,10 +118,10 @@ class DioUtil {
   String _statusKey = "status";
 
   /// BaseResp [int code]字段 key, 默认：errorCode.
-  String _codeKey = "errorCode";
+  String _codeKey = "code";
 
   /// BaseResp [String msg]字段 key, 默认：errorMsg.
-  String _msgKey = "errorMsg";
+  String _msgKey = "msg";
 
   /// BaseResp [T data]字段 key, 默认：data.
   String _dataKey = "returnValue";
@@ -207,36 +207,56 @@ class DioUtil {
         cancelToken: cancelToken);
     _printHttpLog(response);
 
-    String _status;
+    int _status;
     int _code;
     String _msg;
     T _data;
+//    print("response  111   ${response.data.toString()}");
     if (response.statusCode == HttpStatus.ok ||
         response.statusCode == HttpStatus.created) {
-      print("response     ${response.data.toString()}");
+
       try {
         if (response.data is Map) {
-          _status = (response.data[_statusKey] is int)
-              ? response.data[_statusKey].toString()
+//          print("response  122  ${response.data.toString()}");
+          _status = (response.data[_statusKey] is String)
+              ? int.tryParse(response.data[_statusKey])
               : response.data[_statusKey];
+//          print("response  132  ${response.data.toString()}");
           _code = (response.data[_codeKey] is String)
               ? int.tryParse(response.data[_codeKey])
               : response.data[_codeKey];
-          _msg = response.data[_msgKey];
+//          print("response  142  ${response.data.toString()}");
+//          _msg = response.data[_msgKey];
           _data = response.data[_dataKey];
-        } else {
+        } else if(response.data ==null) {
           Map<String, dynamic> _dataMap = _decodeData(response);
-          _status = (_dataMap[_statusKey] is int)
-              ? _dataMap[_statusKey].toString()
+          _status =(_dataMap[_statusKey] is String)
+              ? int.tryParse(_dataMap[_statusKey])
               : _dataMap[_statusKey];
           _code = (_dataMap[_codeKey] is String)
               ? int.tryParse(_dataMap[_codeKey])
               : _dataMap[_codeKey];
-          _msg = _dataMap[_msgKey];
+//          _msg = _dataMap[_msgKey];
+          _data = _dataMap[_dataKey];
+        }else {
+          Map<String, dynamic> _dataMap = _decodeData(response);
+
+          _status = (_dataMap[_statusKey] is String)
+              ? int.tryParse(_dataMap[_statusKey])
+              : _dataMap[_statusKey];
+
+          _code = (_dataMap[_codeKey] is String)
+              ? int.tryParse(_dataMap[_codeKey])
+              : _dataMap[_codeKey];
+
+//          _msg = _dataMap[_msgKey];
+
           _data = _dataMap[_dataKey];
         }
+//        print("response  333   ${response.data.toString()}");
         return new BaseResp(_status, _code, _msg, _data);
       } catch (e) {
+
         return new Future.error(new DioError(
           response: response,
           message: "data parsing exception...",
@@ -244,6 +264,7 @@ class DioUtil {
         ));
       }
     }
+    print("response555  ${response.data.toString()}");
     return new Future.error(new DioError(
       response: response,
       message: "statusCode: $response.statusCode, service error",

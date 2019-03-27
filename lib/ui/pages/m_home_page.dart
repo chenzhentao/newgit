@@ -3,6 +3,7 @@ import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
+import 'package:flutter_wanandroid/ui/widgets/message_item.dart';
 
 bool isHomeInit = true;
 
@@ -70,12 +71,12 @@ class MHomePage extends StatelessWidget {
     );
   }
 
-  Widget buildWxArticle(BuildContext context, List<ReposModel> list) {
+  Widget buildWxArticle(BuildContext context, List<MessageModel> list) {
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
     }
     List<Widget> _children = list.map((model) {
-      return new ArticleItem(
+      return new MessageItem(
         model,
         isHome: true,
       );
@@ -123,7 +124,6 @@ class MHomePage extends StatelessWidget {
         stream: bloc.bannerStream,
         builder:
             (BuildContext context, AsyncSnapshot<List<BannerModel>> snapshot) {
-
           return new RefreshScaffold(
             labelId: labelId,
             isLoading: snapshot.data == null,
@@ -135,6 +135,24 @@ class MHomePage extends StatelessWidget {
             child: new ListView(
               children: <Widget>[
                 buildBanner(context, snapshot.data),
+                GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 30,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount:
+                        bloc.hotRecModel != null ? bloc.hotRecModel.length : 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      return new InkWell(
+                        //highlightColor: Colors.red,
+                        splashColor: Colors.blueAccent,
+                        onTap: () {},
+                        child: new MenuItem(bloc.hotRecModel[index]),
+                      );
+                    }),
+
                 /* ListView.builder(
                   shrinkWrap: true,
                   itemCount:
@@ -144,14 +162,12 @@ class MHomePage extends StatelessWidget {
                       //highlightColor: Colors.red,
                       splashColor: Colors.blueAccent,
                       onTap: () {
-                        */ /*mData.forEach((element) => element.isSelected = false);
-                        mData[index].isSelected = true;
-                        });*/ /*
+
                       },
                       child: new MenuItem(bloc.hotRecModel[index]),
                     );
-                  },
-                ),
+
+                  },),*/
                 new StreamBuilder(
                     stream: bloc.recReposStream,
                     builder: (BuildContext context,
@@ -161,14 +177,17 @@ class MHomePage extends StatelessWidget {
                 new StreamBuilder(
                     stream: bloc.recWxArticleStream,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<ReposModel>> snapshot) {
+                        AsyncSnapshot<List<MessageModel>> snapshot) {
                       return buildWxArticle(context, snapshot.data);
-                    }),*/
+                    }),
               ],
             ),
-          );;
+          );
+          ;
         });
   }
+
+  buildMenuItemList() {}
 }
 
 class MenuItem extends StatelessWidget {
@@ -189,7 +208,7 @@ class MenuItem extends StatelessWidget {
             height: 50.0,
             /* width: 300,*/
             child: new Center(
-              child: new Text(_item.roleName,
+              child: new Text(_item.menuName,
                   style: new TextStyle(
                       color: Colors.black,
                       //fontWeight: FontWeight.bold,

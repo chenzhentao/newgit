@@ -201,7 +201,10 @@ class MainBloc implements BlocBase {
     Map<String, String> mDataMap = {
       'schoolId': bean.userVo.schoolId.toString()
     };
+
     return wanRepository.getBanner(mDataMap).then((list) {
+
+      print("baseResp     2222222222");
       _bannerSink.add(UnmodifiableListView<BannerModel>(list));
     });
   }

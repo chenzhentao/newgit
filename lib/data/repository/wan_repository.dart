@@ -28,7 +28,10 @@ class WanRepository {
         data: data, options: mOptions);
     BannerModelParent bannerModelParent;
     List<BannerModel> bannerList;
-    if (baseResp.code != Constant.STATUS_SUCCESS) {
+    print("baseResp     baseResp.code${baseResp.code}");
+    print("baseResp     baseResp.data${baseResp.data}");
+
+    if (baseResp.status!=Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {
@@ -38,6 +41,7 @@ class WanRepository {
 //      bannerModelParent = BannerModelParent.fromJson(baseResp.data);;
 //      bannerList = bannerModelParent.returnValue;
     }
+    print("baseResp     111111111111$bannerList");
     return bannerList;
   }
 
@@ -52,7 +56,7 @@ class WanRepository {
         data: data, options: mOptions);
     BannerModelParent bannerModelParent;
     List<ComModel> bannerList;
-    if (baseResp.code != Constant.STATUS_SUCCESS) {
+    if (baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {
@@ -72,7 +76,7 @@ class WanRepository {
             WanAndroidApi.getPath(
                 path: WanAndroidApi.ARTICLE_LISTPROJECT, page: page));
     List<ReposModel> list;
-    if (baseResp.code != Constant.STATUS_SUCCESS) {
+    if (baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {
@@ -137,17 +141,24 @@ class WanRepository {
   Future<List<MessageModel>> getWxArticleList(
       {int id, int page: 1, data}) async {
 
-    BaseResp<List> baseResp = await DioUtil()
-        .request<List>(Method.post, WanAndroidApi.WXARTICLE_LIST, data: data);
-    List<MessageModel> list;
+    BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
+        .request<Map<String, dynamic>>(Method.post, WanAndroidApi.WXARTICLE_LIST, data: data);
+    List<MessageModel> list =new List();
     print(baseResp.toString());
-    if (baseResp.code != Constant.STATUS_SUCCESS) {
+
+
+    if (baseResp.code!=null&&baseResp.code != Constant.STATUS_SUCCESS) {
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {
-      baseResp.data.map((value) {
-        return MessageModel.fromJson(value);
-      }).toList();
+     var listVo = baseResp.data["listVo"];
+
+     if(listVo!=null&&listVo is Map){
+       list.add(MessageModel.fromJson(listVo)  );
+     }
+
+        return list;
+
     }
     return list;
   }
@@ -179,8 +190,8 @@ class WanRepository {
             Method.get, WanAndroidApi.GET_INFORMATION,
             data: data, options: mOptions);
     IdentityBean treeList;
-    print("baseResp     ${baseResp.data}");
-    if (baseResp.status != Constant.STATUS_SUCCESS1.toString()) {
+
+    if (baseResp.status != Constant.STATUS_SUCCESS1) {
 //      print("baseResp     ${baseResp.data}");
       return new Future.error(baseResp.msg);
     }
@@ -203,7 +214,7 @@ class WanRepository {
         data: data, options: mOptions);
     List<returnValue> treeList;
     print("baseResp     ${baseResp}");
-    if (baseResp.status != Constant.STATUS_SUCCESS1.toString()) {
+    if (baseResp.status != Constant.STATUS_SUCCESS1) {
       print("baseResp     ${baseResp}");
       return new Future.error(baseResp.msg);
     }
