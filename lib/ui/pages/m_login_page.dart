@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _email='1551868680311', _password='123456', _deviceInfo;
+  String _email = '1551868680311', _password = '123456', _deviceInfo;
 
   bool _isObscure = true;
   Color _eyeColor;
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   final _passwordController = TextEditingController(text: '123456');
-  final _userNumController = TextEditingController(text:'1551868680311');
+  final _userNumController = TextEditingController(text: '1551868680311');
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,6 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField buildPasswordField(BuildContext context) {
     return TextFormField(
       controller: _passwordController,
-
       obscureText: _isObscure,
       validator: (String value) {
         if (value.isEmpty) {
@@ -182,10 +181,16 @@ class _LoginPageState extends State<LoginPage> {
             mOptions.baseUrl = WanAndroidApi.MESSAGE_U;
             mOptions.method = Method.post;
             new WanRepository().postLoginForm(mDataMap).then((onValue) {
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new IdentityPage(mData: onValue)));
+              if (onValue.returnValueList != null)
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) =>
+                            new IdentityPage(mData: onValue.returnValueList)));
+              else {
+                Fluttertoast.showToast(
+                    msg: onValue.msg, toastLength: Toast.LENGTH_SHORT);
+              }
             });
           },
           child: Text(

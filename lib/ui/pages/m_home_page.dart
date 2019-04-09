@@ -135,23 +135,8 @@ class MHomePage extends StatelessWidget {
             child: new ListView(
               children: <Widget>[
                 buildBanner(context, snapshot.data),
-                GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 30,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount:
-                        bloc.hotRecModel != null ? bloc.hotRecModel.length : 0,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new InkWell(
-                        //highlightColor: Colors.red,
-                        splashColor: Colors.blueAccent,
-                        onTap: () {},
-                        child: new MenuItem(bloc.hotRecModel[index]),
-                      );
-                    }),
+                buildMenu(context, bloc.hotRecModel),
+                buildHonor(context, bloc.recReposModel),
 
                 /* ListView.builder(
                   shrinkWrap: true,
@@ -187,7 +172,140 @@ class MHomePage extends StatelessWidget {
         });
   }
 
-  buildMenuItemList() {}
+  Widget buildMenu(BuildContext context, List<ComModel> hotRecModel) {
+    if (hotRecModel == null) {
+      hotRecModel = [
+        ComModel(
+          roleName: "",
+          menuName: "",
+          functionId: 0,
+          menuImage: "",
+          imgUrl: "",
+        ),
+        ComModel(
+            roleName: "",
+            menuName: "",
+            functionId: 0,
+            menuImage: "",
+            imgUrl: ""),
+        ComModel(
+            roleName: "",
+            menuName: "",
+            functionId: 0,
+            menuImage: "",
+            imgUrl: ""),
+        ComModel(
+            roleName: "",
+            menuName: "",
+            functionId: 0,
+            menuImage: "",
+            imgUrl: "")
+      ];
+    }
+    return GridView.count(
+        crossAxisCount: 4,
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+        controller: new ScrollController(keepScrollOffset: false),
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(4.0),
+        childAspectRatio: 1.3,
+        children: hotRecModel.map<Widget>((ComModel commodel) {
+          return new MenuItem(commodel);
+        }).toList());
+  }
+
+  Widget buildHonor(BuildContext context, List<ReposModel> recReposModel) {
+    if (recReposModel == null) {
+      recReposModel = [
+        ReposModel(studentName: "小明", className: "五年级三班", subTypeName: "得奖了"),
+        ReposModel(studentName: "小花", className: "五年级三班", subTypeName: "考上大学"),
+        ReposModel(studentName: "小黄", className: "五年级三班", subTypeName: "得奖了"),
+        ReposModel(studentName: "小青", className: "五年级三班", subTypeName: "得奖了")
+      ];
+    }
+    return GridView.count(
+        crossAxisCount: 4,
+        mainAxisSpacing: 0.0,
+        crossAxisSpacing: 0.0,
+        shrinkWrap: true,
+        controller: new ScrollController(keepScrollOffset: false),
+        padding: const EdgeInsets.all(0.0),
+        childAspectRatio: 0.5,
+        children: recReposModel.map<Widget>((ReposModel commodel) {
+          return new HonorItem(commodel);
+        }).toList());
+  }
+}
+
+class HonorItem extends StatelessWidget {
+  final ReposModel _item;
+
+  HonorItem(this._item);
+
+  @override
+  Widget build(BuildContext context) {
+
+    var card = new Card(
+        elevation: 5.0,  //设置阴影
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),  //设置圆角
+        child: new Column(  // card只能有一个widget，但这个widget内容可以包含其他的widget
+          children: [
+
+            new CachedNetworkImage(
+              fit: BoxFit.fill,
+              imageUrl:
+              "http://tx.haiqq.com/uploads/allimg/c161216/14QRJ2123510-44E0.jpg",
+              placeholder: new ProgressView(),
+              errorWidget: new Icon(Icons.error),
+            ),
+            new Container(
+              height: 30.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text("名字：${_item.studentName}",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+
+                        fontSize: 10.0)),
+              ),
+            ),
+            new Container(
+              height: 30.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text("班级：${_item.className}",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 10.0)),
+              ),
+            ),
+            new Container(
+              height: 30.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text("荣获奖项：${_item.subTypeName}",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 10.0)),
+              ),
+            ),
+          ],
+        ),
+
+    );
+
+
+    return card;/*new Container(
+      height: 200,
+      margin:
+          new EdgeInsets.only(left: 0.0, top: 5.0, right: 0.0, bottom: 5.0),
+      child:card
+    );*/
+  }
 }
 
 class MenuItem extends StatelessWidget {

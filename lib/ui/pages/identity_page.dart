@@ -8,7 +8,7 @@ import 'package:flutter_wanandroid/ui/pages/m_main_page.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
 
 class IdentityPage extends StatefulWidget {
-  final List<returnValue> mData;
+  final List<LoginReturnValue> mData;
 
   IdentityPage({Key key, @required this.mData}) : super(key: key);
 
@@ -21,7 +21,7 @@ class IdentityPage extends StatefulWidget {
 }
 
 class _IdentityPage extends State<IdentityPage> {
-  List<returnValue> mData;
+  List<LoginReturnValue> mData;
 
   _IdentityPage(this.mData) : super();
   int checkedIndex = 0;
@@ -123,7 +123,7 @@ class _IdentityPage extends State<IdentityPage> {
 }
 
 class RadioItem extends StatelessWidget {
-  final returnValue _item;
+  final LoginReturnValue _item;
 
   RadioItem(this._item);
 

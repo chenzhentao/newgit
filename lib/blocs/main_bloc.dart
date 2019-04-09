@@ -21,7 +21,7 @@ class MainBloc implements BlocBase {
   Sink<List<ReposModel>> get _recReposSink => _recRepos.sink;
 
   Stream<List<ReposModel>> get recReposStream => _recRepos.stream;
-
+  List<ReposModel> recReposModel;
   BehaviorSubject<List<MessageModel>> _recWxArticle =
       BehaviorSubject<List<MessageModel>>();
 
@@ -215,6 +215,7 @@ class MainBloc implements BlocBase {
       if (list.length > 6) {
         list = list.sublist(0, 6);
       }
+      recReposModel=list;
       _recReposSink.add(UnmodifiableListView<ReposModel>(list));
     });
   }

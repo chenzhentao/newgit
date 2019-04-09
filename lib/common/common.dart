@@ -6,7 +6,7 @@ class Constant {
   static const int STATUS_SUCCESS = 0;
   static const int STATUS_SUCCESS1 = 1;
 
-  static const String SERVER_ADDRESS = WanAndroidApi.MESSAGE_a;
+  static const String SERVER_ADDRESS = WanAndroidApi.MESSAGE_U;
 
   static const String WAN_ANDROID = "http://www.wanandroid.com/";
 

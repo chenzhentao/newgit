@@ -144,15 +144,16 @@ class WanRepository {
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
         .request<Map<String, dynamic>>(Method.post, WanAndroidApi.WXARTICLE_LIST, data: data);
     List<MessageModel> list =new List();
-    print(baseResp.toString());
+    print("baseResp   100000  ${baseResp.status.toString()}");
 
 
-    if (baseResp.code!=null&&baseResp.code != Constant.STATUS_SUCCESS) {
+    if (baseResp.status!=null&&baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
+    print("baseResp   1111  ${baseResp.data}");
     if (baseResp.data != null) {
      var listVo = baseResp.data["listVo"];
-
+     print("baseResp   111111111  ${listVo}");
      if(listVo!=null&&listVo is Map){
        list.add(MessageModel.fromJson(listVo)  );
      }
@@ -202,7 +203,7 @@ class WanRepository {
     return treeList;
   }
 
-  Future<List<returnValue>> postLoginForm(data) async {
+  Future<LogingResult> postLoginForm(data) async {
     var mOptions = new Options();
     mOptions.data = data;
     mOptions.path = WanAndroidApi.USER_LOGIN;
@@ -212,7 +213,7 @@ class WanRepository {
     BaseResp<List> baseResp = await DioUtil().request<List>(
         Method.post, WanAndroidApi.USER_LOGIN,
         data: data, options: mOptions);
-    List<returnValue> treeList;
+    List<LoginReturnValue> treeList;
     print("baseResp     ${baseResp}");
     if (baseResp.status != Constant.STATUS_SUCCESS1) {
       print("baseResp     ${baseResp}");
@@ -220,11 +221,11 @@ class WanRepository {
     }
     if (baseResp.data != null) {
       treeList = baseResp.data.map((value) {
-        return returnValue.fromJson(value);
+        return LoginReturnValue.fromJson(value);
       }).toList();
     }
-
-    return treeList;
+    LogingResult logingResult = new LogingResult(baseResp.status,baseResp.msg,treeList,baseResp.code);
+    return  logingResult;
   }
 
   Future<List<TreeModel>> getProjectTree() async {

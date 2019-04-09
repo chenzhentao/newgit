@@ -29,6 +29,8 @@ class ComListResp<T> {
 }
 
 class ReposModel {
+  ReposModel( {this.studentName,this.className,this.subTypeName});
+
   String createDateStr;
   String updateDateStr;
   String offenseTimeStr;
@@ -158,24 +160,23 @@ class ReposModel {
 }
 
 class MessageModel {
+  int messageId;
+  String msgType;
+  String msgTitle;
+  String msgContent;
+  String hasRead;
 
+  String msgScopeType;
+  String ownerMobileUserId;
 
-   int messageId;
-   String msgType;
-   String msgTitle;
-   String msgContent;
-   String hasRead;
+  String msgReceiveNames;
+  String msgReceiveIds;
+  String delStatus;
+  String sendName;
+  String createDate;
+  int readCount;
+  int commentCount;
 
-   String msgScopeType;
-   String ownerMobileUserId;
-
-   String msgReceiveNames;
-   String msgReceiveIds;
-   String delStatus;
-   String sendName;
-   String createDate;
-   int readCount;
-   int commentCount;
   MessageModel.fromJson(Map<String, dynamic> json)
       : messageId = json['messageId'],
         msgType = json['msgType'],
@@ -190,8 +191,7 @@ class MessageModel {
         delStatus = json['delStatus'],
         sendName = json['sendName'],
         readCount = json['readCount'],
-        commentCount = json['commentCount']
-;
+        commentCount = json['commentCount'];
 
   Map<String, dynamic> toJson() => {
         'messageId': messageId,
@@ -208,7 +208,6 @@ class MessageModel {
         'sendName': sendName,
         'readCount': readCount,
         'commentCount': commentCount,
-
       };
 
   @override
