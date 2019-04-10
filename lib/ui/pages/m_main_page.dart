@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/ui/pages/identity_page.dart';
 import 'package:flutter_wanandroid/ui/pages/main_left_page.dart';
 import 'package:flutter_wanandroid/ui/pages/main_page.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
@@ -45,7 +46,7 @@ class M_MainPage extends StatelessWidget {
             ],
           ),
           body: new TabBarViewLayout(),
-          drawer: new Drawer(child: new MainLeftPage(),
+          drawer: new Drawer(child: new IdentityPage(mData:SpHelper.getLoginBeanList()),
           ),
           bottomNavigationBar: new Material(color: Colors.blue,child: new TabLayout(),),
         ));

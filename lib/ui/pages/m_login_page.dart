@@ -181,12 +181,17 @@ class _LoginPageState extends State<LoginPage> {
             mOptions.baseUrl = WanAndroidApi.MESSAGE_U;
             mOptions.method = Method.post;
             new WanRepository().postLoginForm(mDataMap).then((onValue) {
-              if (onValue.returnValueList != null)
+              if (onValue.returnValueList != null){
+                SpHelper.putObject<String>(
+                    'login_info',onValue.returnValueList.toString());
+
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
                         builder: (context) =>
-                            new IdentityPage(mData: onValue.returnValueList)));
+                        new IdentityPage(mData: onValue.returnValueList)));
+              }
+
               else {
                 Fluttertoast.showToast(
                     msg: onValue.msg, toastLength: Toast.LENGTH_SHORT);

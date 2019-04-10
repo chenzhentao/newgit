@@ -15,7 +15,7 @@ class IdentityPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    print("IdentityPage     ${mData.toString()}");
+
     return _IdentityPage(mData);
   }
 }
@@ -48,9 +48,29 @@ class _IdentityPage extends State<IdentityPage> {
                 content: Text('错误的用户信息，请与公司联系'));
           });
     } else if (mData.length == 1) {
-      SpHelper.putObject<String>('identy_info', mData[checkedIndex].toJson());
-      Navigator.push(context,
-          new MaterialPageRoute(builder: (context) => new M_MainPage()));
+      var tata = mData[checkedIndex];
+      /*  SpHelper.putObject<String>(
+                      'identy_info',tata .toJson().toString());*/
+
+      Map<String, String> mDataMap = {
+        'mobileId': tata.mobileId.toString(),
+        'baseRoleId': tata.baseRoleId.toString(),
+        'roleName': tata.roleName,
+        'roleId': tata.roleId.toString()
+      };
+      new WanRepository().getIdentityForm(mDataMap).then((onValue) {
+//                    LogUtil.e(onValue .toJson());
+//                    LogUtil.e(onValue.roleName);
+        var valueJson = onValue .toString();
+        SpHelper.putObject<String>(
+            'identy_info',valueJson);
+        Navigator.of(context).pop('/LoginPage');
+        Navigator.pushReplacement(
+            context,
+            new MaterialPageRoute(
+                builder: (context) => new M_MainPage()));
+      });
+
     } else
       mData[checkedIndex].isSelected = true;
   }
@@ -109,7 +129,8 @@ class _IdentityPage extends State<IdentityPage> {
                   var valueJson = onValue .toString();
                     SpHelper.putObject<String>(
                         'identy_info',valueJson);
-                    Navigator.push(
+                  Navigator.of(context).pop('/LoginPage');
+                    Navigator.pushReplacement(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => new M_MainPage()));

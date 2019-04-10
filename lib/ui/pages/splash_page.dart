@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/ui/pages/m_main_page.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -90,7 +91,12 @@ class SplashPageState extends State<SplashPage> {
                 margin: EdgeInsets.only(bottom: 160.0),
                 child: new InkWell(
                   onTap: () {
-                    _goLogin();
+                    if(SpHelper.getIndentityBean()!=null){
+                      _goMain();
+                    }else{
+
+                      _goLogin();
+                    }
                   },
                   child: new CircleAvatar(
                     radius: 48.0,
@@ -139,16 +145,25 @@ class SplashPageState extends State<SplashPage> {
         _count = _tick.toInt();
       });
       if (_tick == 0) {
-//        _goMain();
-        _goLogin();
+        if(SpHelper.getIndentityBean()!=null){
+          _goMain();
+        }else{
+
+          _goLogin();
+        }
       }
     });
     _timerUtil.startCountDown();
   }
 
   void _goMain() {
-    Navigator.of(context).pushReplacementNamed('/MainPage');
+    Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new M_MainPage()));
+
   }
+
   void _goLogin() {
     Navigator.of(context).pushReplacementNamed('/LoginPage');
   }
@@ -173,8 +188,12 @@ class SplashPageState extends State<SplashPage> {
       child: new InkWell(
         onTap: () {
           if (ObjectUtil.isEmpty(_splashModel.url)) return;
-//          _goMain();
-          _goLogin();
+          if(SpHelper.getIndentityBean()!=null){
+            _goMain();
+          }else{
+
+            _goLogin();
+          }
           NavigatorUtil.pushWeb(context,
               title: _splashModel.title, url: _splashModel.url);
         },
@@ -224,8 +243,12 @@ class SplashPageState extends State<SplashPage> {
               margin: EdgeInsets.all(20.0),
               child: InkWell(
                 onTap: () {
-//                  _goMain();
-                  _goLogin();
+
+                  if(SpHelper.getIndentityBean()!=null){
+                                      _goMain();
+                  }else{
+                    _goLogin();
+                  }
                 },
                 child: new Container(
                     padding: EdgeInsets.all(12.0),

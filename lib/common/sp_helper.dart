@@ -4,6 +4,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter_wanandroid/common/common.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
+import 'package:flutter_wanandroid/data/user_info/user_info.dart';
 import 'package:flutter_wanandroid/models/models.dart';
 
 class SpHelper {
@@ -31,6 +32,21 @@ class SpHelper {
     }
   }
 
+  static List<LoginReturnValue> getLoginBeanList() {
+    String _saveLanguage = SpUtil.getString("login_info");
+    LogUtil.e(_saveLanguage);
+    if (ObjectUtil.isNotEmpty(_saveLanguage)) {
+      List  userMap = json.decode(_saveLanguage);
+
+
+          List<LoginReturnValue>  list =   userMap.map((value){
+        return LoginReturnValue.fromJson(value);
+      }).toList();
+    return  list;
+    }
+    return null;
+  }
+
   static IdentityBean getIndentityBean() {
     String _saveLanguage = SpUtil.getString("identy_info");
     LogUtil.e(_saveLanguage);
@@ -40,6 +56,7 @@ class SpHelper {
     }
     return null;
   }
+
   static LanguageModel getLanguageModel() {
     String _saveLanguage = SpUtil.getString(Constant.keyLanguage);
     if (ObjectUtil.isNotEmpty(_saveLanguage)) {
