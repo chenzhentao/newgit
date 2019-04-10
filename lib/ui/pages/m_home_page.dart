@@ -317,14 +317,29 @@ class MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Container(
       margin:
-          new EdgeInsets.only(left: 20.0, top: 5.0, right: 20.0, bottom: 5.0),
+      new EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0, bottom: 0),
       child: new Wrap(
+        alignment: WrapAlignment.center,
         /* mainAxisSize: MainAxisSize.max,
         mainAxisAlignment:MainAxisAlignment.spaceAround,*/
         children: <Widget>[
+          new CachedNetworkImage(
+            fit: BoxFit.fill,
+            imageUrl: _item.menuImage,
+            placeholder: new ProgressView(),
+            errorWidget: new Icon(Icons.error),
+          ),
+          new Text(
+
+            _item.menuName,
+            style: Theme
+                .of(context)
+                .textTheme
+                .body1,
+          ), /*
           new Container(
             height: 50.0,
-            /* width: 300,*/
+            */ /* width: 300,*/ /*
             child: new Center(
               child: new Text(_item.menuName,
                   style: new TextStyle(
@@ -337,7 +352,7 @@ class MenuItem extends StatelessWidget {
               border: new Border.all(width: 1.0, color: Colors.grey),
               borderRadius: const BorderRadius.all(const Radius.circular(5.0)),
             ),
-          ),
+          ),*/
         ],
       ),
     );

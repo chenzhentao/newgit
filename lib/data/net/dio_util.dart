@@ -226,7 +226,7 @@ class DioUtil {
               ? int.tryParse(response.data[_codeKey])
               : response.data[_codeKey];
 //          print("response  142  ${response.data.toString()}");
-//          _msg = response.data[_msgKey];
+          _msg = response.data[_msgKey];
           _data = response.data[_dataKey];
         } else if(response.data ==null) {
           Map<String, dynamic> _dataMap = _decodeData(response);
