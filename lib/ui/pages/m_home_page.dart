@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
-import 'package:flutter_wanandroid/ui/pages/home_school/home_school_page.dart';
 import 'package:flutter_wanandroid/ui/pages/page_index.dart';
 import 'package:flutter_wanandroid/ui/widgets/message_item.dart';
 
@@ -246,60 +245,61 @@ class HonorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var card = new Card(
-      elevation: 5.0, //设置阴影
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))), //设置圆角
-      child: new Column(
-        // card只能有一个widget，但这个widget内容可以包含其他的widget
-        children: [
-          new CachedNetworkImage(
-            fit: BoxFit.fill,
-            imageUrl:
-                "http://tx.haiqq.com/uploads/allimg/c161216/14QRJ2123510-44E0.jpg",
-            placeholder: new ProgressView(),
-            errorWidget: new Icon(Icons.error),
-          ),
-          new Container(
-            height: 30.0,
-            /* width: 300,*/
-            child: new Center(
-              child: new Text("名字：${_item.studentName}",
-                  style: new TextStyle(
-                      color: Colors.black,
-                      //fontWeight: FontWeight.bold,
 
-                      fontSize: 10.0)),
+    var card = new Card(
+        elevation: 5.0,  //设置阴影
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),  //设置圆角
+        child: new Column(  // card只能有一个widget，但这个widget内容可以包含其他的widget
+          children: [
+
+            new CachedNetworkImage(
+              fit: BoxFit.fill,
+              imageUrl:
+              "http://tx.haiqq.com/uploads/allimg/c161216/14QRJ2123510-44E0.jpg",
+              placeholder: new ProgressView(),
+              errorWidget: new Icon(Icons.error),
             ),
-          ),
-          new Container(
-            height: 30.0,
-            /* width: 300,*/
-            child: new Center(
-              child: new Text("班级：${_item.className}",
-                  style: new TextStyle(
-                      color: Colors.black,
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 10.0)),
+            new Container(
+              height: 30.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text("名字：${_item.studentName}",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+
+                        fontSize: 10.0)),
+              ),
             ),
-          ),
-          new Container(
-            height: 30.0,
-            /* width: 300,*/
-            child: new Center(
-              child: new Text("荣获奖项：${_item.subTypeName}",
-                  style: new TextStyle(
-                      color: Colors.black,
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 10.0)),
+            new Container(
+              height: 30.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text("班级：${_item.className}",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 10.0)),
+              ),
             ),
-          ),
-        ],
-      ),
+            new Container(
+              height: 30.0,
+              /* width: 300,*/
+              child: new Center(
+                child: new Text("荣获奖项：${_item.subTypeName}",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 10.0)),
+              ),
+            ),
+          ],
+        ),
+
     );
 
-    return card;
-    /*new Container(
+
+    return card;/*new Container(
       height: 200,
       margin:
           new EdgeInsets.only(left: 0.0, top: 5.0, right: 0.0, bottom: 5.0),
@@ -315,32 +315,46 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
-      onTap: () {
-        print("_item${_item.functionId}");
-        Navigator.pushReplacement(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => new HomeSchoolPage()));
-      },
-      child: new Container(
-          margin:
-              new EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0, bottom: 0),
-          child: new Wrap(alignment: WrapAlignment.center,
-              /* mainAxisSize: MainAxisSize.max,
+    return new Container(
+      margin:
+      new EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0, bottom: 0),
+      child: new Wrap(
+        alignment: WrapAlignment.center,
+        /* mainAxisSize: MainAxisSize.max,
         mainAxisAlignment:MainAxisAlignment.spaceAround,*/
-              children: <Widget>[
-                new CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  imageUrl: _item.menuImage,
-                  placeholder: new ProgressView(),
-                  errorWidget: new Icon(Icons.error),
-                ),
-                new Text(
-                  _item.menuName,
-                  style: Theme.of(context).textTheme.body1,
-                ),
-              ])),
+        children: <Widget>[
+          new CachedNetworkImage(
+            fit: BoxFit.fill,
+            imageUrl: _item.menuImage,
+            placeholder: new ProgressView(),
+            errorWidget: new Icon(Icons.error),
+          ),
+          new Text(
+
+            _item.menuName,
+            style: Theme
+                .of(context)
+                .textTheme
+                .body1,
+          ), /*
+          new Container(
+            height: 50.0,
+            */ /* width: 300,*/ /*
+            child: new Center(
+              child: new Text(_item.menuName,
+                  style: new TextStyle(
+                      color: Colors.black,
+                      //fontWeight: FontWeight.bold,
+                      fontSize: 18.0)),
+            ),
+            decoration: new BoxDecoration(
+              color: Colors.transparent,
+              border: new Border.all(width: 1.0, color: Colors.grey),
+              borderRadius: const BorderRadius.all(const Radius.circular(5.0)),
+            ),
+          ),*/
+        ],
+      ),
     );
   }
 }
