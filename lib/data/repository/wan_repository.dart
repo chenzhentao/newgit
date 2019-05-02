@@ -28,8 +28,8 @@ class WanRepository {
         data: data, options: mOptions);
     BannerModelParent bannerModelParent;
     List<BannerModel> bannerList;
-    print("baseResp     baseResp.code${baseResp.code}");
-    print("baseResp     baseResp.data${baseResp.data}");
+//    print("baseResp     baseResp.code${baseResp.code}");code
+//    print("baseResp     baseResp.data${baseResp.data}");
 
     if (baseResp.status!=Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
@@ -41,7 +41,7 @@ class WanRepository {
 //      bannerModelParent = BannerModelParent.fromJson(baseResp.data);;
 //      bannerList = bannerModelParent.returnValue;
     }
-    print("baseResp     111111111111$bannerList");
+//    print("baseResp     111111111111$bannerList");
     return bannerList;
   }
 
@@ -144,16 +144,16 @@ class WanRepository {
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
         .request<Map<String, dynamic>>(Method.post, WanAndroidApi.WXARTICLE_LIST, data: data);
     List<MessageModel> list =new List();
-    print("baseResp   100000  ${baseResp.status.toString()}");
+//    print("baseResp   100000  ${baseResp.status.toString()}");
 
 
     if (baseResp.status!=null&&baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
-    print("baseResp   1111  ${baseResp.data}");
+//    print("baseResp   1111  ${baseResp.data}");
     if (baseResp.data != null) {
      var listVo = baseResp.data["listVo"];
-     print("baseResp   111111111  ${listVo}");
+//     print("baseResp   111111111  ${listVo}");
      if(listVo!=null&&listVo is Map){
        list.add(MessageModel.fromJson(listVo)  );
      }
@@ -214,9 +214,9 @@ class WanRepository {
         Method.post, WanAndroidApi.USER_LOGIN,
         data: data, options: mOptions);
     List<LoginReturnValue> treeList;
-    print("baseResp     ${baseResp}");
+//    print("baseResp     ${baseResp}");
     if (baseResp.status != Constant.STATUS_SUCCESS1) {
-      print("baseResp     ${baseResp}");
+//      print("baseResp     ${baseResp}");
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {

@@ -94,6 +94,10 @@ flutter:
     - assets/images/renxingbao_tubiao.png
     - assets/images/welcome_bg.png
     - assets/images/carsreen.png
+    - assets/images/jx_banji.png
+    - assets/images/jx_siliao.png
+    - assets/images/jx_tongzhi.png
+    - assets/images/jx_xingxiang.png
     - assets/images/weibosdk_navigationbar_back_highlighted.png
 
     - assets/data/china.json
