@@ -358,7 +358,7 @@ class MainBloc implements BlocBase {
       _homeEventSink.add(new StatusEvent(
           labelId,
           ObjectUtil.isEmpty(list)
-              ? RefreshStatus.noMore
+              ? RefreshStatus.completed
               : RefreshStatus.idle));
     }).catchError(() {
       _reposPage--;
@@ -379,7 +379,7 @@ class MainBloc implements BlocBase {
       _homeEventSink.add(new StatusEvent(
           labelId,
           ObjectUtil.isEmpty(list)
-              ? RefreshStatus.noMore
+              ? RefreshStatus.completed
               : RefreshStatus.idle));
     }).catchError(() {
       _eventsPage--;
@@ -409,7 +409,7 @@ class MainBloc implements BlocBase {
       _homeEventSink.add(new StatusEvent(
           labelId,
           ObjectUtil.isEmpty(list)
-              ? RefreshStatus.noMore
+              ? RefreshStatus.completed
               : RefreshStatus.idle));
     }).catchError(() {
       _homeEventSink.add(new StatusEvent(labelId, RefreshStatus.failed));
@@ -442,7 +442,7 @@ class MainBloc implements BlocBase {
       _homeEventSink.add(new StatusEvent(
           labelId,
           ObjectUtil.isEmpty(list)
-              ? RefreshStatus.noMore
+              ? RefreshStatus.completed
               : RefreshStatus.idle));
     }).catchError(() {
       _homeEventSink.add(new StatusEvent(labelId, RefreshStatus.failed));

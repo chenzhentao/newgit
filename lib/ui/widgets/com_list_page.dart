@@ -13,7 +13,8 @@ class ComListPage extends StatelessWidget {
     final ComListBloc bloc = BlocProvider.of<ComListBloc>(context);
     bloc.comListEventStream.listen((event) {
       if (cid == event.cid) {
-        _controller.sendBack(false, event.status);
+//        _controller.sendBack(false, event.status);
+        _controller.loadComplete();
       }
     });
 

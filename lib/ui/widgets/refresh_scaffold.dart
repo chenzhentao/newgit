@@ -79,23 +79,24 @@ class RefreshScaffoldState extends State<RefreshScaffold>
   @override
   Widget build(BuildContext context) {
 //    LogUtil.e("RefreshScaffold build...... " + widget.labelId);
-
+    SmartRefresher   refresher =  new SmartRefresher(
+        controller: widget.controller,
+        enablePullDown: false,
+        enablePullUp: widget.enablePullUp,
+        enableOverScroll: false,
+        onRefresh: widget.onLoadMore,
+        child: widget.child ??
+            new ListView.builder(
+              itemCount: widget.itemCount,
+              itemBuilder: widget.itemBuilder,
+            ));
     return new Scaffold(
         body: new Stack(
           children: <Widget>[
-            new RefreshIndicator(
-                child: new SmartRefresher(
-                    controller: widget.controller,
-                    enablePullDown: false,
-                    enablePullUp: widget.enablePullUp,
-                    enableOverScroll: false,
-                    onRefresh: widget.onLoadMore,
-                    child: widget.child ??
-                        new ListView.builder(
-                          itemCount: widget.itemCount,
-                          itemBuilder: widget.itemBuilder,
-                        )),
-                onRefresh: widget.onRefresh),
+
+            new RefreshIndicator(child: refresher,
+                onRefresh: widget.onRefresh
+              ),
             new Offstage(
               offstage: widget.isLoading != true,
               child: new Container(

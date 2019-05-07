@@ -130,7 +130,8 @@ class _ReceivePageButton extends State<ReceivePage> {
           height: 40,
           width: ScreenUtil.getInstance().screenWidth,
           child: new Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               new Column(
                 mainAxisAlignment: MainAxisAlignment.center,

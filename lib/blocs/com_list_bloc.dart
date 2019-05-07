@@ -79,7 +79,7 @@ class ComListBloc implements BlocBase {
 //      comList.add(list);
       _comListSink.add(UnmodifiableListView<MessageModel>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
-          ObjectUtil.isEmpty(list) ? RefreshStatus.noMore : RefreshStatus.idle,
+          ObjectUtil.isEmpty(list) ? RefreshStatus.completed : RefreshStatus.idle,
           cid: cid));
     }).catchError(() {
       _comListPage--;
@@ -96,7 +96,7 @@ class ComListBloc implements BlocBase {
       comList.addAll(list);
       _comListSink.add(UnmodifiableListView<MessageModel>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
-          ObjectUtil.isEmpty(list) ? RefreshStatus.noMore : RefreshStatus.idle,
+          ObjectUtil.isEmpty(list) ? RefreshStatus.completed: RefreshStatus.idle,
           cid: cid));
     }).catchError(() {
       _comListPage--;
@@ -116,7 +116,7 @@ class ComListBloc implements BlocBase {
 //      comList.addAll(list);
       _comListSink.add(UnmodifiableListView<MessageModel>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
-          ObjectUtil.isEmpty(list) ? RefreshStatus.noMore : RefreshStatus.idle,
+          ObjectUtil.isEmpty(list) ? RefreshStatus.completed : RefreshStatus.idle,
           cid: cid));
     }).catchError(() {
       _comListPage--;

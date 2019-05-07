@@ -36,7 +36,8 @@ class RecHotPage extends StatelessWidget {
     String labelId = title ?? IntlUtil.getString(context, titleId);
     bloc.homeEventStream.listen((event) {
       if (labelId == event.labelId) {
-        _controller.sendBack(false, event.status);
+//        _controller.sendBack(false, event.status);
+        _controller.loadComplete();
       }
     });
 
