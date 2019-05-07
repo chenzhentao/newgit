@@ -38,6 +38,7 @@ class IdentityBeanParent {
 }
 
 class IdentityBean {
+
   UserVobean userVo;
   int mobileId;
   int roleId;
@@ -70,6 +71,9 @@ class IdentityBean {
     sb.write('}');
     return sb.toString();
   }
+
+  IdentityBean(this.userVo, this.mobileId, this.roleId, this.baseRoleId,
+      this.roleName);
 }
 
 class UserVobean {
@@ -89,6 +93,10 @@ class UserVobean {
   List<SclassVosbean> sclassVos;
 
   String schoolName;
+
+  UserVobean(this.id, this.userName, this.userPhone, this.attendanceType,
+      this.headTeacherName, this.schoolId, this.sclassVosbean, this.sclassVos,
+      this.schoolName);
 
   UserVobean.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -137,6 +145,7 @@ class UserVobean {
 }
 
 class SclassVosbean {
+
   @override
   String toString() {
     StringBuffer sb = new StringBuffer('{');
@@ -221,4 +230,6 @@ class SclassVosbean {
   String schoolName;
 
   String studentUrl;
+
+
 }

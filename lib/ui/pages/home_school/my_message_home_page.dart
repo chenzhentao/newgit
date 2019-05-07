@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/ui/pages/home_school/receive_page.dart';
 import 'package:flutter_wanandroid/ui/pages/main_page.dart';
 import 'package:flutter_wanandroid/ui/widgets/school_home.dart';
 import 'package:flutter_wanandroid/ui/pages/main_page.dart';
@@ -48,7 +49,9 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Theme.of(context).canvasColor,
+      backgroundColor: Theme
+          .of(context)
+          .canvasColor,
       appBar: new MyAppBar(
         backgroundColor: Colors.white,
         leading: new Container(
@@ -66,7 +69,7 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
           style: TextStyle(color: Colors.black),
         ),
         actions: <Widget>[
-          new RaisedButton(
+          new FlatButton(
             onPressed: () {
               print("点击了");
             },
@@ -80,7 +83,7 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
             labelColor: Colors.lightBlueAccent,
             unselectedLabelColor: Colors.black54,
             indicatorColor: Colors.red,
-            indicatorPadding: EdgeInsets.only(left: 20.0,right: 20.0),
+            indicatorPadding: EdgeInsets.only(left: 20.0, right: 20.0),
             tabs: _allPages.map((_Page page) {
               switch (_scrollableStyle) {
                 case TabsScrollableStyle.iconsAndText:
@@ -94,22 +97,26 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
       ),
       body: new TabBarView(
         // 控件的选择和动画状态
-        controller: _controller,
-        // 每个标签一个控件
-        children: _allPages.map((_Page page) {
-          return new Container(
-              key: new ObjectKey(page.icon),
-              padding: const EdgeInsets.all(12.0),
-              // 质感设计卡片
-              child: new Card(
-                  child: new Center(
-                      child: new Icon(
-                page.icon,
-                size: 128.0,
-              ))));
-        }).toList(),
+          controller: _controller,
+          // 每个标签一个控件
+          children: buildChild(context)
       ),
     );
+  }
+
+  List<Widget> buildChild(BuildContext context) {
+    var list = List<Widget>();
+    list.add(buildReceive(context));
+    list.add(buildSend(context));
+    return list;
+  }
+
+  Widget buildReceive(BuildContext context) {
+    return ReceivePage();
+  }
+
+  Widget buildSend(BuildContext context) {
+    return ReceivePage();
   }
 }
 
@@ -122,7 +129,7 @@ class TabLayout extends StatelessWidget {
       indicatorSize: TabBarIndicatorSize.label,
       tabs: _allPages
           .map((_Page page) =>
-              new Tab(text: IntlUtil.getString(context, page.labelId)))
+      new Tab(text: IntlUtil.getString(context, page.labelId)))
           .toList(),
     );
   }

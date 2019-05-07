@@ -211,21 +211,21 @@ class DioUtil {
     int _code;
     String _msg;
     T _data;
-//    print("response  111   ${response.data.toString()}");
+    print("DioUtil  111   ${response.data.toString()}");
     if (response.statusCode == HttpStatus.ok ||
         response.statusCode == HttpStatus.created) {
 
       try {
         if (response.data is Map) {
-//          print("response  122  ${response.data.toString()}");
+          print("DioUtil  response  122  ${response.data.toString()}\n");
           _status = (response.data[_statusKey] is String)
               ? int.tryParse(response.data[_statusKey])
               : response.data[_statusKey];
-//          print("response  132  ${response.data.toString()}");
+          print("DioUtil  response  132  ${response.data.toString()}\n");
           _code = (response.data[_codeKey] is String)
               ? int.tryParse(response.data[_codeKey])
               : response.data[_codeKey];
-//          print("response  142  ${response.data.toString()}");
+          print("DioUtil response  142  ${response.data.toString()}\n");
           _msg = response.data[_msgKey];
           _data = response.data[_dataKey];
         } else if(response.data ==null) {
@@ -253,7 +253,7 @@ class DioUtil {
 
           _data = _dataMap[_dataKey];
         }
-//        print("response  333   ${response.data.toString()}");
+        print("DioUtil   response  333   ${response.data.toString()}\n \n");
         return new BaseResp(_status, _code, _msg, _data);
       } catch (e) {
 

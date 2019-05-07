@@ -137,7 +137,6 @@ class MHomePage extends StatelessWidget {
               children: <Widget>[
                 buildBanner(context, snapshot.data),
                 buildMenu(context, bloc.hotRecModel),
-
                 buildSwiper(context),
                 buildHonor(context, bloc.recReposModel),
                 new StreamBuilder(
@@ -195,8 +194,7 @@ class MHomePage extends StatelessWidget {
         crossAxisSpacing: 4.0,
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
-        padding: const EdgeInsets.all(4.0),
-        childAspectRatio: 1.3,
+childAspectRatio: 1/1.3,
         children: hotRecModel.map<Widget>((ComModel commodel) {
           return new MenuItem(commodel);
         }).toList());
@@ -245,7 +243,6 @@ class MHomePage extends StatelessWidget {
         circular: true,
         autoStart: true,
         direction: Axis.vertical,
-
       ),
     );
   }
@@ -355,24 +352,18 @@ class MenuItem extends StatelessWidget {
         Navigator.pushReplacement(context,
             new MaterialPageRoute(builder: (context) => new HomeSchoolPage()));
       },
-      child: new Container(
-          margin:
-              new EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0, bottom: 0),
-          child: new Wrap(alignment: WrapAlignment.center,
-              /* mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment:MainAxisAlignment.spaceAround,*/
-              children: <Widget>[
-                new CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  imageUrl: _item.menuImage,
-                  placeholder: new ProgressView(),
-                  errorWidget: new Icon(Icons.error),
-                ),
-                new Text(
-                  _item.menuName,
-                  style: Theme.of(context).textTheme.body1,
-                ),
-              ])),
+      child: new Column(children: <Widget>[
+        new CachedNetworkImage(
+          fit: BoxFit.contain,
+          imageUrl: _item.menuImage,
+          placeholder: new ProgressView(),
+          errorWidget: new Icon(Icons.error),
+        ),
+        new Text(
+          _item.menuName,
+          style: Theme.of(context).textTheme.body1,
+        ),
+      ]),
     );
   }
 }

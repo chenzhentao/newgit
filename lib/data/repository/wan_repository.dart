@@ -31,7 +31,7 @@ class WanRepository {
 //    print("baseResp     baseResp.code${baseResp.code}");code
 //    print("baseResp     baseResp.data${baseResp.data}");
 
-    if (baseResp.status!=Constant.STATUS_SUCCESS1) {
+    if (baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
     if (baseResp.data != null) {
@@ -123,9 +123,7 @@ class WanRepository {
 
   Future<List<ReposModel>> getProjectList({int page: 1, data}) async {
     BaseResp<List> baseResp = await DioUtil()
-        .request<List>(
-            Method.get, WanAndroidApi.HOME_HONOR_LIST,
-            data: data);
+        .request<List>(Method.get, WanAndroidApi.HOME_HONOR_LIST, data: data);
     List<ReposModel> list;
     if (baseResp.code != Constant.STATUS_SUCCESS) {
       return new Future.error(baseResp.msg);
@@ -140,26 +138,26 @@ class WanRepository {
 
   Future<List<MessageModel>> getWxArticleList(
       {int id, int page: 1, data}) async {
-
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
-        .request<Map<String, dynamic>>(Method.post, WanAndroidApi.WXARTICLE_LIST, data: data);
-    List<MessageModel> list =new List();
-//    print("baseResp   100000  ${baseResp.status.toString()}");
+        .request<Map<String, dynamic>>(
+            Method.post, WanAndroidApi.WXARTICLE_LIST,
+            data: data);
+    List<MessageModel> list = new List();
 
-
-    if (baseResp.status!=null&&baseResp.status != Constant.STATUS_SUCCESS1) {
+    if (baseResp.status != null &&
+        baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
 //    print("baseResp   1111  ${baseResp.data}");
     if (baseResp.data != null) {
-     var listVo = baseResp.data["listVo"];
-//     print("baseResp   111111111  ${listVo}");
-     if(listVo!=null&&listVo is Map){
-       list.add(MessageModel.fromJson(listVo)  );
-     }
+      var listVo = baseResp.data;
+      if (listVo != null && listVo is Map) {
+       var listModel =  MessageListModel.fromJson(listVo);
 
+        list.addAll(listModel.listVo);
+      } else {
         return list;
-
+      }
     }
     return list;
   }
@@ -224,8 +222,9 @@ class WanRepository {
         return LoginReturnValue.fromJson(value);
       }).toList();
     }
-    LogingResult logingResult = new LogingResult(baseResp.status,baseResp.msg,treeList,baseResp.code);
-    return  logingResult;
+    LogingResult logingResult = new LogingResult(
+        baseResp.status, baseResp.msg, treeList, baseResp.code);
+    return logingResult;
   }
 
   Future<List<TreeModel>> getProjectTree() async {

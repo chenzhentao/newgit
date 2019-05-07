@@ -55,6 +55,29 @@ class MainBloc implements BlocBase {
 
   List<ReposModel> _eventsList;
   int _eventsPage = 0;
+  ///****** ****** ****** Repos ****** ****** ****** /
+
+  ///****** ****** ****** Events ****** ****** ****** /
+
+  BehaviorSubject<List<MessageModel>> _sendMessages =
+  BehaviorSubject<List<MessageModel>>();
+
+  Sink<List<MessageModel>> get _sendMesssagesSink => _sendMessages.sink;
+
+  Stream<List<MessageModel>> get sendMessageStream => _sendMessages.stream;
+  List<MessageModel> sendMessagesList;
+  int _sendMessagePage = 0;
+
+  BehaviorSubject<List<MessageModel>> _receiveMessages =
+  BehaviorSubject<List<MessageModel>>();
+
+  Sink<List<MessageModel>> get _receiveMesssagesSink => _receiveMessages.sink;
+
+  Stream<List<MessageModel>> get receiveMessageStream =>
+      _receiveMessages.stream;
+  List<MessageModel> receiveMessagesList;
+  int _receiveMessagePage = 0;
+
 
   ///****** ****** ****** Events ****** ****** ****** /
 
@@ -127,7 +150,13 @@ class MainBloc implements BlocBase {
   }
 
   @override
-  Future getData({String labelId, int page, IdentityBean bean}) {
+  Future getData({String labelId, int page, IdentityBean bean,
+  String userId,
+  String crDate,
+  String readStatus,
+  String dataType}) {
+
+    print("  getData     ${userId}   ${crDate}   ${readStatus}    ${dataType}    ");
     switch (labelId) {
       case Ids.titleHome:
         return getHomeData(labelId, bean);
@@ -141,6 +170,13 @@ class MainBloc implements BlocBase {
       case Ids.titleSystem:
         return getTree(labelId);
         break;
+      case Ids.sendMessageId:
+         return getMessage(labelId, page, userId, crDate, readStatus, dataType);
+        break;
+      case Ids.receiveMessageId:
+
+        return getMessage(labelId, page, userId, crDate, readStatus, dataType);
+        break;
       default:
         return Future.delayed(new Duration(seconds: 1));
         break;
@@ -148,7 +184,7 @@ class MainBloc implements BlocBase {
   }
 
   @override
-  Future onLoadMore({String labelId}) {
+  Future onLoadMore({String labelId,String userId,String crDate,String readStatus,String dataType}) {
     int _page = 0;
     switch (labelId) {
       case Ids.titleHome:
@@ -161,17 +197,26 @@ class MainBloc implements BlocBase {
         break;
       case Ids.titleSystem:
         break;
+      case Ids.sendMessageId:
+        _page = ++_sendMessagePage;
+        break;
+      case Ids.receiveMessageId:
+        _page = ++_receiveMessagePage;
+        break;
       default:
         break;
     }
     LogUtil.e("onLoadMore labelId: $labelId" +
         "   _page: $_page" +
         "   _reposPage: $_reposPage");
-    return getData(labelId: labelId, page: _page);
+    return getData(labelId: labelId, page: _page,userId: userId,crDate: crDate,readStatus: readStatus,dataType: dataType);
   }
 
   @override
-  Future onRefresh({String labelId, IdentityBean bean}) {
+  Future onRefresh({String labelId, IdentityBean bean,String userId,String crDate,String readStatus,String dataType}) {
+
+
+
     switch (labelId) {
       case Ids.titleHome:
         getHotRecItem(bean.roleId.toString(), bean.userVo.schoolId.toString());
@@ -184,13 +229,74 @@ class MainBloc implements BlocBase {
         break;
       case Ids.titleSystem:
         break;
+      case Ids.sendMessageId:
+
+        break;
+      case Ids.receiveMessageId:
+
+        break;
+      case Ids.sendMessageId:
+        return getData(labelId: labelId, page: 0,userId: userId,crDate: crDate,readStatus: readStatus,dataType: dataType);
+        break;
+      case Ids.receiveMessageId:
+        print("  onRefresh     ${userId}   ${crDate}   ${readStatus}    ${dataType}    ");
+        return getData(labelId: labelId, page: 0,userId: userId,crDate: crDate,readStatus: readStatus,dataType: dataType);
+        break;
       default:
         break;
     }
     LogUtil.e("onRefresh labelId: $labelId" + "   _reposPage: $_reposPage");
-    return getData(labelId: labelId, page: 0, bean: bean);
+    return getData(labelId: labelId, page: 0, bean: bean,userId: userId,crDate: crDate,readStatus: readStatus,dataType: dataType);
   }
+  Future getMessage(String labelId, int page, String userId, String crDate,
+      String readStatus, String dataType) async {
 
+
+    print("${userId}   ${crDate}   ${readStatus}    ${dataType}    ");
+    int _id = 408;
+    String idType = "";
+    switch (labelId) {
+      case Ids.sendMessageId:
+        idType = "1";
+        break;
+      case Ids.receiveMessageId:
+        idType = "0";
+        break;
+    }
+    Map<String, String> dataMap = {
+      'page': page.toString(),
+      'type': dataType,
+      'userId': userId,
+      'idType': idType,
+      'crDate': crDate,
+      'readStatus': readStatus
+    };
+
+    wanRepository.getWxArticleList(id: _id, data: dataMap).then((list) {
+
+
+      print(" wanRepository.getWxArticleLis   ${list.toString()}   ");
+      switch(labelId){
+        case Ids.sendMessageId:
+          if(sendMessagesList ==null){
+            sendMessagesList = new List();
+          }
+          sendMessagesList.addAll(list);
+          _sendMesssagesSink.add(UnmodifiableListView<MessageModel>(list));
+          print(" Ids.sendMessageId   ${sendMessagesList.toString()}   ");
+          break;
+        case Ids.receiveMessageId:
+          if(receiveMessagesList ==null){
+            receiveMessagesList = new List();
+          }
+          receiveMessagesList.addAll(list);
+          _receiveMesssagesSink.add(UnmodifiableListView<MessageModel>(list));
+          print(" Ids.receiveMessageId   ${receiveMessagesList.toString()}   ");
+          break;
+      }
+
+    });
+  }
   Future getHomeData(String labelId, IdentityBean bean) {
     getRecRepos(labelId, bean.userVo.schoolId.toString());
     getRecWxArticle(labelId, 0,"1",bean.userVo.id.toString(),"0");

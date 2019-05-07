@@ -29,7 +29,7 @@ class ComListResp<T> {
 }
 
 class ReposModel {
-  ReposModel( {this.studentName,this.className,this.subTypeName});
+  ReposModel({this.studentName, this.className, this.subTypeName});
 
   String createDateStr;
   String updateDateStr;
@@ -159,15 +159,68 @@ class ReposModel {
   }
 }
 
+class MessageParentModel {
+  String msg;
+  int status;
+  String code;
+  MessageListModel returnValue;
+  MessageParentModel.fromJson(Map<String, dynamic> json)
+      : msg = json['msg'],
+        status = json['status'],
+        code = json['code'],
+        returnValue = json['returnValue'] ;
+
+  Map<String, dynamic> toJson() => {
+    'msg': msg,
+    'status': status,
+    'code': code,
+    'imagePath': returnValue,
+  };
+
+  @override
+  String toString() {
+    StringBuffer sb = new StringBuffer('{');
+    sb.write("\"msg\":\"$msg\"");
+    sb.write(",\"status\":$status");
+    sb.write(",\"code\":\"$code\"");
+    sb.write(",\"returnValue\":\"$returnValue\"");
+    sb.write('}');
+    return sb.toString();
+  }
+}
+
+class MessageListModel {
+  List<MessageModel> listVo;
+  MessageListModel.fromJson(Map<String, dynamic> json)
+      : listVo = (json['listVo'] as List)
+            ?.map((e) => e == null
+            ? null
+            : new MessageModel.fromJson(e as Map<String, dynamic>))
+            ?.toList();
+
+  Map<String, dynamic> toJson() => {
+
+    'listVo': listVo,
+  };
+
+  @override
+  String toString() {
+    StringBuffer sb = new StringBuffer('{');
+    sb.write("\"listVo\":${listVo.toString()}");
+    sb.write('}');
+    return sb.toString();
+  }
+}
+
 class MessageModel {
   int messageId;
-  String msgType;
+  int msgType;
   String msgTitle;
   String msgContent;
-  String hasRead;
+  int hasRead;
 
-  String msgScopeType;
-  String ownerMobileUserId;
+  int msgScopeType;
+  int ownerMobileUserId;
 
   String msgReceiveNames;
   String msgReceiveIds;
@@ -214,13 +267,13 @@ class MessageModel {
   String toString() {
     StringBuffer sb = new StringBuffer('{');
     sb.write("\"messageId\":$messageId");
-    sb.write("\"msgType\":\"$msgType\"");
+    sb.write("\"msgType\":$msgType");
     sb.write("\"msgTitle\":\"$msgTitle\"");
     sb.write("\"msgContent\":\"$msgContent\"");
-    sb.write("\"hasRead\":\"$hasRead\"");
-    sb.write("\"msgScopeType\":\"$msgScopeType\"");
+    sb.write("\"hasRead\":$hasRead");
+    sb.write("\"msgScopeType\":$msgScopeType");
     sb.write("\"createDate\":\"$createDate\"");
-    sb.write("\"ownerMobileUserId\":\"$ownerMobileUserId\"");
+    sb.write("\"ownerMobileUserId\":$ownerMobileUserId");
     sb.write("\"msgReceiveNames\":\"$msgReceiveNames\"");
     sb.write("\"msgReceiveIds\":\"$msgReceiveIds\"");
     sb.write("\"delStatus\":\"$delStatus\"");

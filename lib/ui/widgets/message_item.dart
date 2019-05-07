@@ -21,38 +21,49 @@ class MessageItem extends StatelessWidget {
             children: <Widget>[
               new Expanded(
                   child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Text(
+                    model.msgTitle != null ? model.msgTitle : "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.listTitle,
+                  ),
+                  Gaps.vGap10,
+                  new Text(
+                    model.msgReceiveNames != null ? model.msgReceiveNames : "",
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyles.listContent,
+                  ),
+                  Gaps.vGap5,
+                  new Row(
                     children: <Widget>[
+                      new Container(
+                        width: 40.0,
+                        height: 200.0,
+                        child:
                       new Text(
-                        model.sendName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.listTitle,
+                        model.msgReceiveNames != null
+                            ? model.msgReceiveNames
+                            : "",
+                        style: TextStyles.listExtra,
+                      ),),
+                      Gaps.hGap10,
+                      new Container(
+                        width: 200.0,
+                        height: 200.0,
+                        child: new Text(
+                          model.msgContent != null ? model.msgContent : "",
+                          style: TextStyles.listExtra,
+                        ),
                       ),
-                      Gaps.vGap10,
-                      new Text(
-                        model.msgReceiveNames,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyles.listContent,
-                      ),
-                      Gaps.vGap5,
-                      new Row(
-                        children: <Widget>[
-                          new Text(
-                            model.msgReceiveNames,
-                            style: TextStyles.listExtra,
-                          ),
-                          Gaps.hGap10,
-                          new Text(
-                            model.createDate,
-                            style: TextStyles.listExtra,
-                          ),
-                        ],
-                      )
                     ],
-                  )),
+                  )
+                ],
+              )),
               new Container(
+
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(left: 12.0),
                 child: new CircleAvatar(
@@ -61,7 +72,9 @@ class MessageItem extends StatelessWidget {
                   child: new Padding(
                     padding: EdgeInsets.all(5.0),
                     child: new Text(
-                      model.msgReceiveNames,
+                      model.msgReceiveNames != null
+                          ? model.msgReceiveNames
+                          : "",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 11.0),
                     ),

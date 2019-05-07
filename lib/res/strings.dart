@@ -3,6 +3,8 @@ class Ids {
   static const String titleRepos = 'title_repos';
   static const String titleEvents = 'title_events';
   static const String titleSystem = 'title_system';
+  static const String receiveMessageId = 'receive_message_id';
+  static const String sendMessageId = 'send_message_id';
 
   static String titleBookmarks = 'title_bookmarks';
   static String titleCollection = 'title_collection';
