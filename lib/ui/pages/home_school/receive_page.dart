@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/message_bloc.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/radio_group.dart';
 import 'package:flutter_wanandroid/ui/widgets/message_item.dart';
+import 'package:flutter_wanandroid/utils/date_format_base.dart';
 import 'package:flutter_wanandroid/utils/util_index.dart';
 
 bool ReceivePageInit = true;
@@ -77,6 +79,7 @@ class _ReceivePageButton extends State<ReceivePage> {
             dataType: dataType);
       });
     }
+
     return new Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,16 +132,30 @@ class _ReceivePageButton extends State<ReceivePage> {
         new Container(
           height: 40,
           width: ScreenUtil.getInstance().screenWidth,
+
           child: new Row(
 
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
+
+              new FlatButton(onPressed: () {
+
+                DatePicker.showDatePicker(context,
+                    showTitleActions: true,
+                    minTime: DateTime(2018, 3, 5),
+                    maxTime: DateTime.now(), onChanged: (date) {
+                      print('change $date');
+                    }, onConfirm: (date) {
+                      setState(() {
+                        crDate = formatDate(date, [yyyy, '-', mm]);
+                      });
+                    }, currentTime: DateTime.parse(crDate+"-01 00:00:00"), locale: LocaleType.zh);
+              }, child: new Text(crDate)),
               new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[new Text(crDate), new Text(crDate)],
               ),
-              new FlatButton(onPressed: () {}, child: new Text(crDate))
             ],
           ),
         ),

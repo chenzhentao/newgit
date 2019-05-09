@@ -194,7 +194,7 @@ class MHomePage extends StatelessWidget {
         crossAxisSpacing: 4.0,
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
-childAspectRatio: 1/1.3,
+        childAspectRatio: 1 / 1.3,
         children: hotRecModel.map<Widget>((ComModel commodel) {
           return new MenuItem(commodel);
         }).toList());
@@ -349,7 +349,7 @@ class MenuItem extends StatelessWidget {
     return new GestureDetector(
       onTap: () {
         print("_item${_item.functionId}");
-        Navigator.pushReplacement(context,
+        Navigator.push(context,
             new MaterialPageRoute(builder: (context) => new HomeSchoolPage()));
       },
       child: new Column(children: <Widget>[

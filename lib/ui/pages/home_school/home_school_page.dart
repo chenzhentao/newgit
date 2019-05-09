@@ -47,7 +47,7 @@ class HomeSchoolPage extends StatelessWidget {
               fit: BoxFit.fill,
               height: double.infinity,
             ),
-            onPressed: () {   Navigator.pushReplacement(
+            onPressed: () {   Navigator.push(
                 context,
                 new MaterialPageRoute(
                     builder: (context) => new MyMessageHomePage()));}),
