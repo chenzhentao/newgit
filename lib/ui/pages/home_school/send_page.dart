@@ -9,36 +9,36 @@ import 'package:flutter_wanandroid/ui/widgets/message_item.dart';
 import 'package:flutter_wanandroid/utils/date_format_base.dart';
 import 'package:flutter_wanandroid/utils/util_index.dart';
 
-bool ReceivePageInit = true;
+bool sendPageInit = true;
 enum ReadStatus { WeiDu, YiDu, All, School, Sys }
 
-class ReceivePage extends StatefulWidget {
-  const ReceivePage({
+class SendPage extends StatefulWidget {
+  const SendPage({
     Key key,
   }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return new _ReceivePageButton();
+    return new _sendPageButton();
   }
 }
 
-class _ReceivePageButton extends State<ReceivePage> {
+class _sendPageButton extends State<SendPage> {
   int _currentIndex = 1;
   String userId;
   String crDate = "2019-03";
   String readStatus = ReadStatus.All.index.toString();
-  String dataType = "0";
+  String dataType = "1";
   final IdentityBean mData = SpHelper.getIndentityBean();
 
-  final String labelId = Ids.receiveMessageId;
+  final String labelId = Ids.sendMessageId;
   List<GroupModel> _group = [
     GroupModel(
-      text: "全部",
+      text: "全部通知",
       index: 1,
     ),
     GroupModel(
-      text: "未读",
+      text: "老师通知",
       index: 2,
     ),
     GroupModel(
@@ -46,7 +46,7 @@ class _ReceivePageButton extends State<ReceivePage> {
       index: 3,
     ),
     GroupModel(
-      text: "系统通知",
+      text: "家长通知",
       index: 4,
     ),
   ];
@@ -62,15 +62,15 @@ class _ReceivePageButton extends State<ReceivePage> {
     userId = mData.mobileId.toString();
     RefreshController _controller = new RefreshController();
     final MainBloc bloc = BlocProvider.of<MainBloc>(context);
-    bloc.receiveMessageStream.listen((event) {
+    bloc.sendMessageStream.listen((event) {
       /*if (labelId == event.labelId) {
         _controller.sendBack(false, event.status);
       }*/
     });
 
-    if (ReceivePageInit) {
+    if (sendPageInit) {
       LogUtil.e("HomePage init......");
-      ReceivePageInit = false;
+      sendPageInit = false;
       Observable.just(1).delay(new Duration(milliseconds: 500)).listen((_) {
         bloc.onRefresh(
             labelId: labelId,
@@ -99,7 +99,8 @@ class _ReceivePageButton extends State<ReceivePage> {
                     width: ScreenUtil
                         .getInstance()
                         .screenWidth / 4 - 8,
-                    margin: EdgeInsets.only(left: 4.0, right: 4.0,top: 5.0,bottom: 5.0),
+                    margin: EdgeInsets.only(
+                        left: 4.0, right: 4.0, top: 5.0, bottom: 5.0),
                     child: FlatButton(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
@@ -137,9 +138,8 @@ class _ReceivePageButton extends State<ReceivePage> {
           ),
         ),
         new Expanded(
-
           child: new StreamBuilder(
-              stream: bloc.receiveMessageStream,
+              stream: bloc.sendMessageStream,
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> snapshot) {
                 return new RefreshScaffold(
@@ -168,7 +168,6 @@ class _ReceivePageButton extends State<ReceivePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             new FlatButton(
-                              
                                 onPressed: () {
                                   DatePicker.showDatePicker(context,
                                       showTitleActions: true,
@@ -187,28 +186,38 @@ class _ReceivePageButton extends State<ReceivePage> {
                                           crDate + "-01 00:00:00"),
                                       locale: LocaleType.zh);
                                 },
-                                child: Row(children: <Widget>[
-                                  new Text(crDate)
-                                  ,
-                                  new Icon(Icons.keyboard_arrow_down,color: Colors.blue,)
-
-                                ],)),
+                                child: Row(
+                                  children: <Widget>[
+                                    new Text(crDate),
+                                    new Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.blue,
+                                    )
+                                  ],
+                                )),
                             new RichText(
-                                text: new TextSpan(text: "总共",
+                                text: new TextSpan(
+                                    text: "总共",
                                     children: List.generate(3, (index) {
                                       return TextSpan(
-                                        style: TextStyle(color: (index ==1)?Colors.red:Colors.blueGrey,fontSize: (index ==1)?18.0:14.0),
-                                          text:(index ==0)?"总共":(index ==1)?
-                                      "${bloc.receiveMessagesList == null
-                                          ? 0
-                                          : bloc.receiveMessagesList
-                                          .length}":"条");
+                                          style: TextStyle(
+                                              color: (index == 1)
+                                                  ? Colors.red
+                                                  : Colors.blueGrey,
+                                              fontSize:
+                                              (index == 1) ? 18.0 : 14.0),
+                                          text: (index == 0)
+                                              ? "总共"
+                                              : (index == 1)
+                                              ? "${bloc.sendMessagesList == null
+                                              ? 0
+                                              : bloc.sendMessagesList.length}"
+                                              : "条");
                                     })))
-
                           ],
                         ),
                       ),
-                      buildWxArticle(context, bloc.receiveMessagesList),
+                      buildWxArticle(context, bloc.sendMessagesList),
                     ],
                   ),
                 );
@@ -224,9 +233,20 @@ class _ReceivePageButton extends State<ReceivePage> {
       return new Container(height: 0.0);
     }
     List<Widget> _children = list.map((model) {
-      return new MessageItem(
-        model,
-        isHome: true,
+      return new GestureDetector(
+        onTap: () {
+          print(" 跳到详情");
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) =>
+                  new MessageDetailPage(model),
+              ),);
+        },
+        child: new MessageItem(
+          model,
+          isHome: true,
+        ),
       );
     }).toList();
     return new Column(
@@ -241,6 +261,5 @@ class _ReceivePageButton extends State<ReceivePage> {
     });
   }
 
-  TextSpan _buildSpanList(int index) {
-  }
+  TextSpan _buildSpanList(int index) {}
 }

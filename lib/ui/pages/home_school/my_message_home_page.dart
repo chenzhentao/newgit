@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/receive_page.dart';
+import 'package:flutter_wanandroid/ui/pages/home_school/send_page.dart';
 import 'package:flutter_wanandroid/ui/pages/main_page.dart';
 import 'package:flutter_wanandroid/ui/widgets/school_home.dart';
 import 'package:flutter_wanandroid/ui/pages/main_page.dart';
@@ -116,7 +117,7 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
   }
 
   Widget buildSend(BuildContext context) {
-    return ReceivePage();
+    return SendPage();
   }
 }
 
@@ -125,7 +126,7 @@ class TabLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return new TabBar(
       isScrollable: true,
-      labelPadding: EdgeInsets.all(12.0),
+      labelPadding: EdgeInsets.all(0.0),
       indicatorSize: TabBarIndicatorSize.label,
       tabs: _allPages
           .map((_Page page) =>

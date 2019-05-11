@@ -227,6 +227,7 @@ class MessageModel {
   String delStatus;
   String sendName;
   String createDate;
+  String createDateApi;
   int readCount;
   int commentCount;
 
@@ -238,6 +239,7 @@ class MessageModel {
         hasRead = json['hasRead'],
         msgScopeType = json['msgScopeType'],
         createDate = json['createDate'],
+        createDateApi = json['createDateApi'],
         ownerMobileUserId = json['ownerMobileUserId'],
         msgReceiveNames = json['msgReceiveNames'],
         msgReceiveIds = json['msgReceiveIds'],
@@ -254,6 +256,7 @@ class MessageModel {
         'hasRead': hasRead,
         'msgScopeType': msgScopeType,
         'createDate': createDate,
+        'createDateApi': createDateApi,
         'ownerMobileUserId': ownerMobileUserId,
         'msgReceiveNames': msgReceiveNames,
         'msgReceiveIds': msgReceiveIds,
@@ -273,6 +276,7 @@ class MessageModel {
     sb.write("\"hasRead\":$hasRead");
     sb.write("\"msgScopeType\":$msgScopeType");
     sb.write("\"createDate\":\"$createDate\"");
+    sb.write("\"createDateApi\":\"$createDateApi\"");
     sb.write("\"ownerMobileUserId\":$ownerMobileUserId");
     sb.write("\"msgReceiveNames\":\"$msgReceiveNames\"");
     sb.write("\"msgReceiveIds\":\"$msgReceiveIds\"");
@@ -291,11 +295,7 @@ class BannerModelParent {
   String code;
   List<BannerModel> returnValue;
 
-//(json['children'] as List)
-//            ?.map((e) => e == null
-//                ? null
-//                : new TreeModel.fromJson(e as Map<String, dynamic>))
-//            ?.toList();
+
   BannerModelParent.fromJson(Map<String, dynamic> json)
       : msg = json['msg'],
         status = json['status'],
