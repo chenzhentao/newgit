@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/message_bloc.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/message_detail.dart';
@@ -87,53 +88,48 @@ class _sendPageButton extends State<SendPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new Container(
-          width: ScreenUtil
-              .getInstance()
-              .screenWidth,
+          width: ScreenUtil.getInstance().screenWidth,
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _group
                 .map(
-                  (item) =>
-                  Container(
-                    width: ScreenUtil
-                        .getInstance()
-                        .screenWidth / 4 - 8,
-                    margin: EdgeInsets.only(
-                        left: 4.0, right: 4.0, top: 5.0, bottom: 5.0),
-                    child: FlatButton(
-                      padding: EdgeInsets.all(0.0),
-                      child: Text(
-                        "${item.text}",
-                        style: TextStyle(
+                  (item) => Container(
+                        width: ScreenUtil.getInstance().screenWidth / 4 - 8,
+                        margin: EdgeInsets.only(
+                            left: 4.0, right: 4.0, top: 5.0, bottom: 5.0),
+                        child: FlatButton(
+                          padding: EdgeInsets.all(0.0),
+                          child: Text(
+                            "${item.text}",
+                            style: TextStyle(
+                                color: item.index == _currentIndex
+                                    ? Colors.white70
+                                    : Colors.blue),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _currentIndex = item.index;
+                              readStatus = _currentIndex.toString();
+                              bloc.onRefresh(
+                                  labelId: labelId,
+                                  userId: userId,
+                                  crDate: crDate,
+                                  readStatus: readStatus,
+                                  dataType: dataType);
+                            });
+                          },
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
                             color: item.index == _currentIndex
-                                ? Colors.white70
-                                : Colors.blue),
+                                ? Colors.blue
+                                : Colors.white10,
+                            border: Border.all(
+                              color: Colors.blue,
+                              width: 1.0,
+                            )),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _currentIndex = item.index;
-                          readStatus = _currentIndex.toString();
-                          bloc.onRefresh(
-                              labelId: labelId,
-                              userId: userId,
-                              crDate: crDate,
-                              readStatus: readStatus,
-                              dataType: dataType);
-                        });
-                      },
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: item.index == _currentIndex
-                            ? Colors.blue
-                            : Colors.white10,
-                        border: Border.all(
-                          color: Colors.blue,
-                          width: 1.0,
-                        )),
-                  ),
-            )
+                )
                 .toList(),
           ),
         ),
@@ -141,7 +137,7 @@ class _sendPageButton extends State<SendPage> {
           child: new StreamBuilder(
               stream: bloc.sendMessageStream,
               builder: (BuildContext context,
-                  AsyncSnapshot<List<MessageModel>> snapshot) {
+                  AsyncSnapshot<List<MessagetBeanReturnvalueListvo>> snapshot) {
                 return new RefreshScaffold(
                   labelId: labelId,
                   isLoading: snapshot.data == null,
@@ -161,9 +157,7 @@ class _sendPageButton extends State<SendPage> {
                       new Container(
                         height: 40,
                         padding: EdgeInsets.only(right: 10.0),
-                        width: ScreenUtil
-                            .getInstance()
-                            .screenWidth,
+                        width: ScreenUtil.getInstance().screenWidth,
                         child: new Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -174,14 +168,13 @@ class _sendPageButton extends State<SendPage> {
                                       minTime: DateTime(2018, 3, 5),
                                       maxTime: DateTime.now(),
                                       onChanged: (date) {
-                                        print('change $date');
-                                      },
-                                      onConfirm: (date) {
-                                        setState(() {
-                                          crDate =
-                                              formatDate(date, [yyyy, '-', mm]);
-                                        });
-                                      },
+                                    print('change $date');
+                                  }, onConfirm: (date) {
+                                    setState(() {
+                                      crDate =
+                                          formatDate(date, [yyyy, '-', mm]);
+                                    });
+                                  },
                                       currentTime: DateTime.parse(
                                           crDate + "-01 00:00:00"),
                                       locale: LocaleType.zh);
@@ -205,14 +198,12 @@ class _sendPageButton extends State<SendPage> {
                                                   ? Colors.red
                                                   : Colors.blueGrey,
                                               fontSize:
-                                              (index == 1) ? 18.0 : 14.0),
+                                                  (index == 1) ? 18.0 : 14.0),
                                           text: (index == 0)
                                               ? "总共"
                                               : (index == 1)
-                                              ? "${bloc.sendMessagesList == null
-                                              ? 0
-                                              : bloc.sendMessagesList.length}"
-                                              : "条");
+                                                  ? "${bloc.sendMessagesList == null ? 0 : bloc.sendMessagesList.length}"
+                                                  : "条");
                                     })))
                           ],
                         ),
@@ -227,26 +218,16 @@ class _sendPageButton extends State<SendPage> {
     );
   }
 
-  Widget buildWxArticle(BuildContext context, List<MessageModel> list) {
+  Widget buildWxArticle(
+      BuildContext context, List<MessagetBeanReturnvalueListvo> list) {
     print("buildWxArticle   ${list.toString()}   ");
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
     }
     List<Widget> _children = list.map((model) {
-      return new GestureDetector(
-        onTap: () {
-          print(" 跳到详情");
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) =>
-                  new MessageDetailPage(model),
-              ),);
-        },
-        child: new MessageItem(
-          model,
-          isHome: true,
-        ),
+      return new MessageItem(
+        model,
+        isHome: false,
       );
     }).toList();
     return new Column(

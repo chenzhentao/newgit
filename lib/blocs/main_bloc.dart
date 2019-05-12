@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 
@@ -22,12 +23,14 @@ class MainBloc implements BlocBase {
 
   Stream<List<ReposModel>> get recReposStream => _recRepos.stream;
   List<ReposModel> recReposModel;
-  BehaviorSubject<List<MessageModel>> _recWxArticle =
-      BehaviorSubject<List<MessageModel>>();
+  BehaviorSubject<List<MessagetBeanReturnvalueListvo>> _recWxArticle =
+      BehaviorSubject<List<MessagetBeanReturnvalueListvo>>();
 
-  Sink<List<MessageModel>> get _recWxArticleSink => _recWxArticle.sink;
+  Sink<List<MessagetBeanReturnvalueListvo>> get _recWxArticleSink =>
+      _recWxArticle.sink;
 
-  Stream<List<MessageModel>> get recWxArticleStream => _recWxArticle.stream;
+  Stream<List<MessagetBeanReturnvalueListvo>> get recWxArticleStream =>
+      _recWxArticle.stream;
 
   ///****** ****** ****** Home ****** ****** ****** /
 
@@ -60,23 +63,26 @@ class MainBloc implements BlocBase {
 
   ///****** ****** ****** Events ****** ****** ****** /
 
-  BehaviorSubject<List<MessageModel>> _sendMessages =
-      BehaviorSubject<List<MessageModel>>();
+  BehaviorSubject<List<MessagetBeanReturnvalueListvo>> _sendMessages =
+      BehaviorSubject<List<MessagetBeanReturnvalueListvo>>();
 
-  Sink<List<MessageModel>> get _sendMesssagesSink => _sendMessages.sink;
+  Sink<List<MessagetBeanReturnvalueListvo>> get _sendMesssagesSink =>
+      _sendMessages.sink;
 
-  Stream<List<MessageModel>> get sendMessageStream => _sendMessages.stream;
-  List<MessageModel> sendMessagesList;
+  Stream<List<MessagetBeanReturnvalueListvo>> get sendMessageStream =>
+      _sendMessages.stream;
+  List<MessagetBeanReturnvalueListvo> sendMessagesList;
   int _sendMessagePage = 0;
 
-  BehaviorSubject<List<MessageModel>> _receiveMessages =
-      BehaviorSubject<List<MessageModel>>();
+  BehaviorSubject<List<MessagetBeanReturnvalueListvo>> _receiveMessages =
+      BehaviorSubject<List<MessagetBeanReturnvalueListvo>>();
 
-  Sink<List<MessageModel>> get _receiveMesssagesSink => _receiveMessages.sink;
+  Sink<List<MessagetBeanReturnvalueListvo>> get _receiveMesssagesSink =>
+      _receiveMessages.sink;
 
-  Stream<List<MessageModel>> get receiveMessageStream =>
+  Stream<List<MessagetBeanReturnvalueListvo>> get receiveMessageStream =>
       _receiveMessages.stream;
-  List<MessageModel> receiveMessagesList;
+  List<MessagetBeanReturnvalueListvo> receiveMessagesList;
   int _receiveMessagePage = 0;
 
   ///****** ****** ****** Events ****** ****** ****** /
@@ -319,22 +325,32 @@ class MainBloc implements BlocBase {
     };
 
     wanRepository.getWxArticleList(id: _id, data: dataMap).then((list) {
-      print(" wanRepository.getWxArticleLis   ${list.toString()}   ");
+      if (list == null) {
+        print(" main_bloc getWxArticleList 为空");
+      }
       switch (labelId) {
         case Ids.sendMessageId:
           if (sendMessagesList == null) {
             sendMessagesList = new List();
           }
-          sendMessagesList.addAll(list);
-          _sendMesssagesSink.add(UnmodifiableListView<MessageModel>(list));
+          if(page==0){
+            sendMessagesList.clear();
+          }
+          sendMessagesList.addAll(list.listVo);
+          _sendMesssagesSink.add(
+              UnmodifiableListView<MessagetBeanReturnvalueListvo>(list.listVo));
           print(" Ids.sendMessageId   ${sendMessagesList.toString()}   ");
           break;
         case Ids.receiveMessageId:
           if (receiveMessagesList == null) {
             receiveMessagesList = new List();
           }
-          receiveMessagesList.addAll(list);
-          _receiveMesssagesSink.add(UnmodifiableListView<MessageModel>(list));
+          if(page==0){
+            receiveMessagesList.clear();
+          }
+          receiveMessagesList.addAll(list.listVo);
+          _receiveMesssagesSink.add(
+              UnmodifiableListView<MessagetBeanReturnvalueListvo>(list.listVo));
           print(" Ids.receiveMessageId   ${receiveMessagesList.toString()}   ");
           break;
       }
@@ -381,10 +397,13 @@ class MainBloc implements BlocBase {
     };
 
     wanRepository.getWxArticleList(id: _id, data: dataMap).then((list) {
-      if (list.length > 6) {
-        list = list.sublist(0, 6);
+      if (list.listVo.length > 6) {
+        _recWxArticleSink.add(
+            UnmodifiableListView<MessagetBeanReturnvalueListvo>(
+                list.listVo.sublist(0, 6)));
       }
-      _recWxArticleSink.add(UnmodifiableListView<MessageModel>(list));
+      _recWxArticleSink.add(
+          UnmodifiableListView<MessagetBeanReturnvalueListvo>(list.listVo));
     });
   }
 

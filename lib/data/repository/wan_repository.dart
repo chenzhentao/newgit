@@ -3,9 +3,11 @@ import 'package:flutter_wanandroid/common/common.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/api/apis.dart';
 import 'package:flutter_wanandroid/data/net/dio_util.dart';
+import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/data/protocol/models.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/data/user_info/user_info.dart';
+import 'package:flutter_wanandroid/models/message_detail_bean_entity.dart';
 
 //data) async {
 //    var mOptions = new Options();
@@ -72,9 +74,9 @@ class WanRepository {
   Future<List<ReposModel>> getArticleListProject(int page) async {
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
         .request<Map<String, dynamic>>(
-            Method.get,
-            WanAndroidApi.getPath(
-                path: WanAndroidApi.ARTICLE_LISTPROJECT, page: page));
+        Method.get,
+        WanAndroidApi.getPath(
+            path: WanAndroidApi.ARTICLE_LISTPROJECT, page: page));
     List<ReposModel> list;
     if (baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
@@ -91,8 +93,8 @@ class WanRepository {
   Future<List<ReposModel>> getArticleList({int page, data}) async {
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
         .request<Map<String, dynamic>>(Method.get,
-            WanAndroidApi.getPath(path: WanAndroidApi.ARTICLE_LIST, page: page),
-            data: data);
+        WanAndroidApi.getPath(path: WanAndroidApi.ARTICLE_LIST, page: page),
+        data: data);
     List<ReposModel> list;
     if (baseResp.code != Constant.STATUS_SUCCESS) {
       return new Future.error(baseResp.msg);
@@ -136,30 +138,50 @@ class WanRepository {
     return list;
   }
 
-  Future<List<MessageModel>> getWxArticleList(
+  Future<MessagetBeanReturnvalue> getWxArticleList(
       {int id, int page: 1, data}) async {
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
         .request<Map<String, dynamic>>(
-            Method.post, WanAndroidApi.WXARTICLE_LIST,
-            data: data);
-    List<MessageModel> list = new List();
+        Method.post, WanAndroidApi.WXARTICLE_LIST,
+        data: data);
 
     if (baseResp.status != null &&
         baseResp.status != Constant.STATUS_SUCCESS1) {
       return new Future.error(baseResp.msg);
     }
-//    print("baseResp   1111  ${baseResp.data}");
     if (baseResp.data != null) {
       var listVo = baseResp.data;
       if (listVo != null && listVo is Map) {
-       var listModel =  MessageListModel.fromJson(listVo);
-
-        list.addAll(listModel.listVo);
+        var listModel = MessagetBeanReturnvalue.fromJson(listVo);
+        return listModel;
       } else {
-        return list;
+        return null;
       }
     }
-    return list;
+    return null;
+  }
+
+  Future<MessageDetailBeanReturnvalue> getMessageDetail(data) async {
+    print(data.toString());
+    BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
+        .request<Map<String, dynamic>>(
+        Method.get, WanAndroidApi.SCHOOL_FAMILY_COMMENT,
+        data: data);
+
+    if (baseResp.status != null &&
+        baseResp.status != Constant.STATUS_SUCCESS1) {
+      return new Future.error(baseResp.msg);
+    }
+    if (baseResp.data != null) {
+      var listVo = baseResp.data;
+      if (listVo != null && listVo is Map) {
+        var listModel = MessageDetailBeanReturnvalue.fromJson(listVo);
+        return listModel;
+      } else {
+        return null;
+      }
+    }
+    return null;
   }
 
   Future<List<TreeModel>> getWxArticleChapters() async {
@@ -186,8 +208,8 @@ class WanRepository {
 
     BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
         .request<Map<String, dynamic>>(
-            Method.get, WanAndroidApi.GET_INFORMATION,
-            data: data, options: mOptions);
+        Method.get, WanAndroidApi.GET_INFORMATION,
+        data: data, options: mOptions);
     IdentityBean treeList;
 
     if (baseResp.status != Constant.STATUS_SUCCESS1) {

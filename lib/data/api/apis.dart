@@ -25,25 +25,33 @@ class WanAndroidApi {
   /// 在某个公众号中搜索历史文章 http://wanandroid.com/wxarticle/list/405/1/json?k=Java
   static const String WXARTICLE_LIST = "api/schoolFamily/list/";
 
+  /**
+   * 接受通知和发布的通知详情
+   */
+  static const String SCHOOL_FAMILY_COMMENT =
+      "api/schoolFamily/listMessageComment/";
   static const String USER_REGISTER = "user/register"; //注册
   static const String USER_LOGIN = "api/login/login"; //登录
   static const String USER_LOGOUT = "user/logout"; //退出
-   static const String MESSAGE_b = "http://192.168.0.111:8080/renxingbao/";
-   static const String MESSAGE_a = "http://api.szwyx.com/renxingbao/";
+  static const String MESSAGE_b = "http://192.168.0.111:8080/renxingbao/";
+  static const String MESSAGE_a = "http://api.szwyx.com/renxingbao/";
+
   /*测试*/
-   static const String MESSAGE_UR = "http://test.szwyx.com/renxingbao/";
+  static const String MESSAGE_UR = "http://test.szwyx.com/renxingbao/";
   static const String MESSAGE_U = MESSAGE_UR;
 
-
   /*首页banner*/
-  static const   String MYSCHOOL = "api/homePage/mySchool";
+  static const String MYSCHOOL = "api/homePage/mySchool";
+
   /*首页接口*/
-  static const   String MY_MENU = "api/homePage/myMenu";
+  static const String MY_MENU = "api/homePage/myMenu";
+
   /*
          * 确认身份后得到个人信息
          * */
-  static const   String GET_INFORMATION = "api/login/getMyInformation/";
-  static const String HOME_HONOR_LIST = "api/offenseStudentOffense/goodListForPage";
+  static const String GET_INFORMATION = "api/login/getMyInformation/";
+  static const String HOME_HONOR_LIST =
+      "api/offenseStudentOffense/goodListForPage";
 
   static String getPath({String path: '', int page, String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);

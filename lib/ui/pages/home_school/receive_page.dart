@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/data/user_info/identity_info.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/message_bloc.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/message_detail.dart';
@@ -141,7 +142,7 @@ class _ReceivePageButton extends State<ReceivePage> {
           child: new StreamBuilder(
               stream: bloc.receiveMessageStream,
               builder: (BuildContext context,
-                  AsyncSnapshot<List<MessageModel>> snapshot) {
+                  AsyncSnapshot<List<MessagetBeanReturnvalueListvo>> snapshot) {
                 return new RefreshScaffold(
                   labelId: labelId,
                   isLoading: snapshot.data == null,
@@ -218,7 +219,7 @@ class _ReceivePageButton extends State<ReceivePage> {
     );
   }
 
-  Widget buildWxArticle(BuildContext context, List<MessageModel> list) {
+  Widget buildWxArticle(BuildContext context, List<MessagetBeanReturnvalueListvo> list) {
     print("buildWxArticle   ${list.toString()}   ");
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);

@@ -98,6 +98,8 @@ flutter:
     - assets/images/jx_siliao.png
     - assets/images/jx_tongzhi.png
     - assets/images/jx_xingxiang.png
+    - assets/images/images_zuo.png
+    - assets/images/qipao_you1.png
     - assets/images/weibosdk_navigationbar_back_highlighted.png
 
     - assets/data/china.json

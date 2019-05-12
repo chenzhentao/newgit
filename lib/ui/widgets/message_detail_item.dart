@@ -2,30 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/models/EnmuModels.dart';
+import 'package:flutter_wanandroid/models/message_detail_bean_entity.dart';
 import 'package:flutter_wanandroid/ui/pages/home_school/message_detail.dart';
 
-class MessageItem extends StatelessWidget {
-  const MessageItem(this.model, {Key key, this.isHome}) : super(key: key);
+class MessageDetailItem extends StatelessWidget {
+  const MessageDetailItem(this.model, int userId, {Key key, }) : super(key: key);
 
-  final MessagetBeanReturnvalueListvo model;
-  final bool isHome;
+  final MessageDetailBeanReturnvalueListvo model;
+
 
   @override
   Widget build(BuildContext context) {
     return new InkWell(
       onTap: () {
-        // new GestureDetector(
-        //        onTap: () {
-        print(" 跳到详情");
-        Navigator.push(
-          context,
-          new MaterialPageRoute(
-            builder: (context) => new MessageDetailPage(model),
-          ),
-        );
-        //        },
-        //        ,
-        //      )child:
+      
       },
       child: new Container(
           padding: EdgeInsets.all(16.0),
@@ -40,8 +30,8 @@ class MessageItem extends StatelessWidget {
                     children: <Widget>[
                       new Expanded(
                         child: new Text(
-                          model.msgTitle != null
-                              ? "${model.msgTitle}${model.msgTitle}${model.msgTitle}${model.msgTitle}${model.msgTitle}${model.msgTitle}"
+                          model.createDate != null
+                              ? "${model.createDate}${model.createDate}${model.createDate}${model.createDate}${model.createDate}${model.createDate}"
                               : "",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -49,8 +39,8 @@ class MessageItem extends StatelessWidget {
                         ),
                       ),
                       new Expanded(
-                          child: new Text(isHome?
-                        "发布人：${model.sendName}":"接收对象:${model.msgReceiveNames}",
+                          child: new Text(
+                        "发布人：${model.userName}",
                         maxLines: 1,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
@@ -64,12 +54,12 @@ class MessageItem extends StatelessWidget {
                     children: <Widget>[
                       new Expanded(
                         child: new Text(
-                          model.msgContent != null
-                              ? "${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}"
-                                  "${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}"
-                                  "${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}"
-                                  "${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}"
-                                  "${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}${model.msgContent}"
+                          model.content != null
+                              ? "${model.content}${model.content}${model.content}${model.content}${model.content}${model.content}${model.content}"
+                                  "${model.content}${model.content}${model.content}${model.content}${model.content}"
+                                  "${model.content}${model.content}${model.content}${model.content}${model.content}"
+                                  "${model.content}${model.content}${model.content}${model.content}${model.content}"
+                                  "${model.content}${model.content}${model.content}${model.content}${model.content}"
                               : "",
                           maxLines: 5,
                           overflow: TextOverflow.ellipsis,
@@ -90,12 +80,12 @@ class MessageItem extends StatelessWidget {
                             child: new FlatButton(
                                 onPressed: () {},
                                 child: Text(
-                                  "${model.hasRead == 0 ? "已读" : "未读"}",
+                                  "${model.userId == 0 ? "已读" : "未读"}",
                                   maxLines: 1,
                                   style: TextStyle(color: Colors.white),
                                 ))),
                         decoration: BoxDecoration(
-                            color: model.hasRead == 0
+                            color: model.userId == 0
                                 ? Colors.purpleAccent
                                 : Colors.red,
                             borderRadius:
@@ -110,18 +100,18 @@ class MessageItem extends StatelessWidget {
                       new Row(
                         children: <Widget>[
                           new Text(
-                            "类型：${PushType.getPushTypeString(model.msgScopeType)}",
+                            "类型：}",
                             style: TextStyles.listExtra,
                           ),
                           Gaps.hGap10,
                           new Text(
-                            "范围：${MessageType.getPushTypeString(model.msgType)}",
+                            "范围：}",
                             style: TextStyles.listExtra,
                           ),
                         ],
                       ),
                       new Text(
-                        "${model.createDateApi}",
+                        "${model.createDate}",
 
                         style: TextStyles.listExtra,
                       ),
@@ -137,7 +127,7 @@ class MessageItem extends StatelessWidget {
                       ),
                       Gaps.hGap5,
                       new Text(
-                        "${model.commentCount}",
+                        "${model.userId}",
                         style: TextStyles.listExtra,
                       ),
                       Gaps.hGap10,
@@ -148,7 +138,7 @@ class MessageItem extends StatelessWidget {
                       ),
                       Gaps.hGap5,
                       new Text(
-                        "${model.commentCount}",
+                        "${model.userId}",
                         style: TextStyles.listExtra,
                       ),
                     ],

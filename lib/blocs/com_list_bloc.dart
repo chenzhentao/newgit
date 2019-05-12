@@ -1,17 +1,18 @@
 import 'dart:collection';
 
 import 'package:flutter_wanandroid/common/component_index.dart';
+import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
 
 class ComListBloc implements BlocBase {
-  BehaviorSubject<List<MessageModel>> _comListData =
-      BehaviorSubject<List<MessageModel>>();
+  BehaviorSubject<List<MessagetBeanReturnvalueListvo>> _comListData =
+      BehaviorSubject<List<MessagetBeanReturnvalueListvo>>();
 
-  Sink<List<MessageModel>> get _comListSink => _comListData.sink;
+  Sink<List<MessagetBeanReturnvalueListvo>> get _comListSink => _comListData.sink;
 
-  Stream<List<MessageModel>> get comListStream => _comListData.stream;
+  Stream<List<MessagetBeanReturnvalueListvo>> get comListStream => _comListData.stream;
 
-  List<MessageModel> comList;
+  List<MessagetBeanReturnvalueListvo> comList;
   int _comListPage = 0;
 
   BehaviorSubject<StatusEvent> _comListEvent = BehaviorSubject<StatusEvent>();
@@ -77,7 +78,7 @@ class ComListBloc implements BlocBase {
         comList.clear();
       }
 //      comList.add(list);
-      _comListSink.add(UnmodifiableListView<MessageModel>(comList));
+      _comListSink.add(UnmodifiableListView<MessagetBeanReturnvalueListvo>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
           ObjectUtil.isEmpty(list) ? RefreshStatus.completed : RefreshStatus.idle,
           cid: cid));
@@ -93,8 +94,8 @@ class ComListBloc implements BlocBase {
       if (page == 1) {
         comList.clear();
       }
-      comList.addAll(list);
-      _comListSink.add(UnmodifiableListView<MessageModel>(comList));
+      comList.addAll(list.listVo);
+      _comListSink.add(UnmodifiableListView<MessagetBeanReturnvalueListvo>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
           ObjectUtil.isEmpty(list) ? RefreshStatus.completed: RefreshStatus.idle,
           cid: cid));
@@ -114,7 +115,7 @@ class ComListBloc implements BlocBase {
         comList.clear();
       }
 //      comList.addAll(list);
-      _comListSink.add(UnmodifiableListView<MessageModel>(comList));
+      _comListSink.add(UnmodifiableListView<MessagetBeanReturnvalueListvo>(comList));
       _comListEventSink.add(new StatusEvent(labelId,
           ObjectUtil.isEmpty(list) ? RefreshStatus.completed : RefreshStatus.idle,
           cid: cid));
