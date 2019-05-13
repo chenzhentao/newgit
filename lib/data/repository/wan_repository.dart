@@ -183,6 +183,28 @@ class WanRepository {
     }
     return null;
   }
+  Future<MessageDetailBeanReturnvalue> replayMessages(data) async {
+    print(data.toString());
+    BaseResp<Map<String, dynamic>> baseResp = await DioUtil()
+        .request<Map<String, dynamic>>(
+        Method.post, WanAndroidApi.SCHOOL_FAMILY_ADD_COMMENT,
+        data: data);
+
+    if (baseResp.status != null &&
+        baseResp.status != Constant.STATUS_SUCCESS1) {
+      return new Future.error(baseResp.msg);
+    }
+    if (baseResp.data != null) {
+      var listVo = baseResp.data;
+      if (listVo != null && listVo is Map) {
+        var listModel = MessageDetailBeanReturnvalue.fromJson(listVo);
+        return listModel;
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
 
   Future<List<TreeModel>> getWxArticleChapters() async {
     BaseResp<List> baseResp = await DioUtil().request<List>(Method.get,

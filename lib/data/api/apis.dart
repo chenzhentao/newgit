@@ -24,7 +24,8 @@ class WanAndroidApi {
   /// 查看某个公众号历史数据 http://wanandroid.com/wxarticle/list/405/1/json
   /// 在某个公众号中搜索历史文章 http://wanandroid.com/wxarticle/list/405/1/json?k=Java
   static const String WXARTICLE_LIST = "api/schoolFamily/list/";
-
+  /*我的消息详情----消息回复*/
+  static const  String SCHOOL_FAMILY_ADD_COMMENT = "api/schoolFamily/addComment";
   /**
    * 接受通知和发布的通知详情
    */

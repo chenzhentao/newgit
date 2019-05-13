@@ -29,6 +29,7 @@ class M_MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new DefaultTabController(
+
         length: _allPages.length,
         child: new Scaffold(
           appBar: new MyAppBar(
@@ -45,6 +46,7 @@ class M_MainPage extends StatelessWidget {
                   })
             ],
           ),
+
           body: new TabBarViewLayout(),
           drawer: new Drawer(child: new IdentityPage(mData:SpHelper.getLoginBeanList()),
           ),

@@ -57,7 +57,6 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
         backgroundColor: Colors.white,
         leading: new Container(
           decoration: BoxDecoration(
-              shape: BoxShape.circle,
               image: DecorationImage(
                 image: AssetImage(
                   Utils.getImgPath('weibosdk_navigationbar_back_highlighted'),

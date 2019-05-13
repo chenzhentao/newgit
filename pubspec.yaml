@@ -49,6 +49,9 @@ dependencies:
   webview_flutter: ^0.3.3+1
   # https://github.com/flutterchina/flukit.
   flukit: ^1.0.0
+  #  https://github.com/flutter/plugins/blob/master/packages/image_picker/
+  image_picker: ^0.5.0+3
+  video_player: 0.5.2
   fluttertoast: ^3.0.3
   flutter_staggered_grid_view: "^0.2.7"
   flutter_datetime_picker: ^1.2.0
@@ -100,6 +103,11 @@ flutter:
     - assets/images/jx_xingxiang.png
     - assets/images/images_zuo.png
     - assets/images/qipao_you1.png
+    - assets/images/qipao_you.png
+    - assets/images/qipao_zuo.png
+    - assets/images/bj_fabu_tupian.png
+    - assets/images/yuyin.png
+    - assets/images/jianpan.png
     - assets/images/weibosdk_navigationbar_back_highlighted.png
 
     - assets/data/china.json

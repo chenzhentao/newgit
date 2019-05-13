@@ -10,7 +10,7 @@ import 'package:flutter_wanandroid/ui/pages/page_index.dart';
 
 void main() => runApp(BlocProvider<ApplicationBloc>(
       bloc: ApplicationBloc(),
-      child: BlocProvider(child: MyApp(), bloc: MainBloc()),
+      child: BlocProvider(child:Theme(data: ThemeData(backgroundColor:new Color.fromARGB(1, 246, 249, 253) ), child: MyApp()) , bloc: MainBloc()),
     ));
 
 class MyApp extends StatefulWidget {

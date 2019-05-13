@@ -73,7 +73,8 @@ class MHomePage extends StatelessWidget {
     );
   }
 
-  Widget buildWxArticle(BuildContext context, List<MessagetBeanReturnvalueListvo> list) {
+  Widget buildWxArticle(
+      BuildContext context, List<MessagetBeanReturnvalueListvo> list) {
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
     }
@@ -124,10 +125,12 @@ class MHomePage extends StatelessWidget {
 
     return new StreamBuilder(
         stream: bloc.bannerStream,
+
         builder:
             (BuildContext context, AsyncSnapshot<List<BannerModel>> snapshot) {
           return new RefreshScaffold(
             labelId: labelId,
+
             isLoading: snapshot.data == null,
             controller: _controller,
             enablePullUp: false,
@@ -135,6 +138,7 @@ class MHomePage extends StatelessWidget {
               return bloc.onRefresh(labelId: labelId, bean: mData);
             },
             child: new ListView(
+
               children: <Widget>[
                 buildBanner(context, snapshot.data),
                 buildMenu(context, bloc.hotRecModel),
@@ -149,13 +153,13 @@ class MHomePage extends StatelessWidget {
                 new StreamBuilder(
                     stream: bloc.recWxArticleStream,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<MessagetBeanReturnvalueListvo>> snapshot) {
+                        AsyncSnapshot<List<MessagetBeanReturnvalueListvo>>
+                            snapshot) {
                       return buildWxArticle(context, snapshot.data);
                     }),
               ],
             ),
           );
-
         });
   }
 
@@ -190,12 +194,14 @@ class MHomePage extends StatelessWidget {
       ];
     }
     return GridView.count(
+
+        padding: EdgeInsets.only(top: 8.0),
         crossAxisCount: 4,
-        mainAxisSpacing: 4.0,
+        mainAxisSpacing: 0.0,
         crossAxisSpacing: 4.0,
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
-        childAspectRatio: 1 / 1.3,
+        childAspectRatio: 1 / 1.15,
         children: hotRecModel.map<Widget>((ComModel commodel) {
           return new MenuItem(commodel);
         }).toList());
@@ -206,46 +212,56 @@ class MHomePage extends StatelessWidget {
     if (recReposModel == null) {
       recReposModel = [
         ReposModel(studentName: "小明", className: "五年级三班", subTypeName: "得奖了"),
-        ReposModel(studentName: "小花", className: "五年级三班", subTypeName: "考上大学"),
-        ReposModel(studentName: "小黄", className: "五年级三班", subTypeName: "得奖了"),
-        ReposModel(studentName: "小青", className: "五年级三班", subTypeName: "得奖了")
+        ReposModel(studentName: "小花", className: "五年级二班", subTypeName: "考上大学"),
+        ReposModel(studentName: "小黄", className: "五年级一班", subTypeName: "得奖了"),
+        ReposModel(studentName: "小青", className: "五年级九班", subTypeName: "得奖了")
       ];
     }
     return new Container(
-      height: 40,
-      margin: EdgeInsets.all(10),
-      child: new Swiper(
-        children: recReposModel.map<Widget>((ReposModel reposModel) {
-          return new Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              new Text(
-                reposModel.studentName,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.blue, fontSize: 16.0),
+        height: 50,
+        color: Colors.white,
+        padding: EdgeInsets.only(top: 4,left: 10,right: 10,bottom: 4),
+        margin: EdgeInsets.all(10),
+        child: new Row(
+          children: <Widget>[
+            new Text(
+              '精品\n文章',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.blue, fontSize: 14.0),
+            ),
+            Gaps.hGap10,
+            new Expanded(
+
+              child: new Swiper(
+                children: recReposModel.map<Widget>((ReposModel reposModel) {
+                  return new Row(
+                    mainAxisSize: MainAxisSize.min,
+
+                    children: <Widget>[
+                      new Text(
+                        reposModel.className,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black54, fontSize: 14.0,fontWeight: FontWeight.bold),
+                      ),
+                      new Text(
+                        reposModel.subTypeName,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black54, fontSize: 14.0),
+                      )
+                    ],
+                  );
+                }).toList(),
+                controller: new SwiperController(),
+                circular: true,
+                autoStart: true,
+                direction: Axis.vertical,
               ),
-              new Text(
-                reposModel.className,
-                maxLines: 1,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.blue, fontSize: 16.0),
-              ),
-              new Text(
-                reposModel.subTypeName,
-                maxLines: 1,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.blue, fontSize: 16.0),
-              )
-            ],
-          );
-        }).toList(),
-        controller: new SwiperController(),
-        circular: true,
-        autoStart: true,
-        direction: Axis.vertical,
-      ),
-    );
+            )
+          ],
+        ));
   }
 
   Widget buildHonor(BuildContext context, List<ReposModel> recReposModel) {
@@ -348,21 +364,25 @@ class MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
+
       onTap: () {
         print("_item${_item.functionId}");
         Navigator.push(context,
             new MaterialPageRoute(builder: (context) => new HomeSchoolPage()));
       },
-      child: new Column(children: <Widget>[
+      child: new Column(
+
+          children: <Widget>[
         new CachedNetworkImage(
-          fit: BoxFit.contain,
+          width: 66,
+          fit: BoxFit.fitWidth,
           imageUrl: _item.menuImage,
           placeholder: new ProgressView(),
           errorWidget: new Icon(Icons.error),
         ),
         new Text(
           _item.menuName,
-          style: Theme.of(context).textTheme.body1,
+          style: Theme.of(context).textTheme.body2,
         ),
       ]),
     );
