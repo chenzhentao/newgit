@@ -2,18 +2,68 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-class IamgePickerPage extends StatefulWidget {
-  IamgePickerPage({Key key, this.title}) : super(key: key);
+class IamgePickerPage extends PopupRoute {
+  IamgePickerPage({  RouteSettings settings,}) : super(settings: settings);
 
-  final String title;
+
+  final DatePickerTheme theme= DatePickerTheme();
+  @override
+  // TODO: implement barrierColor
+  Color get barrierColor => Colors.black54;
 
   @override
-  _IamgePickerPageState createState() => _IamgePickerPageState();
+  // TODO: implement barrierDismissible
+  bool get barrierDismissible => true;
+
+  @override
+  // TODO: implement barrierLabel
+  String get barrierLabel => '';
+
+
+  @override
+  // TODO: implement transitionDuration
+  Duration get transitionDuration => const Duration(milliseconds: 200);
+  AnimationController _animationController;
+
+  @override
+  AnimationController createAnimationController() {
+    assert(_animationController == null);
+    _animationController =
+        BottomSheet.createAnimationController(navigator.overlay);
+    return _animationController;
+  }
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    Widget bottomSheet = new MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: _ImagePickerComponent(
+        route: this,
+      ),
+    );
+    ThemeData inheritTheme = Theme.of(context, shadowThemeOnly: true);
+    if (inheritTheme != null) {
+      bottomSheet = new Theme(data: inheritTheme, child: bottomSheet);
+    }
+    return bottomSheet;
+  }
+}
+class _ImagePickerComponent extends StatefulWidget {
+ final IamgePickerPage route;
+
+  _ImagePickerComponent(
+      {Key key,
+        @required this.route,});
+  @override
+  __ImagePickerComponentState createState() => __ImagePickerComponentState();
 }
 
-class _IamgePickerPageState extends State<IamgePickerPage> {
+class __ImagePickerComponentState extends State<_ImagePickerComponent> {
+
   File _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -139,10 +189,80 @@ class _IamgePickerPageState extends State<IamgePickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    DatePickerTheme theme = widget.route.theme;
+    return      new GestureDetector(
+      child: new AnimatedBuilder(
+        animation: widget.route.animation,
+        builder: (BuildContext context, Widget child) {
+          return new ClipRect(
+
+              child: new CustomSingleChildLayout(
+              delegate: new _BottomPickerLayout(
+              widget.route.animation.value, theme,
+              showTitleActions: false),
+
+          child:  new GestureDetector(
+              child: Material(
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {
+                        isVideo = false;
+                        _onImageButtonPressed(ImageSource.gallery);
+                      },
+//                      heroTag: 'image0',
+//                      tooltip: 'Pick Image from gallery',
+                      child: const Icon(Icons.photo_library),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          isVideo = false;
+                          _onImageButtonPressed(ImageSource.camera);
+                        },
+//                        heroTag: 'image1',
+//                        tooltip: 'Take a Photo',
+                        child: const Icon(Icons.camera_alt),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: RaisedButton(
+                        color: Colors.red,
+                        onPressed: () {
+                          isVideo = true;
+                          _onImageButtonPressed(ImageSource.gallery);
+                        },
+//                        heroTag: 'video0',
+//                        tooltip: 'Pick Video from gallery',
+                        child: const Icon(Icons.video_library),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: RaisedButton(
+                        color: Colors.red,
+                        onPressed: () {
+                          isVideo = true;
+                          _onImageButtonPressed(ImageSource.camera);
+                        },
+//                        heroTag: 'video1',
+//                        tooltip: 'Take a Video',
+                        child: const Icon(Icons.videocam),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+              )
+          );
+        },
       ),
+    )/*Scaffold(
       body: Center(
         child: Platform.isAndroid
             ? FutureBuilder<void>(
@@ -228,7 +348,7 @@ class _IamgePickerPageState extends State<IamgePickerPage> {
           ),
         ],
       ),
-    );
+    )*/;
   }
 
   Text _getRetrieveErrorWidget() {
@@ -282,5 +402,40 @@ class AspectRatioVideoState extends State<AspectRatioVideo> {
     } else {
       return Container();
     }
+  }
+}
+
+class _BottomPickerLayout extends SingleChildLayoutDelegate {
+  _BottomPickerLayout(this.progress, this.theme,
+      {this.itemCount, this.showTitleActions});
+
+  final double progress;
+  final int itemCount;
+  final bool showTitleActions;
+  final DatePickerTheme theme;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    double maxHeight = theme.containerHeight;
+    if (showTitleActions) {
+      maxHeight += theme.titleHeight;
+    }
+
+    return new BoxConstraints(
+        minWidth: constraints.maxWidth,
+        maxWidth: constraints.maxWidth,
+        minHeight: 0.0,
+        maxHeight: maxHeight);
+  }
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    double height = size.height - childSize.height * progress;
+    return new Offset(0.0, height);
+  }
+
+  @override
+  bool shouldRelayout(_BottomPickerLayout oldDelegate) {
+    return progress != oldDelegate.progress;
   }
 }

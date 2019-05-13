@@ -31,8 +31,14 @@ class _MessageDetailState extends State<MessageDetailPage> {
   TextEditingController _replyFieldController = new TextEditingController();
 
   void _getDatas() {
-    mobileId = SpHelper.getIndentityBean().mobileId;
-    mUserId = SpHelper.getIndentityBean().userVo.id.toString();
+    mobileId = SpHelper
+        .getIndentityBean()
+        .mobileId;
+    mUserId = SpHelper
+        .getIndentityBean()
+        .userVo
+        .id
+        .toString();
     _onLoading(true);
   }
 
@@ -66,115 +72,125 @@ class _MessageDetailState extends State<MessageDetailPage> {
   Widget build(BuildContext context) {
     var headView = new Container(
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        new Expanded(
-            child: Container(
-          child: SmartRefresher(
-              controller: _refreshController,
-              enablePullDown: true,
-              isNestWrapped: true,
-              header: ClassicHeader(
-                idleIcon: Container(),
-                idleText: "Load more...",
-              ),
-              enablePullUp: true,
-              onRefresh: () {
-                _onLoading(true);
-              },
-              onLoading: () {
-                _onLoading(false);
-              },
-              footer: new ClassicFooter(
-                noDataText: '没有更多数据',
-                noMoreIcon: Text(""),
-              ),
-              onOffsetChange: _onOffsetCallback,
-              child: ListView.builder(
-                itemCount: data.length + 1,
-                itemBuilder: _itemBuild,
-              )),
-        )),
-        new Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new IconButton(
-              icon:
-                  Image.asset(Utils.getImgPath(isRecord ? 'yuyin' : 'jianpan')),
-              onPressed: () {
-                setState(() {
-                  isRecord = !isRecord;
-                });
-              },
-            ),
             new Expanded(
-              child: new TextField(
-                controller: _replyFieldController,
-                onSubmitted: (value) {
-                  _replyMessage(value);
-
-                },
-                /*onChanged: (value) {
+                child: Container(
+                  child: SmartRefresher(
+                      controller: _refreshController,
+                      enablePullDown: true,
+                      isNestWrapped: true,
+                      header: ClassicHeader(
+                        idleIcon: Container(),
+                        idleText: "Load more...",
+                      ),
+                      enablePullUp: true,
+                      onRefresh: () {
+                        _onLoading(true);
+                      },
+                      onLoading: () {
+                        _onLoading(false);
+                      },
+                      footer: new ClassicFooter(
+                        noDataText: '没有更多数据',
+                        noMoreIcon: Text(""),
+                      ),
+                      onOffsetChange: _onOffsetCallback,
+                      child: ListView.builder(
+                        itemCount: data.length + 1,
+                        itemBuilder: _itemBuild,
+                      )),
+                )),
+            new Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                new IconButton(
+                  icon:
+                  Image.asset(Utils.getImgPath(isRecord ? 'yuyin' : 'jianpan')),
+                  onPressed: () {
+                    setState(() {
+                      isRecord = !isRecord;
+                    });
+                  },
+                ),
+                new Expanded(
+                  child: new TextField(
+                    controller: _replyFieldController,
+                    onSubmitted: (value) {
+                      _replyMessage(value);
+                    },
+                    /*onChanged: (value) {
                   LogUtil.e("onChanged ${value}");
 
                   LogUtil.e(
                       "onChanged _replyFieldController${_replyFieldController.value.toString()}");
                 },*/
-                maxLines: 10,
-                minLines: 1,
-                decoration: new InputDecoration(
-                    contentPadding: EdgeInsets.only(
-                        left: 8.0, top: 10.0, bottom: 6.0, right: 10.0),
-                    labelText: '请输入',
-                    fillColor: Colors.blue,
-                    border: new OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue)),
-                    focusedBorder: new OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue))),
-                style: TextStyle(color: Colors.black87),
-                focusNode: FocusNode(),
-              ),
-            ),
-            new IconButton(
-              icon: Image.asset(Utils.getImgPath('bj_fabu_tupian')),
-              onPressed: () {   Navigator.push(
+                    maxLines: 10,
+                    minLines: 1,
+                    decoration: new InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: 8.0, top: 10.0, bottom: 6.0, right: 10.0),
+                        labelText: '请输入',
+                        fillColor: Colors.blue,
+                        border: new OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue)),
+                        focusedBorder: new OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue))),
+                    style: TextStyle(color: Colors.black87),
+                    focusNode: FocusNode(),
+                  ),
+                ),
+                new IconButton(
+                  icon: Image.asset(Utils.getImgPath('bj_fabu_tupian')),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        new IamgePickerPage());
+                    /*Navigator.push(
                 context,
                 new MaterialPageRoute(
                   builder: (context) => new IamgePickerPage(title:"选择图片"),
                 ),
-              );},
+              );*/
+                  },
+                ),
+                new Padding(
+                    padding: EdgeInsets.only(right: 6.0),
+                    child: new Theme(
+                      data: Theme.of(context).copyWith(
+                          buttonTheme: ButtonThemeData(
+                              minWidth: 40.0,
+                              height: 5,
+                              padding: EdgeInsets.only(
+                                  left: 10.0,
+                                  top: 0.0,
+                                  right: 10.0,
+                                  bottom: 0.0))),
+                      child: new RaisedButton(
+                        padding: EdgeInsets.only(
+                            left: 10.0, top: 2, bottom: 2.0, right: 10.0),
+                        onPressed: () {
+                          _replyMessage(_replyFieldController.text);
+                        },
+                        color: Colors.blueAccent,
+                        child: Text(
+                          "提交",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(8.0))),
+                      ),
+                    )),
+              ],
             ),
-            new Padding(
-                padding: EdgeInsets.only(right: 6.0),
-                child: new Theme(
-                  data: Theme.of(context).copyWith(
-                      buttonTheme: ButtonThemeData(
-                          minWidth: 40.0,
-                          height: 5,
-                          padding: EdgeInsets.only(
-                              left: 10.0, top: 0.0, right: 10.0, bottom: 0.0))),
-                  child: new RaisedButton(
-                    padding: EdgeInsets.only(
-                        left: 10.0, top: 2, bottom: 2.0, right: 10.0),
-                    onPressed: () {
-                      _replyMessage(_replyFieldController.text);
-                    },
-                    color: Colors.blueAccent,
-                    child: Text(
-                      "提交",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                  ),
-                )),
           ],
-        ),
-      ],
-    ));
+        ));
     return Scaffold(
-      backgroundColor: Theme.of(context).canvasColor,
+      backgroundColor: Theme
+          .of(context)
+          .canvasColor,
       appBar: new MyAppBar(
         title: Text("通知详情"),
         centerTitle: true,
@@ -206,9 +222,10 @@ class _MessageDetailState extends State<MessageDetailPage> {
     }
     LogUtil.e(dataMap.toString());
     wanRepository.replayMessages(dataMap).then((list) {
-      if (mounted) setState(() {
-        _onLoading(true);
-      });
+      if (mounted)
+        setState(() {
+          _onLoading(true);
+        });
     });
   }
 
@@ -283,10 +300,10 @@ class _MessageDetailState extends State<MessageDetailPage> {
               children: <Widget>[
                 new Expanded(
                     child: new Text(
-                  "发布人：${widget.model.sendName}",
-                  maxLines: 1,
-                  style: TextStyle(color: Colors.blue),
-                )),
+                      "发布人：${widget.model.sendName}",
+                      maxLines: 1,
+                      style: TextStyle(color: Colors.blue),
+                    )),
                 new Expanded(
                     child: new Text("接收人：${widget.model.msgReceiveNames}",
                         style: TextStyle(color: Colors.blue), maxLines: 1)),
@@ -312,11 +329,23 @@ class _MessageDetailState extends State<MessageDetailPage> {
                 ))
           ]),
       padding:
-          EdgeInsets.only(left: 18.0, top: 10.0, right: 18.0, bottom: 10.0),
+      EdgeInsets.only(left: 18.0, top: 10.0, right: 18.0, bottom: 10.0),
       decoration: new BoxDecoration(
           color: Colors.white,
           border: new Border.all(width: 0.33, color: Colours.divider)),
     );
+  }
+
+  PopupMenuButton showChiocePopwin(BuildContext context) {
+    return PopupMenuButton(itemBuilder: _popMenuItemBuild);
+  }
+
+  List<String> _imageOptions = ['相册', "相机", '选择视频', '录视频'];
+
+  List<PopupMenuEntry> _popMenuItemBuild(BuildContext context) {
+    return List.generate(_imageOptions.length, (index) {
+      new RaisedButton(onPressed: () {}, child: Text(_imageOptions[index]),);
+    }).toList();
   }
 }
 
@@ -352,37 +381,43 @@ class _ItemState extends State<Item> {
                   new Expanded(
                       child: new Container(
                           child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      new Padding(
-                        padding: EdgeInsets.only(right: 10.0),
-                        child: Text(
-                          '${itemData.userName}',
-                          textAlign: TextAlign.end,
-                          style:
-                              TextStyle(fontSize: 12.0, color: Colors.black54),
-                        ),
-                      ),
-                      Gaps.vGap10,
-                      new Container(
-                          padding: EdgeInsets.only(
-                              left: 7.0, top: 9.0, right: 22.0, bottom: 5.0),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Utils.getImgPath('qipao_you')),
-                              centerSlice:
-                                  new Rect.fromLTRB(7.0, 45.0, 30.0, 51.0),
-                            ),
-                          ),
-                          child: Text(
-                            '${itemData.content}拉尔来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                            maxLines: 10,
-                          ))
-                    ],
-                  ))),
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              new Padding(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: Text(
+                                  '${itemData.userName}',
+                                  textAlign: TextAlign.end,
+                                  style:
+                                  TextStyle(
+                                      fontSize: 12.0, color: Colors.black54),
+                                ),
+                              ),
+                              Gaps.vGap10,
+                              new Container(
+                                  padding: EdgeInsets.only(
+                                      left: 7.0,
+                                      top: 9.0,
+                                      right: 22.0,
+                                      bottom: 5.0),
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          Utils.getImgPath('qipao_you')),
+                                      centerSlice:
+                                      new Rect.fromLTRB(7.0, 45.0, 30.0, 51.0),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${itemData
+                                        .content}拉尔来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                    ),
+                                    maxLines: 10,
+                                  ))
+                            ],
+                          ))),
                   Image.network(
                     "http://126306.sgss8.com/upload/2016042923/232418_1381.jpg",
                     width: 35.0,
@@ -417,37 +452,43 @@ class _ItemState extends State<Item> {
                   new Expanded(
                       child: new Container(
                           child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          '${itemData.userName}',
-                          textAlign: TextAlign.start,
-                          style:
-                              TextStyle(fontSize: 12.0, color: Colors.black54),
-                        ),
-                      ),
-                      Gaps.vGap10,
-                      new Container(
-                          padding: EdgeInsets.only(
-                              left: 27.0, top: 9.0, right: 8.0, bottom: 5.0),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(Utils.getImgPath('qipao_zuo')),
-                              centerSlice:
-                                  new Rect.fromLTRB(27.0, 45.0, 57.0, 51.0),
-                            ),
-                          ),
-                          child: Text(
-                            '${itemData.content}拉尔来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                            maxLines: 10,
-                          ))
-                    ],
-                  ))),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              new Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  '${itemData.userName}',
+                                  textAlign: TextAlign.start,
+                                  style:
+                                  TextStyle(
+                                      fontSize: 12.0, color: Colors.black54),
+                                ),
+                              ),
+                              Gaps.vGap10,
+                              new Container(
+                                  padding: EdgeInsets.only(
+                                      left: 27.0,
+                                      top: 9.0,
+                                      right: 8.0,
+                                      bottom: 5.0),
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          Utils.getImgPath('qipao_zuo')),
+                                      centerSlice:
+                                      new Rect.fromLTRB(27.0, 45.0, 57.0, 51.0),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${itemData
+                                        .content}拉尔来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                    ),
+                                    maxLines: 10,
+                                  ))
+                            ],
+                          ))),
                 ],
               ),
             ],
