@@ -116,9 +116,12 @@ class MessageDetailBeanReturnvalueListvo {
 	String userName;
 	int userId;
 	String content;
+	String photoUrl;
+	String videoUrl;
+	String firstVideoUrl;
 	String createDate;
 
-	MessageDetailBeanReturnvalueListvo({this.sendMoileId, this.contentId, this.pageSize, this.userName, this.userId, this.content, this.createDate});
+	MessageDetailBeanReturnvalueListvo({this.sendMoileId, this.contentId, this.pageSize, this.userName, this.userId, this.content,this.photoUrl,this.firstVideoUrl,this.videoUrl, this.createDate});
 
 	MessageDetailBeanReturnvalueListvo.fromJson(Map<String, dynamic> json) {
 		sendMoileId = json['sendMoileId'];
@@ -127,6 +130,9 @@ class MessageDetailBeanReturnvalueListvo {
 		userName = json['userName'];
 		userId = json['userId'];
 		content = json['content'];
+		photoUrl = json['photoUrl'];
+		firstVideoUrl = json['firstVideoUrl'];
+    videoUrl = json['videoUrl'];
 		createDate = json['createDate'];
 	}
 
@@ -138,6 +144,9 @@ class MessageDetailBeanReturnvalueListvo {
 		data['userName'] = this.userName;
 		data['userId'] = this.userId;
 		data['content'] = this.content;
+		data['photoUrl'] = this.photoUrl;
+		data['firstVideoUrl'] = this.firstVideoUrl;
+		data['videoUrl'] = this.videoUrl;
 		data['createDate'] = this.createDate;
 		return data;
 	}

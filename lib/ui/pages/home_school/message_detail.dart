@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
@@ -7,8 +11,13 @@ import 'package:flutter_wanandroid/models/EnmuModels.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_wanandroid/models/message_detail_bean_entity.dart';
 import 'package:flutter_wanandroid/ui/pages/demos/image_picker_demo.dart';
+import 'package:flutter_wanandroid/ui/pages/demos/sound_demo.dart';
+import 'package:flutter_wanandroid/ui/pages/demos/video_demo.dart';
+import 'package:flutter_wanandroid/ui/widgets/audio_record_button.dart';
 import 'package:flutter_wanandroid/ui/widgets/bubble_item.dart';
 import 'package:flutter_wanandroid/ui/widgets/message_detail_item.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:video_player/video_player.dart';
 
 class MessageDetailPage extends StatefulWidget {
   MessagetBeanReturnvalueListvo model;
@@ -30,15 +39,13 @@ class _MessageDetailState extends State<MessageDetailPage> {
 
   TextEditingController _replyFieldController = new TextEditingController();
 
+  get _result => (result) {
+        print("MessageDetailPage   ${result}");
+      };
+
   void _getDatas() {
-    mobileId = SpHelper
-        .getIndentityBean()
-        .mobileId;
-    mUserId = SpHelper
-        .getIndentityBean()
-        .userVo
-        .id
-        .toString();
+    mobileId = SpHelper.getIndentityBean().mobileId;
+    mUserId = SpHelper.getIndentityBean().userVo.id.toString();
     _onLoading(true);
   }
 
@@ -72,125 +79,131 @@ class _MessageDetailState extends State<MessageDetailPage> {
   Widget build(BuildContext context) {
     var headView = new Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new Expanded(
+            child: Container(
+          color: Colors.grey,
+          child: SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              isNestWrapped: true,
+              header: ClassicHeader(
+                idleIcon: Container(),
+                idleText: "Load more...",
+              ),
+              enablePullUp: true,
+              onRefresh: () {
+                _onLoading(true);
+              },
+              onLoading: () {
+                _onLoading(false);
+              },
+              footer: new ClassicFooter(
+                noDataText: '没有更多数据',
+                noMoreIcon: Text(""),
+              ),
+              onOffsetChange: _onOffsetCallback,
+              child: ListView.builder(
+                itemCount: data.length + 1,
+                itemBuilder: _itemBuild,
+              )),
+        )),
+        new Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            new Expanded(
-                child: Container(
-                  child: SmartRefresher(
-                      controller: _refreshController,
-                      enablePullDown: true,
-                      isNestWrapped: true,
-                      header: ClassicHeader(
-                        idleIcon: Container(),
-                        idleText: "Load more...",
-                      ),
-                      enablePullUp: true,
-                      onRefresh: () {
-                        _onLoading(true);
-                      },
-                      onLoading: () {
-                        _onLoading(false);
-                      },
-                      footer: new ClassicFooter(
-                        noDataText: '没有更多数据',
-                        noMoreIcon: Text(""),
-                      ),
-                      onOffsetChange: _onOffsetCallback,
-                      child: ListView.builder(
-                        itemCount: data.length + 1,
-                        itemBuilder: _itemBuild,
-                      )),
-                )),
-            new Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                new IconButton(
-                  icon:
+            new IconButton(
+              icon:
                   Image.asset(Utils.getImgPath(isRecord ? 'yuyin' : 'jianpan')),
-                  onPressed: () {
-                    setState(() {
-                      isRecord = !isRecord;
-                    });
-                  },
-                ),
-                new Expanded(
-                  child: new TextField(
-                    controller: _replyFieldController,
-                    onSubmitted: (value) {
-                      _replyMessage(value);
-                    },
-                    /*onChanged: (value) {
+              onPressed: () {
+                setState(() {
+                  isRecord = !isRecord;
+                });
+              },
+            ),
+            new Expanded(
+              child: new Stack(
+                children: <Widget>[
+                  new Offstage(
+                    offstage: isRecord,
+                    child: new TextField(
+                      controller: _replyFieldController,
+                      onSubmitted: (value) {
+                        _replyMessage(value);
+                      },
+                      /*onChanged: (value) {
                   LogUtil.e("onChanged ${value}");
 
                   LogUtil.e(
                       "onChanged _replyFieldController${_replyFieldController.value.toString()}");
                 },*/
-                    maxLines: 10,
-                    minLines: 1,
-                    decoration: new InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: 8.0, top: 10.0, bottom: 6.0, right: 10.0),
-                        labelText: '请输入',
-                        fillColor: Colors.blue,
-                        border: new OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue)),
-                        focusedBorder: new OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue))),
-                    style: TextStyle(color: Colors.black87),
-                    focusNode: FocusNode(),
+                      maxLines: 10,
+                      minLines: 1,
+                      decoration: new InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: 8.0, top: 10.0, bottom: 6.0, right: 10.0),
+                          labelText: '请输入',
+                          fillColor: Colors.blue,
+                          border: new OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue)),
+                          focusedBorder: new OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue))),
+                      style: TextStyle(color: Colors.black87),
+                      focusNode: FocusNode(),
+                    ),
                   ),
-                ),
-                new IconButton(
-                  icon: Image.asset(Utils.getImgPath('bj_fabu_tupian')),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        new IamgePickerPage());
-                    /*Navigator.push(
-                context,
-                new MaterialPageRoute(
-                  builder: (context) => new IamgePickerPage(title:"选择图片"),
-                ),
-              );*/
-                  },
-                ),
-                new Padding(
-                    padding: EdgeInsets.only(right: 6.0),
-                    child: new Theme(
-                      data: Theme.of(context).copyWith(
-                          buttonTheme: ButtonThemeData(
-                              minWidth: 40.0,
-                              height: 5,
-                              padding: EdgeInsets.only(
-                                  left: 10.0,
-                                  top: 0.0,
-                                  right: 10.0,
-                                  bottom: 0.0))),
-                      child: new RaisedButton(
-                        padding: EdgeInsets.only(
-                            left: 10.0, top: 2, bottom: 2.0, right: 10.0),
-                        onPressed: () {
-                          _replyMessage(_replyFieldController.text);
-                        },
-                        color: Colors.blueAccent,
-                        child: Text(
-                          "提交",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(8.0))),
-                      ),
-                    )),
-              ],
+                  new Offstage(
+                      offstage: !isRecord,
+                      child: new InkWell(
+                        //highlightColor: Colors.red,
+                        splashColor: Colors.blueAccent,
+                        onTap: () {},
+                        child: new AudioRecordButton(_result),
+                      )),
+                ],
+              ),
             ),
+            new IconButton(
+              icon: Image.asset(Utils.getImgPath('bj_fabu_tupian')),
+              onPressed: () async {
+                LocalMediaType result =
+                    await Navigator.push(context, new ImagePickerPage());
+                print(
+                    '${result.mimeType}${result.filePath}${result.width}${result.height}');
+                _replyImageMessage(result);
+              },
+            ),
+            new Padding(
+                padding: EdgeInsets.only(right: 6.0),
+                child: new Theme(
+                  data: Theme.of(context).copyWith(
+                      buttonTheme: ButtonThemeData(
+                          minWidth: 40.0,
+                          height: 5,
+                          padding: EdgeInsets.only(
+                              left: 10.0, top: 0.0, right: 10.0, bottom: 0.0))),
+                  child: new RaisedButton(
+                    padding: EdgeInsets.only(
+                        left: 10.0, top: 2, bottom: 2.0, right: 10.0),
+                    onPressed: () {
+                      _replyMessage(_replyFieldController.text);
+                    },
+                    color: Colors.blueAccent,
+                    child: Text(
+                      "提交",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                  ),
+                )),
           ],
-        ));
+        ),
+      ],
+    ));
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .canvasColor,
+      backgroundColor: Theme.of(context).canvasColor,
       appBar: new MyAppBar(
         title: Text("通知详情"),
         centerTitle: true,
@@ -199,19 +212,70 @@ class _MessageDetailState extends State<MessageDetailPage> {
     );
   }
 
+/*   String guessMimeType(String path) {
+    FileNameMap fileNameMap = URLConnection.getFileNameMap();
+    String tempPath = path.replaceAll("-","");
+    String contentTypeFor = fileNameMap.getContentTypeFor(tempPath);
+    if (contentTypeFor == null) {
+      contentTypeFor = "application/octet-stream";
+    }
+    return contentTypeFor;
+  }*/
+  void _replyImageMessage(LocalMediaType imageResult) {
+    Map<String, dynamic> dataMap = {
+//      'content': imagePath,
+      'userId': mUserId,
+      'messageId': widget.model.messageId.toString(),
+    };
+
+    if (imageResult.mimeType == 1) {
+      String imagePath = imageResult.filePath;
+      dataMap.putIfAbsent('photo', () {
+        return new UploadFileInfo(new File(imagePath),
+            imagePath.substring(imagePath.lastIndexOf("/") + 1),
+            contentType:
+                ContentType.parse(new MediaType('image', 'jpeg').mimeType));
+      });
+    } else if (imageResult.mimeType == 2) {
+      String imagePath = imageResult.filePath;
+
+      print(
+          "${imagePath.substring(imagePath.lastIndexOf("/") + 1)} ${imagePath.substring(imagePath.lastIndexOf(".") + 1)}             ");
+      dataMap.putIfAbsent('video', () {
+        return new UploadFileInfo(new File(imagePath),
+            imagePath.substring(imagePath.lastIndexOf("/") + 1),
+            contentType: ContentType.parse(new MediaType('audio',
+                    imagePath.substring(imagePath.lastIndexOf(".") + 1))
+                .mimeType));
+      });
+    }
+
+    FormData formData = new FormData.from(dataMap);
+    /*  {
+      'content': imagePath,
+      'userId': mUserId,
+      'messageId': widget.model.messageId.toString()
+    };*/
+    String ownerMobileUserId = widget.model.ownerMobileUserId.toString();
+    if (ownerMobileUserId != null) {
+      /* dataMap.putIfAbsent("ownerMobileUserId", () {
+        return ownerMobileUserId;
+      });*/
+    }
+//    LogUtil.e(dataMap.toString());
+    wanRepository.replayMessages(formData).then((list) {
+      if (mounted)
+        setState(() {
+          _onLoading(true);
+        });
+    });
+  }
+
   void _replyMessage(String content) {
-    LogUtil.e(content);
-    LogUtil.e(content);
-    LogUtil.e(content);
-    LogUtil.e(content);
-    LogUtil.e(content);
-    LogUtil.e(content);
-    LogUtil.e(content);
-    LogUtil.e(content);
     LogUtil.e(content);
     Map<String, String> dataMap = {
       'content': content,
-      'userId': mUserId,
+      'userId': mobileId.toString(),
       'messageId': widget.model.messageId.toString()
     };
     String ownerMobileUserId = widget.model.ownerMobileUserId.toString();
@@ -224,13 +288,15 @@ class _MessageDetailState extends State<MessageDetailPage> {
     wanRepository.replayMessages(dataMap).then((list) {
       if (mounted)
         setState(() {
+          _replyFieldController.clear();
           _onLoading(true);
         });
     });
   }
 
-  Widget _itemBuild(context, index) =>
-      (index == 0) ? buildSwiper(context) : Item(mobileId, data[index - 1]);
+  Widget _itemBuild(context, index) => (index == 0)
+      ? buildSwiper(context)
+      : Item(mobileId.toString(), data[index - 1]);
 
   WanRepository wanRepository = new WanRepository();
 
@@ -243,7 +309,7 @@ class _MessageDetailState extends State<MessageDetailPage> {
     Map<String, String> dataMap = {
       'page': mDataPage.toString(),
       'mobileId': mobileId.toString(),
-      'userId': mUserId,
+      'userId': mUserId.toString(),
       'messageId': widget.model.messageId.toString()
     };
     String ownerMobileUserId = widget.model.ownerMobileUserId.toString();
@@ -270,9 +336,9 @@ class _MessageDetailState extends State<MessageDetailPage> {
           }
           data.addAll(list.listVo);
           if (!isRefresh) {
-            _refreshController.resetNoData();
             _refreshController.loadComplete();
           } else {
+            _refreshController.resetNoData();
             _refreshController.refreshCompleted();
           }
         });
@@ -300,10 +366,10 @@ class _MessageDetailState extends State<MessageDetailPage> {
               children: <Widget>[
                 new Expanded(
                     child: new Text(
-                      "发布人：${widget.model.sendName}",
-                      maxLines: 1,
-                      style: TextStyle(color: Colors.blue),
-                    )),
+                  "发布人：${widget.model.sendName}",
+                  maxLines: 1,
+                  style: TextStyle(color: Colors.blue),
+                )),
                 new Expanded(
                     child: new Text("接收人：${widget.model.msgReceiveNames}",
                         style: TextStyle(color: Colors.blue), maxLines: 1)),
@@ -329,7 +395,7 @@ class _MessageDetailState extends State<MessageDetailPage> {
                 ))
           ]),
       padding:
-      EdgeInsets.only(left: 18.0, top: 10.0, right: 18.0, bottom: 10.0),
+          EdgeInsets.only(left: 18.0, top: 10.0, right: 18.0, bottom: 10.0),
       decoration: new BoxDecoration(
           color: Colors.white,
           border: new Border.all(width: 0.33, color: Colours.divider)),
@@ -344,14 +410,28 @@ class _MessageDetailState extends State<MessageDetailPage> {
 
   List<PopupMenuEntry> _popMenuItemBuild(BuildContext context) {
     return List.generate(_imageOptions.length, (index) {
-      new RaisedButton(onPressed: () {}, child: Text(_imageOptions[index]),);
+      new RaisedButton(
+        onPressed: () {},
+        child: Text(_imageOptions[index]),
+      );
     }).toList();
   }
 }
 
+class LocalMediaType {
+  final int mimeType;
+  final String filePath;
+  int width;
+  int height;
+  int duration;
+
+  LocalMediaType(this.mimeType, this.filePath,
+      {this.width, this.height, this.duration});
+}
+
 class Item extends StatefulWidget {
   MessageDetailBeanReturnvalueListvo itemData;
-  int userId;
+  String userId;
 
   Item(this.userId, this.itemData);
 
@@ -360,13 +440,54 @@ class Item extends StatefulWidget {
 }
 
 class _ItemState extends State<Item> {
+  VideoPlayerController _butterflyController;
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final Completer<void> connectedCompleter = Completer<void>();
+  bool isSupported = true;
+  bool isDisposed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.itemData.videoUrl != null) {
+      Future<void> initController(
+          VideoPlayerController controller, String name) async {
+        print(
+            '> VideoDemo initController "$name" ${isDisposed ? "DISPOSED" : ""}');
+        controller.setLooping(false);
+        controller.setVolume(0.0);
+        controller.pause();
+        await connectedCompleter.future;
+        await controller.initialize();
+        if (mounted) {
+          print(
+              '< VideoDemo initController "$name" done ${isDisposed ? "DISPOSED" : ""}');
+          setState(() {});
+        }
+      }
+
+      _butterflyController =
+          VideoPlayerController.network(widget.itemData.videoUrl);
+      initController(_butterflyController, 'butterfly');
+      isIOSSimulator().then<void>((bool result) {
+        isSupported = !result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var itemData = widget.itemData;
-    if (widget.userId != itemData.userId) //我发的,在右边
+    print("${itemData.photoUrl}    ${itemData.content}");
+    int _offstate_status =
+        itemData.content != null ? 0 : itemData.photoUrl != null ? 1 : 2;
+
+    if (widget.userId.compareTo(itemData.userId.toString()) == 0) //我发的,在右边
+
       return Container(
           alignment: Alignment.topRight,
-          color: Colors.grey.withAlpha(5),
+          color: Colors.grey.withAlpha(245),
           padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
           child: Column(
             children: <Widget>[
@@ -380,6 +501,7 @@ class _ItemState extends State<Item> {
                 children: <Widget>[
                   new Expanded(
                       child: new Container(
+                          padding: EdgeInsets.only(left: 37.0),
                           child: new Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
@@ -388,34 +510,84 @@ class _ItemState extends State<Item> {
                                 child: Text(
                                   '${itemData.userName}',
                                   textAlign: TextAlign.end,
-                                  style:
-                                  TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12.0, color: Colors.black54),
                                 ),
                               ),
                               Gaps.vGap10,
-                              new Container(
-                                  padding: EdgeInsets.only(
-                                      left: 7.0,
-                                      top: 9.0,
-                                      right: 22.0,
-                                      bottom: 5.0),
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          Utils.getImgPath('qipao_you')),
-                                      centerSlice:
-                                      new Rect.fromLTRB(7.0, 45.0, 30.0, 51.0),
+                              new Stack(
+                                children: <Widget>[
+                                  new Offstage(
+                                    offstage: _offstate_status != 0,
+                                    child: new Container(
+                                        padding: EdgeInsets.only(
+                                            left: 7.0,
+                                            top: 9.0,
+                                            right: 22.0,
+                                            bottom: 5.0),
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                Utils.getImgPath('qipao_you')),
+                                            centerSlice: new Rect.fromLTRB(
+                                                4.0, 20.0, 5.0, 20.5),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '${itemData.content}',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                          ),
+                                          maxLines: 10,
+                                        )),
+                                  ),
+                                  new Offstage(
+                                      offstage: _offstate_status != 1,
+                                      child: new Container(
+                                        padding: EdgeInsets.only(right: 10.0),
+                                        child: new ConstrainedBox(
+                                          constraints: new BoxConstraints(
+                                              maxHeight: 200),
+                                          child: new CachedNetworkImage(
+                                            fit: BoxFit.fill,
+                                            imageUrl: itemData.photoUrl == null
+                                                ? "http://126306.sgss8.com/upload/2016042923/232418_1381.jpg"
+                                                : itemData.photoUrl,
+                                            placeholder: new ProgressView(),
+                                            errorWidget: new Icon(Icons.error),
+                                          ),
+                                        ),
+                                      )),
+                                  new Offstage(
+                                    offstage: _offstate_status != 2,
+                                    child: new Container(
+                                      padding: EdgeInsets.only(right: 10.0),
+                                      child: isSupported &&
+                                              _butterflyController != null
+                                          ? ConnectivityOverlay(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 10.0),
+                                                child: SingleVideoCard(
+                                                  controller:
+                                                      _butterflyController,
+                                                  firstScreen: widget
+                                                      .itemData.firstVideoUrl,
+                                                ),
+                                              ),
+                                              connectedCompleter:
+                                                  connectedCompleter,
+                                              scaffoldKey: scaffoldKey,
+                                            )
+                                          : const Center(
+                                              child: Text(
+                                                'Video playback not supported on the iOS Simulator.',
+                                              ),
+                                            ),
                                     ),
                                   ),
-                                  child: Text(
-                                    '${itemData
-                                        .content}拉尔来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年',
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                    ),
-                                    maxLines: 10,
-                                  ))
+                                ],
+                              )
                             ],
                           ))),
                   Image.network(
@@ -451,6 +623,7 @@ class _ItemState extends State<Item> {
                   ),
                   new Expanded(
                       child: new Container(
+                          padding: EdgeInsets.only(right: 38.0),
                           child: new Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -459,34 +632,83 @@ class _ItemState extends State<Item> {
                                 child: Text(
                                   '${itemData.userName}',
                                   textAlign: TextAlign.start,
-                                  style:
-                                  TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12.0, color: Colors.black54),
                                 ),
                               ),
                               Gaps.vGap10,
-                              new Container(
-                                  padding: EdgeInsets.only(
-                                      left: 27.0,
-                                      top: 9.0,
-                                      right: 8.0,
-                                      bottom: 5.0),
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          Utils.getImgPath('qipao_zuo')),
-                                      centerSlice:
-                                      new Rect.fromLTRB(27.0, 45.0, 57.0, 51.0),
+                              new Stack(
+                                children: <Widget>[
+                                  new Offstage(
+                                    offstage: _offstate_status != 0,
+                                    child: new Container(
+                                        padding: EdgeInsets.only(
+                                            left: 27.0,
+                                            top: 9.0,
+                                            right: 8.0,
+                                            bottom: 5.0),
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: AssetImage(
+                                                Utils.getImgPath('qipao_zuo')),
+                                            centerSlice: new Rect.fromLTRB(
+                                                31.0, 24.0, 32.0, 25.0),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '${itemData.content}拉年拉年拉年拉年拉年拉年拉年拉年拉年拉年拉年拉年拉年',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                          ),
+                                          maxLines: 10,
+                                        )),
+                                  ),
+                                  new Offstage(
+                                    offstage: _offstate_status != 1,
+                                    child: new Container(
+                                      padding: EdgeInsets.only(left: 10.0),
+                                      child: new ConstrainedBox(
+                                        constraints:
+                                            new BoxConstraints(maxHeight: 200),
+                                        child: new CachedNetworkImage(
+                                          fit: BoxFit.fill,
+                                          imageUrl: itemData.photoUrl == null
+                                              ? "http://126306.sgss8.com/upload/2016042923/232418_1381.jpg"
+                                              : itemData.photoUrl,
+                                          placeholder: new ProgressView(),
+                                          errorWidget: new Icon(Icons.error),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  child: Text(
-                                    '${itemData
-                                        .content}拉尔来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年来访成行横欧文这等拉结你了今年',
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                    ),
-                                    maxLines: 10,
-                                  ))
+                                  new Offstage(
+                                    offstage: _offstate_status != 2,
+                                    child: isSupported &&
+                                            _butterflyController != null
+                                        ? ConnectivityOverlay(
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10.0),
+                                              child: SingleVideoCard(
+                                                controller:
+                                                    _butterflyController,
+                                                firstScreen: widget
+                                                    .itemData.firstVideoUrl,
+                                              ),
+                                            ),
+                                            connectedCompleter:
+                                                connectedCompleter,
+                                            scaffoldKey: scaffoldKey,
+                                          )
+                                        : const Center(
+                                            child: Text(
+                                              'Video playback not supported on the iOS Simulator.',
+                                            ),
+                                          ),
+                                  ),
+                                ],
+                              )
                             ],
                           ))),
                 ],
@@ -498,7 +720,11 @@ class _ItemState extends State<Item> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    print('> VideoDemo dispose');
+    isDisposed = true;
+    if (_butterflyController != null) _butterflyController.dispose();
+
+    print('< VideoDemo dispose');
     super.dispose();
   }
 }

@@ -1,15 +1,22 @@
 import 'dart:async';
 import 'dart:io';
 
+//import 'package:fake_http/fake_http.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_wanandroid/ui/pages/home_school/message_detail.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-class IamgePickerPage extends PopupRoute {
-  IamgePickerPage({  RouteSettings settings,}) : super(settings: settings);
 
+class ImagePickerPage<MediaType> extends PopupRoute<MediaType> {
+  ImagePickerPage({
+    RouteSettings settings,
+  }) : super(settings: settings);
 
-  final DatePickerTheme theme= DatePickerTheme();
+  final DatePickerTheme theme = DatePickerTheme();
+
   @override
   // TODO: implement barrierColor
   Color get barrierColor => Colors.black54;
@@ -21,7 +28,6 @@ class IamgePickerPage extends PopupRoute {
   @override
   // TODO: implement barrierLabel
   String get barrierLabel => '';
-
 
   @override
   // TODO: implement transitionDuration
@@ -37,7 +43,8 @@ class IamgePickerPage extends PopupRoute {
   }
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
     Widget bottomSheet = new MediaQuery.removePadding(
       context: context,
       removeTop: true,
@@ -52,18 +59,20 @@ class IamgePickerPage extends PopupRoute {
     return bottomSheet;
   }
 }
-class _ImagePickerComponent extends StatefulWidget {
- final IamgePickerPage route;
 
-  _ImagePickerComponent(
-      {Key key,
-        @required this.route,});
+class _ImagePickerComponent extends StatefulWidget {
+  final ImagePickerPage route;
+
+  _ImagePickerComponent({
+    Key key,
+    @required this.route,
+  });
+
   @override
   __ImagePickerComponentState createState() => __ImagePickerComponentState();
 }
 
 class __ImagePickerComponentState extends State<_ImagePickerComponent> {
-
   File _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -78,22 +87,38 @@ class __ImagePickerComponentState extends State<_ImagePickerComponent> {
     if (isVideo) {
       ImagePicker.pickVideo(source: source).then((File file) {
         if (file != null && mounted) {
-          setState(() {
+          var contentType = ContentType.parse(file.path);
+          print(
+              "${contentType.toString()}     ${contentType.mimeType}    ${contentType.primaryType}     ${contentType.subType}");
+
+          Navigator.pop(
+              context,
+              new LocalMediaType(
+                2,
+                file.path,
+              ));
+          /*setState(() {
             _controller = VideoPlayerController.file(file)
               ..addListener(_onVideoControllerUpdate)
               ..setVolume(1.0)
               ..initialize()
               ..setLooping(true)
               ..play();
-          });
+          });*/
         }
       });
     } else {
       try {
         _imageFile = await ImagePicker.pickImage(source: source);
+        var contentType = ContentType.parse(_imageFile.path);
+
+        print(
+            "${contentType.toString()}     ${contentType.mimeType}    ${contentType.primaryType}     ${contentType.subType}");
+        Navigator.pop(context, new LocalMediaType(1, _imageFile.path));
       } catch (e) {
         _pickImageError = e;
       }
+
       setState(() {});
     }
   }
@@ -190,79 +215,80 @@ class __ImagePickerComponentState extends State<_ImagePickerComponent> {
   @override
   Widget build(BuildContext context) {
     DatePickerTheme theme = widget.route.theme;
-    return      new GestureDetector(
+    return new GestureDetector(
       child: new AnimatedBuilder(
         animation: widget.route.animation,
         builder: (BuildContext context, Widget child) {
           return new ClipRect(
-
               child: new CustomSingleChildLayout(
-              delegate: new _BottomPickerLayout(
-              widget.route.animation.value, theme,
-              showTitleActions: false),
-
-          child:  new GestureDetector(
+            delegate: new _BottomPickerLayout(
+                widget.route.animation.value, theme,
+                showTitleActions: false),
+            child: new GestureDetector(
               child: Material(
                 color: Colors.transparent,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        isVideo = false;
-                        _onImageButtonPressed(ImageSource.gallery);
-                      },
-//                      heroTag: 'image0',
-//                      tooltip: 'Pick Image from gallery',
-                      child: const Icon(Icons.photo_library),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
-                      child: RaisedButton(
+                child: new Container(
+                  color: Colors.grey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      RaisedButton(
                         onPressed: () {
                           isVideo = false;
-                          _onImageButtonPressed(ImageSource.camera);
-                        },
-//                        heroTag: 'image1',
-//                        tooltip: 'Take a Photo',
-                        child: const Icon(Icons.camera_alt),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
-                      child: RaisedButton(
-                        color: Colors.red,
-                        onPressed: () {
-                          isVideo = true;
                           _onImageButtonPressed(ImageSource.gallery);
                         },
+//                      heroTag: 'image0',
+//                      tooltip: 'Pick Image from gallery',
+                        child: const Icon(Icons.photo_library),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: RaisedButton(
+                          onPressed: () {
+                            isVideo = false;
+                            _onImageButtonPressed(ImageSource.camera);
+                          },
+//                        heroTag: 'image1',
+//                        tooltip: 'Take a Photo',
+                          child: const Icon(Icons.camera_alt),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: RaisedButton(
+                          color: Colors.red,
+                          onPressed: () {
+                            isVideo = true;
+                            _onImageButtonPressed(ImageSource.gallery);
+                          },
 //                        heroTag: 'video0',
 //                        tooltip: 'Pick Video from gallery',
-                        child: const Icon(Icons.video_library),
+                          child: const Icon(Icons.video_library),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
-                      child: RaisedButton(
-                        color: Colors.red,
-                        onPressed: () {
-                          isVideo = true;
-                          _onImageButtonPressed(ImageSource.camera);
-                        },
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: RaisedButton(
+                          color: Colors.red,
+                          onPressed: () {
+                            isVideo = true;
+                            _onImageButtonPressed(ImageSource.camera);
+                          },
 //                        heroTag: 'video1',
 //                        tooltip: 'Take a Video',
-                        child: const Icon(Icons.videocam),
+                          child: const Icon(Icons.videocam),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-              )
-          );
+          ));
         },
       ),
-    )/*Scaffold(
+    ) /*Scaffold(
       body: Center(
         child: Platform.isAndroid
             ? FutureBuilder<void>(
@@ -348,7 +374,8 @@ class __ImagePickerComponentState extends State<_ImagePickerComponent> {
           ),
         ],
       ),
-    )*/;
+    )*/
+        ;
   }
 
   Text _getRetrieveErrorWidget() {
