@@ -118,10 +118,12 @@ class MessageDetailBeanReturnvalueListvo {
 	String content;
 	String photoUrl;
 	String videoUrl;
+	String musicUrl;
+	int musicTime;
 	String firstVideoUrl;
 	String createDate;
 
-	MessageDetailBeanReturnvalueListvo({this.sendMoileId, this.contentId, this.pageSize, this.userName, this.userId, this.content,this.photoUrl,this.firstVideoUrl,this.videoUrl, this.createDate});
+	MessageDetailBeanReturnvalueListvo({this.sendMoileId, this.contentId, this.pageSize, this.userName, this.userId, this.content,this.photoUrl,this.firstVideoUrl,this.videoUrl,this.musicUrl,this.musicTime, this.createDate});
 
 	MessageDetailBeanReturnvalueListvo.fromJson(Map<String, dynamic> json) {
 		sendMoileId = json['sendMoileId'];
@@ -131,6 +133,8 @@ class MessageDetailBeanReturnvalueListvo {
 		userId = json['userId'];
 		content = json['content'];
 		photoUrl = json['photoUrl'];
+		musicUrl = json['musicUrl'];
+		musicTime = json['musicTime'];
 		firstVideoUrl = json['firstVideoUrl'];
     videoUrl = json['videoUrl'];
 		createDate = json['createDate'];
@@ -145,6 +149,8 @@ class MessageDetailBeanReturnvalueListvo {
 		data['userId'] = this.userId;
 		data['content'] = this.content;
 		data['photoUrl'] = this.photoUrl;
+		data['musicUrl'] = this.musicUrl;
+		data['musicTime'] = this.musicTime;
 		data['firstVideoUrl'] = this.firstVideoUrl;
 		data['videoUrl'] = this.videoUrl;
 		data['createDate'] = this.createDate;

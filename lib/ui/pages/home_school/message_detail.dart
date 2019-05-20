@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_wanandroid/common/component_index.dart';
 import 'package:flutter_wanandroid/data/protocol/messaget_bean_entity.dart';
 import 'package:flutter_wanandroid/data/repository/wan_repository.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_wanandroid/models/EnmuModels.dart';
 
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_wanandroid/models/message_detail_bean_entity.dart';
+import 'package:flutter_wanandroid/ui/dialog/simple_dialog.dart';
 import 'package:flutter_wanandroid/ui/pages/demos/image_picker_demo.dart';
 import 'package:flutter_wanandroid/ui/pages/demos/sound_demo.dart';
 import 'package:flutter_wanandroid/ui/pages/demos/video_demo.dart';
@@ -20,7 +22,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:video_player/video_player.dart';
 
 class MessageDetailPage extends StatefulWidget {
-  MessagetBeanReturnvalueListvo model;
+  final MessagetBeanReturnvalueListvo model;
 
   MessageDetailPage(this.model);
 
@@ -39,8 +41,8 @@ class _MessageDetailState extends State<MessageDetailPage> {
 
   TextEditingController _replyFieldController = new TextEditingController();
 
-  get _result => (result) {
-        print("MessageDetailPage   ${result}");
+  get _result => (result, audioLength) {
+        _replyAudioMessage(result, audioLength);
       };
 
   void _getDatas() {
@@ -58,14 +60,28 @@ class _MessageDetailState extends State<MessageDetailPage> {
     _refreshController.requestRefresh();
   }
 
+  @override
+  void dispose() {
+    if (flutterSound.isPlaying) flutterSound.stopPlayer();
+
+    super.dispose();
+  }
+
   void _onOffsetCallback(bool isUp, double offset) {}
+  FlutterSound flutterSound;
+
+  bool _isPlaying = false;
+  StreamSubscription _playerSubscription;
 
   @override
   void initState() {
     _getDatas();
     _scrollController = ScrollController(keepScrollOffset: true);
     _refreshController = RefreshController();
-
+    flutterSound = new FlutterSound();
+    flutterSound.setSubscriptionDuration(0.01);
+    flutterSound.setDbPeakLevelUpdate(0.8);
+    flutterSound.setDbLevelEnabled(true);
     SchedulerBinding.instance.addPostFrameCallback((_) {
 //      _refreshController.requestRefresh(true);
     });
@@ -74,6 +90,32 @@ class _MessageDetailState extends State<MessageDetailPage> {
 
   bool isRecord = false;
   bool _autovalidate = false;
+
+  void startPlayer(String videoPath) async {
+    String path = await flutterSound.startPlayer(videoPath);
+    await flutterSound.setVolume(1.0);
+    print('startPlayer: $path');
+
+    try {
+      _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
+        if (e != null) {
+//          slider_current_position = e.currentPosition;
+//          max_duration = e.duration;
+//
+//          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+//              e.currentPosition.toInt(),
+//              isUtc: true);
+//          String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+          this.setState(() {
+            this._isPlaying = true;
+//            this._playerTxt = txt.substring(0, 8);
+          });
+        }
+      });
+    } catch (err) {
+      print('error: $err');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +263,47 @@ class _MessageDetailState extends State<MessageDetailPage> {
     }
     return contentTypeFor;
   }*/
+  void _replyAudioMessage(String imageResult, int length) {
+    Map<String, dynamic> dataMap = {
+//      'content': imagePath,
+      'userId': mUserId,
+      'messageId': widget.model.messageId.toString(),
+    };
+
+    if (imageResult != null && length > 0) {
+      dataMap.putIfAbsent('musicTime', () {
+        return "${length}";
+      });
+
+      dataMap.putIfAbsent('music', () {
+        return new UploadFileInfo(new File(imageResult),
+            imageResult.substring(imageResult.lastIndexOf("/") + 1),
+            contentType: ContentType.parse(new MediaType('music',
+                    imageResult.substring(imageResult.lastIndexOf(".") + 1))
+                .mimeType));
+      });
+    }
+
+    FormData formData = new FormData.from(dataMap);
+    var dialog = showDialog<Null>(
+        context: context, //BuildContext对象
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new LoadingDialog(
+            //调用对话框
+            text: '请等待...',
+          );
+        });
+    wanRepository.replayMessages(formData).then((list) {
+      Navigator.pop(context);
+
+      if (mounted)
+        setState(() {
+          _onLoading(true);
+        });
+    });
+  }
+
   void _replyImageMessage(LocalMediaType imageResult) {
     Map<String, dynamic> dataMap = {
 //      'content': imagePath,
@@ -251,19 +334,19 @@ class _MessageDetailState extends State<MessageDetailPage> {
     }
 
     FormData formData = new FormData.from(dataMap);
-    /*  {
-      'content': imagePath,
-      'userId': mUserId,
-      'messageId': widget.model.messageId.toString()
-    };*/
+
     String ownerMobileUserId = widget.model.ownerMobileUserId.toString();
-    if (ownerMobileUserId != null) {
-      /* dataMap.putIfAbsent("ownerMobileUserId", () {
-        return ownerMobileUserId;
-      });*/
-    }
-//    LogUtil.e(dataMap.toString());
+    var dialog = showDialog<Null>(
+        context: context, //BuildContext对象
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new LoadingDialog(
+            //调用对话框
+            text: '请等待...',
+          );
+        });
     wanRepository.replayMessages(formData).then((list) {
+      Navigator.pop(context);
       if (mounted)
         setState(() {
           _onLoading(true);
@@ -284,8 +367,17 @@ class _MessageDetailState extends State<MessageDetailPage> {
         return ownerMobileUserId;
       });*/
     }
-    LogUtil.e(dataMap.toString());
+    var dialog = showDialog<Null>(
+        context: context, //BuildContext对象
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new LoadingDialog(
+            //调用对话框
+            text: '请等待...',
+          );
+        });
     wanRepository.replayMessages(dataMap).then((list) {
+      Navigator.pop(context);
       if (mounted)
         setState(() {
           _replyFieldController.clear();
@@ -296,7 +388,7 @@ class _MessageDetailState extends State<MessageDetailPage> {
 
   Widget _itemBuild(context, index) => (index == 0)
       ? buildSwiper(context)
-      : Item(mobileId.toString(), data[index - 1]);
+      : Item(mobileId.toString(), data[index - 1], flutterSound);
 
   WanRepository wanRepository = new WanRepository();
 
@@ -318,7 +410,17 @@ class _MessageDetailState extends State<MessageDetailPage> {
         return ownerMobileUserId;
       });
     }
+    /* var dialog = showDialog<Null>(
+        context: context, //BuildContext对象
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new LoadingDialog(
+            //调用对话框
+            text: '请等待...',.
+          );
+        });*/
     wanRepository.getMessageDetail(dataMap).then((list) {
+//      Navigator.pop(context);
       if (mounted)
         setState(() {
           if (mDataPage == 0) {
@@ -430,10 +532,11 @@ class LocalMediaType {
 }
 
 class Item extends StatefulWidget {
-  MessageDetailBeanReturnvalueListvo itemData;
-  String userId;
+  final MessageDetailBeanReturnvalueListvo itemData;
+  final String userId;
+  final FlutterSound flutterSound;
 
-  Item(this.userId, this.itemData);
+  Item(this.userId, this.itemData, this.flutterSound);
 
   @override
   _ItemState createState() => _ItemState();
@@ -446,6 +549,8 @@ class _ItemState extends State<Item> {
   final Completer<void> connectedCompleter = Completer<void>();
   bool isSupported = true;
   bool isDisposed = false;
+
+  StreamSubscription _playerSubscription;
 
   @override
   void initState() {
@@ -476,12 +581,43 @@ class _ItemState extends State<Item> {
     }
   }
 
+  void startPlayer(String videoPath) async {
+    if (widget.flutterSound.isPlaying) {
+      widget.flutterSound.stopPlayer();
+    }
+    String path = await widget.flutterSound.startPlayer(videoPath);
+    await widget.flutterSound.setVolume(1.0);
+    print('startPlayer: $path');
+
+    try {
+      _playerSubscription =
+          widget.flutterSound.onPlayerStateChanged.listen((e) {
+        if (e != null) {
+//          slider_current_position = e.currentPosition;
+//          max_duration = e.duration;
+//
+//          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+//              e.currentPosition.toInt(),
+//              isUtc: true);
+//          String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+          this.setState(() {
+//            this._isPlaying = true;
+//            this._playerTxt = txt.substring(0, 8);
+          });
+        }
+      });
+    } catch (err) {
+      print('error: $err');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var itemData = widget.itemData;
-    print("${itemData.photoUrl}    ${itemData.content}");
-    int _offstate_status =
-        itemData.content != null ? 0 : itemData.photoUrl != null ? 1 : 2;
+    print("${itemData.musicTime}    ${itemData.musicTime}");
+    int _offstate_status = itemData.musicUrl != null && 0 < itemData.musicTime
+        ? 3
+        : (itemData.photoUrl != null ? 1 : (itemData.videoUrl != null ? 2 : 0));
 
     if (widget.userId.compareTo(itemData.userId.toString()) == 0) //我发的,在右边
 
@@ -508,7 +644,7 @@ class _ItemState extends State<Item> {
                               new Padding(
                                 padding: EdgeInsets.only(right: 10.0),
                                 child: Text(
-                                  '${itemData.userName}',
+                                  '${itemData.userName == null ? "匿名用户" : itemData.userName}',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       fontSize: 12.0, color: Colors.black54),
@@ -586,6 +722,39 @@ class _ItemState extends State<Item> {
                                             ),
                                     ),
                                   ),
+                                  new Offstage(
+                                    offstage: _offstate_status != 3,
+                                    child: new Container(
+                                        width: itemData.musicTime != null &&
+                                                60 > itemData.musicTime
+                                            ? ((MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    100) /
+                                                60.0 *
+                                                (itemData.musicTime < 10
+                                                    ? 10
+                                                    : itemData.musicTime))
+                                            : (MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                100),
+                                        padding: EdgeInsets.only(right: 10.0),
+                                        child:  RaisedButton(
+                                          child: Text(
+                                            "${itemData.musicTime}\"",
+                                            textAlign: TextAlign.start,
+                                            maxLines: 1,
+                                            style:
+                                            TextStyle(color: Colors.white),
+                                          ),
+                                          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15) ) ,
+                                          color: Colors.blueAccent,
+                                          onPressed: () {
+                                            startPlayer(itemData.musicUrl);
+                                          },
+                                        )),
+                                  ),
                                 ],
                               )
                             ],
@@ -630,7 +799,7 @@ class _ItemState extends State<Item> {
                               new Padding(
                                 padding: EdgeInsets.only(left: 10.0),
                                 child: Text(
-                                  '${itemData.userName}',
+                                  '${itemData.userName == null ? "匿名用户" : itemData.userName}',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       fontSize: 12.0, color: Colors.black54),
@@ -706,6 +875,40 @@ class _ItemState extends State<Item> {
                                               'Video playback not supported on the iOS Simulator.',
                                             ),
                                           ),
+                                  ),
+                                  new Offstage(
+                                    offstage: _offstate_status != 3,
+                                    child: new Container(
+                                        width: itemData.musicTime != null &&
+                                                60 > itemData.musicTime
+                                            ? ((MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    100) /
+                                                60.0 *
+                                                (itemData.musicTime < 20
+                                                    ? 20
+                                                    : itemData.musicTime))
+                                            : (MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                100),
+                                        height: 30,
+                                        padding: EdgeInsets.only(right: 10.0),
+                                        child: RaisedButton(
+                                          child: Text(
+                                            "${itemData.musicTime}\"",
+                                            textAlign: TextAlign.end,
+                                            maxLines: 1,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15) ) ,
+                                          color: Colors.blueAccent,
+                                          onPressed: () {
+                                            startPlayer(itemData.musicUrl);
+                                          },
+                                        )),
                                   ),
                                 ],
                               )

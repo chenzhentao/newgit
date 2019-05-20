@@ -117,6 +117,14 @@ flutter:
     - assets/images/yuyin.png
     - assets/images/jianpan.png
     - assets/images/weibosdk_navigationbar_back_highlighted.png
+    - assets/images/sound_left_0.png
+    - assets/images/sound_left_1.png
+    - assets/images/sound_left_2.png
+    - assets/images/sound_left_3.png
+    - assets/images/sound_right_0.png
+    - assets/images/sound_right_1.png
+    - assets/images/sound_right_2.png
+    - assets/images/sound_right_3.png
 
     - assets/data/china.json
 

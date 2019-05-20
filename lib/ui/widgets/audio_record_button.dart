@@ -13,7 +13,7 @@ class AudioRecordButton extends StatefulWidget {
   @override
   _AudioRecordButtonState createState() => _AudioRecordButtonState();
 }
-typedef OnBackResult = void Function(String isOpened);
+typedef OnBackResult = void Function(String isOpened,int audioLength);
 /* class OnBackResult {
   void onResultBack(String result);
 }*/
@@ -31,6 +31,8 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
   double _dbLevel;
   double slider_current_position = 0.0;
   double max_duration = 1.0;
+  String audioPath;
+  int audioLongth;
   get _onVerticalDragDown => (DragDownDetails details) {
         print("_onVerticalDragDown${details.toString()}");
       };
@@ -59,8 +61,8 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
 
   void startRecorder() async {
     try {
-      String path = await flutterSound.startRecorder(null);
-      print('startRecorder: $path');
+      audioPath = await flutterSound.startRecorder(null);
+      print('startRecorder: $audioPath');
 
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -68,6 +70,7 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
             isUtc: true);
 //        print('startRecorder: $date');
         String txt = DateFormat('ss:SS', 'en_GB').format(date);
+        audioLongth = date.second;
 //        print('startRecorder    txt: $txt');
         this.setState(() {
           this._recorderTxt = txt.substring(0, 5);
@@ -104,15 +107,15 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
       }
 
       this.setState(() {
-//        widget.onBackResult(flutterSound.);
+        widget.onBackResult(audioPath,audioLongth);
         this._isRecording = false;
       });
     } catch (err) {
       print('stopRecorder error: $err');
     }
   }
-  void startPlayer() async {
-    String path = await flutterSound.startPlayer(null);
+   void  startPlayer(String videoPath) async {
+    String path = await flutterSound.startPlayer(videoPath);
     await flutterSound.setVolume(1.0);
     print('startPlayer: $path');
 
@@ -167,7 +170,7 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
           //单击
           onTap: () {
             print("onTap");
-            startPlayer();
+            startPlayer(null);
           },
         onLongPress: _onLongPress,
         onVerticalDragCancel: _onVerticalDragCancel,
