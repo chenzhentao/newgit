@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Colours {
-  static const Color app_main = Color(0xFF666666);
+  static const Color app_main = Color(0xfff0f0f0);
 
   static const Color transparent_80 = Color(0x80000000); //<!--204-->
 

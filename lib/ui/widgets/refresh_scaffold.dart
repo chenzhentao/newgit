@@ -86,7 +86,7 @@ class RefreshScaffoldState extends State<RefreshScaffold>
         controller: widget.controller,
         enablePullDown: false,
         enablePullUp: widget.enablePullUp,
-        enableOverScroll: false,
+//        enableOverScroll: false,
         onRefresh: widget.onLoadMore,
         child: widget.child ??
             new ListView.builder(

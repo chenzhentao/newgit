@@ -125,6 +125,14 @@ flutter:
     - assets/images/sound_right_1.png
     - assets/images/sound_right_2.png
     - assets/images/sound_right_3.png
+    - assets/images/recorder.png
+    - assets/images/v1.png
+    - assets/images/v2.png
+    - assets/images/v3.png
+    - assets/images/v4.png
+    - assets/images/v5.png
+    - assets/images/v6.png
+    - assets/images/v7.png
 
     - assets/data/china.json
 

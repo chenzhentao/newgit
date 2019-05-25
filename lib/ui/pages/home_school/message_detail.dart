@@ -82,6 +82,7 @@ class _MessageDetailState extends State<MessageDetailPage> {
     flutterSound.setSubscriptionDuration(0.01);
     flutterSound.setDbPeakLevelUpdate(0.8);
     flutterSound.setDbLevelEnabled(true);
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
 //      _refreshController.requestRefresh(true);
     });
@@ -94,11 +95,12 @@ class _MessageDetailState extends State<MessageDetailPage> {
   void startPlayer(String videoPath) async {
     String path = await flutterSound.startPlayer(videoPath);
     await flutterSound.setVolume(1.0);
-    print('startPlayer: $path');
 
     try {
       _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
         if (e != null) {
+          print(
+              'startPlayer: ${e.runtimeType}   ${e.currentPosition}   ${e.duration}');
 //          slider_current_position = e.currentPosition;
 //          max_duration = e.duration;
 //
@@ -196,13 +198,18 @@ class _MessageDetailState extends State<MessageDetailPage> {
                     ),
                   ),
                   new Offstage(
-                      offstage: !isRecord,
-                      child: new InkWell(
-                        //highlightColor: Colors.red,
-                        splashColor: Colors.blueAccent,
-                        onTap: () {},
-                        child: new AudioRecordButton(_result),
+                    offstage: !isRecord,
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withAlpha(21),
+                          border: Border.all(
+                        color: Colors.blueAccent,
                       )),
+                      height: 36.0,
+                      child:  new AudioRecordButton(_result)),
+
+                  ),
                 ],
               ),
             ),
@@ -542,7 +549,7 @@ class Item extends StatefulWidget {
   _ItemState createState() => _ItemState();
 }
 
-class _ItemState extends State<Item> {
+class _ItemState extends State<Item> with TickerProviderStateMixin {
   VideoPlayerController _butterflyController;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -551,23 +558,49 @@ class _ItemState extends State<Item> {
   bool isDisposed = false;
 
   StreamSubscription _playerSubscription;
+  var leftSoundNames = [
+    'assets/images/sound_left_0.png',
+    'assets/images/sound_left_1.png',
+    'assets/images/sound_left_2.png' /*,
+    'assets/images/sound_left_3.png'*/
+  ];
+  var rightSoundNames = [
+    'assets/images/sound_right_0.png',
+    'assets/images/sound_right_1.png',
+    'assets/images/sound_right_2.png' /*,
+    'assets/images/sound_right_3.png'*/
+  ];
+  int _animationPosition = 3;
+  AnimationController controller;
+  Animation animation;
 
   @override
   void initState() {
     super.initState();
+    //控制语音动画
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    final Animation curve =
+        CurvedAnimation(parent: controller, curve: Curves.easeOut);
+    animation = IntTween(begin: 0, end: 3).animate(curve)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        }
+        if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      });
+
     if (widget.itemData.videoUrl != null) {
       Future<void> initController(
           VideoPlayerController controller, String name) async {
-        print(
-            '> VideoDemo initController "$name" ${isDisposed ? "DISPOSED" : ""}');
         controller.setLooping(false);
         controller.setVolume(0.0);
         controller.pause();
         await connectedCompleter.future;
         await controller.initialize();
         if (mounted) {
-          print(
-              '< VideoDemo initController "$name" done ${isDisposed ? "DISPOSED" : ""}');
           setState(() {});
         }
       }
@@ -582,28 +615,34 @@ class _ItemState extends State<Item> {
   }
 
   void startPlayer(String videoPath) async {
+    controller.forward();
     if (widget.flutterSound.isPlaying) {
       widget.flutterSound.stopPlayer();
     }
     String path = await widget.flutterSound.startPlayer(videoPath);
     await widget.flutterSound.setVolume(1.0);
-    print('startPlayer: $path');
 
     try {
       _playerSubscription =
           widget.flutterSound.onPlayerStateChanged.listen((e) {
         if (e != null) {
-//          slider_current_position = e.currentPosition;
-//          max_duration = e.duration;
+          if (e.duration <= e.currentPosition) {
+            controller.reset();
+          }
+          print(
+              'startPlayer: ${e.currentPosition}     ${e.duration}      ${e.runtimeType}');
+//          slider_current_position = ;
+//          max_duration = ;
 //
 //          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
 //              e.currentPosition.toInt(),
 //              isUtc: true);
 //          String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-          this.setState(() {
+          if (mounted)
+            this.setState(() {
 //            this._isPlaying = true;
 //            this._playerTxt = txt.substring(0, 8);
-          });
+            });
         }
       });
     } catch (err) {
@@ -614,12 +653,12 @@ class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     var itemData = widget.itemData;
-    print("${itemData.musicTime}    ${itemData.musicTime}");
+//    print("${itemData.musicTime}    ${itemData.musicTime}");
     int _offstate_status = itemData.musicUrl != null && 0 < itemData.musicTime
         ? 3
         : (itemData.photoUrl != null ? 1 : (itemData.videoUrl != null ? 2 : 0));
 
-    if (widget.userId.compareTo(itemData.userId.toString()) == 0) //我发的,在右边
+    if (widget.userId.compareTo(itemData.userId.toString()) != 0) //我发的,在右边
 
       return Container(
           alignment: Alignment.topRight,
@@ -732,23 +771,35 @@ class _ItemState extends State<Item> {
                                                         .width -
                                                     100) /
                                                 60.0 *
-                                                (itemData.musicTime < 10
-                                                    ? 10
+                                                (itemData.musicTime < 30
+                                                    ? 30
                                                     : itemData.musicTime))
                                             : (MediaQuery.of(context)
                                                     .size
                                                     .width -
                                                 100),
                                         padding: EdgeInsets.only(right: 10.0),
-                                        child:  RaisedButton(
-                                          child: Text(
-                                            "${itemData.musicTime}\"",
-                                            textAlign: TextAlign.start,
-                                            maxLines: 1,
-                                            style:
-                                            TextStyle(color: Colors.white),
+                                        child: RaisedButton(
+                                          padding: EdgeInsets.only(
+                                              left: 8.0, right: 4.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                "${itemData.musicTime}\"",
+                                                textAlign: TextAlign.start,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Image.asset(rightSoundNames[
+                                                  animation.value % 3])
+                                            ],
                                           ),
-                                          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15) ) ,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18)),
                                           color: Colors.blueAccent,
                                           onPressed: () {
                                             startPlayer(itemData.musicUrl);
@@ -886,8 +937,8 @@ class _ItemState extends State<Item> {
                                                         .width -
                                                     100) /
                                                 60.0 *
-                                                (itemData.musicTime < 20
-                                                    ? 20
+                                                (itemData.musicTime < 30
+                                                    ? 30
                                                     : itemData.musicTime))
                                             : (MediaQuery.of(context)
                                                     .size
@@ -896,14 +947,26 @@ class _ItemState extends State<Item> {
                                         height: 30,
                                         padding: EdgeInsets.only(right: 10.0),
                                         child: RaisedButton(
-                                          child: Text(
-                                            "${itemData.musicTime}\"",
-                                            textAlign: TextAlign.end,
-                                            maxLines: 1,
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                          padding: EdgeInsets.only(
+                                              left: 4.0, right: 8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Image.asset(leftSoundNames[
+                                                  animation.value % 3]),
+                                              Text(
+                                                "${itemData.musicTime}\"",
+                                                textAlign: TextAlign.start,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
                                           ),
-                                          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15) ) ,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
                                           color: Colors.blueAccent,
                                           onPressed: () {
                                             startPlayer(itemData.musicUrl);
