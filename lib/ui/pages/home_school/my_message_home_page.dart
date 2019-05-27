@@ -54,12 +54,13 @@ class _ScrollableTabsState extends State<MyMessageHomePage>
           .of(context)
           .canvasColor,
       appBar: new MyAppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.white70,
         leading: new Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
                   Utils.getImgPath('weibosdk_navigationbar_back_highlighted'),
+
                 ),
               )),
         ),

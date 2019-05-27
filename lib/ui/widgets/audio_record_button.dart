@@ -26,9 +26,8 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
         builder: (BuildContext context) {
           return DialogContent();
         });
-    if(result is Map){
-
-      widget.onBackResult(result["audioPath"],result["audioLongth"]);
+    if (result is Map) {
+      widget.onBackResult(result["audioPath"], result["audioLongth"]);
     }
   }
 
@@ -47,7 +46,6 @@ class _AudioRecordButtonState extends State<AudioRecordButton> {
       };
 
   get _onLongPressEnd => (LongPressEndDetails details) {
-
         print("_onLongPressEnd");
       };
 
@@ -111,7 +109,7 @@ class _DialogContentState extends State<DialogContent> {
   bool _isPlaying = false;
 
   String _recorderTxt = '00:00:00';
-  double _dbLevel;
+  int _dbLevel;
   double slider_current_position = 0.0;
   double max_duration = 1.0;
   String audioPath;
@@ -164,7 +162,7 @@ class _DialogContentState extends State<DialogContent> {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             e.currentPosition.toInt(),
             isUtc: true);
-//        print('startRecorder: $date');
+
         String txt = DateFormat('ss:SS', 'en_GB').format(date);
 
 //        print('startRecorder    txt: $txt');
@@ -177,7 +175,9 @@ class _DialogContentState extends State<DialogContent> {
           flutterSound.onRecorderDbPeakChanged.listen((value) {
         print("got update -> $value");
         setState(() {
-          this._dbLevel = value;
+          double tempValue = 6*(value / 160);
+          this._dbLevel = tempValue.toInt();
+          print("got update -> $_dbLevel");
         });
       });
 
@@ -188,6 +188,8 @@ class _DialogContentState extends State<DialogContent> {
       print('startRecorder error: $err');
     }
   }
+
+
 
   void stopRecorder(isConfirm) async {
     try {
@@ -214,6 +216,8 @@ class _DialogContentState extends State<DialogContent> {
     }
   }
 
+  var soundLeavelImage = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7'];
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -233,7 +237,7 @@ class _DialogContentState extends State<DialogContent> {
                   fit: BoxFit.fitWidth,
                 ),
                 Image.asset(
-                  Utils.getImgPath('v1'),
+                  Utils.getImgPath(soundLeavelImage[_dbLevel]),
                   height: 130,
                   fit: BoxFit.fitWidth,
                 ),

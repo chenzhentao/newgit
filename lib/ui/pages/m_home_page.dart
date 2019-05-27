@@ -125,12 +125,10 @@ class MHomePage extends StatelessWidget {
 
     return new StreamBuilder(
         stream: bloc.bannerStream,
-
         builder:
             (BuildContext context, AsyncSnapshot<List<BannerModel>> snapshot) {
           return new RefreshScaffold(
             labelId: labelId,
-
             isLoading: snapshot.data == null,
             controller: _controller,
             enablePullUp: false,
@@ -138,7 +136,6 @@ class MHomePage extends StatelessWidget {
               return bloc.onRefresh(labelId: labelId, bean: mData);
             },
             child: new ListView(
-
               children: <Widget>[
                 buildBanner(context, snapshot.data),
                 buildMenu(context, bloc.hotRecModel),
@@ -194,7 +191,6 @@ class MHomePage extends StatelessWidget {
       ];
     }
     return GridView.count(
-
         padding: EdgeInsets.only(top: 8.0),
         crossAxisCount: 4,
         mainAxisSpacing: 0.0,
@@ -220,7 +216,7 @@ class MHomePage extends StatelessWidget {
     return new Container(
         height: 50,
         color: Colors.white,
-        padding: EdgeInsets.only(top: 4,left: 10,right: 10,bottom: 4),
+        padding: EdgeInsets.only(top: 4, left: 10, right: 10, bottom: 4),
         margin: EdgeInsets.all(10),
         child: new Row(
           children: <Widget>[
@@ -232,18 +228,19 @@ class MHomePage extends StatelessWidget {
             ),
             Gaps.hGap10,
             new Expanded(
-
               child: new Swiper(
                 children: recReposModel.map<Widget>((ReposModel reposModel) {
                   return new Row(
                     mainAxisSize: MainAxisSize.min,
-
                     children: <Widget>[
                       new Text(
                         reposModel.className,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black54, fontSize: 14.0,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold),
                       ),
                       new Text(
                         reposModel.subTypeName,
@@ -363,28 +360,29 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
+    print("_item${_item.menuName}   ${_item.menuImage}");
 
+    return new GestureDetector(
       onTap: () {
-        print("_item${_item.functionId}");
         Navigator.push(context,
             new MaterialPageRoute(builder: (context) => new HomeSchoolPage()));
       },
       child: new Column(
-
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-        new CachedNetworkImage(
-          width: 66,
-          fit: BoxFit.fitWidth,
-          imageUrl: _item.menuImage,
-          placeholder: new ProgressView(),
-          errorWidget: new Icon(Icons.error),
-        ),
-        new Text(
-          _item.menuName,
-          style: Theme.of(context).textTheme.body2,
-        ),
-      ]),
+            new CachedNetworkImage(
+              width: 66,
+              fit: BoxFit.fitWidth,
+              imageUrl: _item.menuImage,
+              placeholder: new ProgressView(),
+              errorWidget: new Icon(Icons.error),
+            ),
+            new Text(
+              _item.menuName,
+              style: Theme.of(context).textTheme.body2,
+            ),
+          ]),
     );
   }
 }

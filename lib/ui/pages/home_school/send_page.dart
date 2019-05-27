@@ -97,7 +97,7 @@ class _sendPageButton extends State<SendPage> {
                         width: ScreenUtil.getInstance().screenWidth / 4 - 8,
                         margin: EdgeInsets.only(
                             left: 4.0, right: 4.0, top: 5.0, bottom: 5.0),
-                        child: FlatButton(
+                        child: OutlineButton(
                           padding: EdgeInsets.all(0.0),
                           child: Text(
                             "${item.text}",
@@ -118,16 +118,16 @@ class _sendPageButton extends State<SendPage> {
                                   dataType: dataType);
                             });
                           },
+                          color: item.index == _currentIndex
+                            ? Colors.blue
+                            : Colors.white10,
+
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(5.0)),),
                         ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: item.index == _currentIndex
-                                ? Colors.blue
-                                : Colors.white10,
-                            border: Border.all(
-                              color: Colors.blue,
-                              width: 1.0,
-                            )),
+
                       ),
                 )
                 .toList(),

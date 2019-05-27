@@ -88,57 +88,52 @@ class _ReceivePageButton extends State<ReceivePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new Container(
-          width: ScreenUtil
-              .getInstance()
-              .screenWidth,
+          width: ScreenUtil.getInstance().screenWidth,
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _group
                 .map(
-                  (item) =>
-                  Container(
-                    width: ScreenUtil
-                        .getInstance()
-                        .screenWidth / 4 - 8,
-                    margin: EdgeInsets.only(left: 4.0, right: 4.0,top: 5.0,bottom: 5.0),
-                    child: FlatButton(
-                      padding: EdgeInsets.all(0.0),
-                      child: Text(
-                        "${item.text}",
-                        style: TextStyle(
-                            color: item.index == _currentIndex
-                                ? Colors.white70
-                                : Colors.blue),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _currentIndex = item.index;
-                          readStatus = _currentIndex.toString();
-                          bloc.onRefresh(
-                              labelId: labelId,
-                              userId: userId,
-                              crDate: crDate,
-                              readStatus: readStatus,
-                              dataType: dataType);
-                        });
-                      },
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: item.index == _currentIndex
+                  (item) => Container(
+                        width: ScreenUtil.getInstance().screenWidth / 4 - 8,
+
+                        margin: EdgeInsets.only(
+                            left: 4.0, right: 4.0, top: 5.0, bottom: 5.0),
+                        child: OutlineButton(
+                          padding: EdgeInsets.all(0.0),
+                          textColor: item.index == _currentIndex
+                              ? Colors.white70
+                              : Colors.blue,
+                          color: /*item.index == _currentIndex
                             ? Colors.blue
-                            : Colors.white10,
-                        border: Border.all(
-                          color: Colors.blue,
-                          width: 1.0,
-                        )),
-                  ),
-            )
+                            :*/ Colors.black54,
+                          child: Text(
+                            "${item.text}",
+                          ),
+                          onPressed: () {
+                            if (mounted)
+                              setState(() {
+                                _currentIndex = item.index;
+                                readStatus = _currentIndex.toString();
+                                bloc.onRefresh(
+                                    labelId: labelId,
+                                    userId: userId,
+                                    crDate: crDate,
+                                    readStatus: readStatus,
+                                    dataType: dataType);
+                              });
+                          },
+                          borderSide: BorderSide(color: Colors.blueAccent),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),),
+
+                        ),
+                      ),
+                )
                 .toList(),
           ),
         ),
         new Expanded(
-
           child: new StreamBuilder(
               stream: bloc.receiveMessageStream,
               builder: (BuildContext context,
@@ -162,50 +157,54 @@ class _ReceivePageButton extends State<ReceivePage> {
                       new Container(
                         height: 40,
                         padding: EdgeInsets.only(right: 10.0),
-                        width: ScreenUtil
-                            .getInstance()
-                            .screenWidth,
+                        width: ScreenUtil.getInstance().screenWidth,
                         child: new Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             new FlatButton(
-                              
                                 onPressed: () {
                                   DatePicker.showDatePicker(context,
                                       showTitleActions: true,
                                       minTime: DateTime(2018, 3, 5),
                                       maxTime: DateTime.now(),
                                       onChanged: (date) {
-                                        print('change $date');
-                                      },
-                                      onConfirm: (date) {
-                                        setState(() {
-                                          crDate =
-                                              formatDate(date, [yyyy, '-', mm]);
-                                        });
-                                      },
+                                    print('change $date');
+                                  }, onConfirm: (date) {
+                                    setState(() {
+                                      crDate =
+                                          formatDate(date, [yyyy, '-', mm]);
+                                    });
+                                  },
                                       currentTime: DateTime.parse(
                                           crDate + "-01 00:00:00"),
                                       locale: LocaleType.zh);
                                 },
-                                child: Row(children: <Widget>[
-                                  new Text(crDate)
-                                  ,
-                                  new Icon(Icons.keyboard_arrow_down,color: Colors.blue,)
-
-                                ],)),
+                                child: Row(
+                                  children: <Widget>[
+                                    new Text(crDate),
+                                    new Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.blue,
+                                    )
+                                  ],
+                                )),
                             new RichText(
-                                text: new TextSpan(text: "总共",
+                                text: new TextSpan(
+                                    text: "总共",
                                     children: List.generate(3, (index) {
                                       return TextSpan(
-                                        style: TextStyle(color: (index ==1)?Colors.red:Colors.blueGrey,fontSize: (index ==1)?18.0:14.0),
-                                          text:(index ==0)?"总共":(index ==1)?
-                                      "${bloc.receiveMessagesList == null
-                                          ? 0
-                                          : bloc.receiveMessagesList
-                                          .length}":"条");
+                                          style: TextStyle(
+                                              color: (index == 1)
+                                                  ? Colors.red
+                                                  : Colors.blueGrey,
+                                              fontSize:
+                                                  (index == 1) ? 18.0 : 14.0),
+                                          text: (index == 0)
+                                              ? "总共"
+                                              : (index == 1)
+                                                  ? "${bloc.receiveMessagesList == null ? 0 : bloc.receiveMessagesList.length}"
+                                                  : "条");
                                     })))
-
                           ],
                         ),
                       ),
@@ -219,7 +218,8 @@ class _ReceivePageButton extends State<ReceivePage> {
     );
   }
 
-  Widget buildWxArticle(BuildContext context, List<MessagetBeanReturnvalueListvo> list) {
+  Widget buildWxArticle(
+      BuildContext context, List<MessagetBeanReturnvalueListvo> list) {
     print("buildWxArticle   ${list.toString()}   ");
     if (ObjectUtil.isEmpty(list)) {
       return new Container(height: 0.0);
@@ -242,6 +242,5 @@ class _ReceivePageButton extends State<ReceivePage> {
     });
   }
 
-  TextSpan _buildSpanList(int index) {
-  }
+  TextSpan _buildSpanList(int index) {}
 }

@@ -244,7 +244,7 @@ class _MessageDetailState extends State<MessageDetailPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     shape: new RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0))),
                   ),
                 )),
           ],

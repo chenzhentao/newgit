@@ -83,23 +83,26 @@ class MessageItem extends StatelessWidget {
                                     minWidth: 40.0,
                                     height: 5,
                                     padding: EdgeInsets.only(
-                                        left: 10.0,
-                                        top: 0.0,
-                                        right: 10.0,
-                                        bottom: 0.0))),
-                            child: new FlatButton(
+                                        left: 8.0,
+                                        top: 2.0,
+                                        right: 8.0,
+                                        bottom: 2.0))),
+                            child: new RaisedButton(
+                              padding:EdgeInsets.only(
+                                  left: 8.0,
+                                  top: 2.0,
+                                  right: 8.0,
+                                  bottom: 2.0) ,
                                 onPressed: () {},
                                 child: Text(
                                   "${model.hasRead == 0 ? "已读" : "未读"}",
                                   maxLines: 1,
                                   style: TextStyle(color: Colors.white),
-                                ))),
-                        decoration: BoxDecoration(
-                            color: model.hasRead == 0
+                                ),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0))),color:  model.hasRead == 0
                                 ? Colors.purpleAccent
-                                : Colors.red,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
+                                : Colors.red,)),
                       ),
                     ],
                   ),
@@ -137,7 +140,7 @@ class MessageItem extends StatelessWidget {
                       ),
                       Gaps.hGap5,
                       new Text(
-                        "${model.commentCount}",
+                        "${model.commentCount!=null?model.commentCount:0}",
                         style: TextStyles.listExtra,
                       ),
                       Gaps.hGap10,
@@ -148,7 +151,7 @@ class MessageItem extends StatelessWidget {
                       ),
                       Gaps.hGap5,
                       new Text(
-                        "${model.commentCount}",
+                        "${model.readCount!=null?model.readCount:0}",
                         style: TextStyles.listExtra,
                       ),
                     ],
