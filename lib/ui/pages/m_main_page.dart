@@ -33,11 +33,12 @@ class M_MainPage extends StatelessWidget {
         length: _allPages.length,
         child: new Scaffold(
           appBar: new MyAppBar(
+            backgroundColor: Colors.white70,
             centerTitle: true,
-            title: new Text('任行宝'),
+            title: new Text('任行宝',style: TextStyle(color: Colors.black),),
             actions: <Widget>[
               new IconButton(
-                  icon: new Icon(Icons.search),
+                  icon: new Icon(Icons.search,color: Colors.blueAccent,),
                   onPressed: () {
                     NavigatorUtil.pushPage(context, new SearchPage(),
                         pageName: "SearchPage");
@@ -50,7 +51,7 @@ class M_MainPage extends StatelessWidget {
           body: new TabBarViewLayout(),
           drawer: new Drawer(child: new IdentityPage(mData:SpHelper.getLoginBeanList()),
           ),
-          bottomNavigationBar: new Material(color: Colors.blue,child: new TabLayout(),),
+          bottomNavigationBar: new Material(color: Colors.white70,child: new TabLayout(),),
         ));
   }
 }
@@ -61,6 +62,8 @@ class TabLayout extends StatelessWidget{
     return new TabBar(
       isScrollable: false,
       labelPadding: EdgeInsets.all(0.0),
+      labelColor:Colors.blueAccent,
+      unselectedLabelColor:Colors.grey,
       indicatorSize: TabBarIndicatorSize.label,
       tabs: _allPages
           .map((_Page page) =>
