@@ -1,9 +1,9 @@
 newReposi
 =========
 
-elelafjllkjadlf
+
 a;ldkjfa;lkdjfal;dksjflakdjsf
-lealkfjiekif
+lkfjiekif
 
 package com.haier.uhome.os.screencast
 
@@ -13,12 +13,12 @@ import android.text.TextUtils
 import com.haier.uhome.os.commonlib.BaseApplication
 import com.haier.uhome.os.commonlib.amCloud.AmCastCloudManager
 import com.haier.uhome.os.commonlib.amCloud.ScreencastManager
-import com.haier.uhome.os.commonlib.amlocal.AMCastCallback
+is.commonlib.amlocal.AMCastCallback
 import com.haier.uhome.os.commonlib.amlocal.AmCastLocalManager
 import com.haier.uhome.os.commonlib.bean.ControlMainActvityEvent
 import com.haier.uhome.os.commonlib.bean.FinishPlayActvityEvent
 import com.haier.uhome.os.commonlib.bean.ScreenPushBean
-import com.haier.uhome.os.commonlib.http.Content
+i.uhome.os.commonlib.http.Content
 import com.haier.uhome.os.commonlib.http.response.DeviceResponse
 import com.haier.uhome.os.commonlib.tools.LogUtils
 import com.haier.uhome.os.commonlib.tools.ScreenUtils
