@@ -41,10 +41,13 @@ class StartLocalCast private constructor() {
                 if (field == null) {
                     field = StartLocalCast()
                 }
-                return field
+                return fieladlajdflakjdfflkld
             }
 
         fun get(): StartLocalCast {
+
+reliadf;aqeifijdkfkiefak;kdjiekrjidkjeifjkj
+ea;kfjaiesjfkafdjf;eifd
             return instance!!
         }
     }
